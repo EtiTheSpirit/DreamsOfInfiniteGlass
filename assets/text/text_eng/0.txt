@@ -1,0 +1,8 @@
+GLASS-0-mech
+ITERATOR: Mm?
+
+SPECEVENT : GLASS_COMMUNICATE
+
+GLASS: My, such an elegant communications protocol... My name is Dreams of Infinite Glass.
+
+LCM-X:
