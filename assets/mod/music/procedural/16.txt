@@ -1,0 +1,12 @@
+TH_16 - KICK : NEUTRAL
+TH_16 - HAT : NEUTRAL
+TH_16 - BASS : NEUTRAL
+TH_16 - VOX : NEUTRAL
+TH_16 - LEAD : HIGHKARMA
+
+
+Layer : TH_16 - KICK
+Layer : TH_16 - HAT
+Layer : TH_16 - BASS
+Layer : TH_16 - VOX
+Layer : TH_16 - LEAD

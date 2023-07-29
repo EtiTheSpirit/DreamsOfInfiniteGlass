@@ -1,0 +1,18 @@
+DangerType: None
+CeilingDrips: 0
+RainIntensity: 0
+RumbleIntensity: 0
+WaveSpeed: 0
+WaveLength: 0
+WaveAmplitude: 0
+SecondWaveLength: 0
+SecondWaveAmplitude: 0
+Grime: 0
+BkgDroneVolume: 0.251087
+RandomItemDensity: 0
+RandomItemSpearChance: 0
+WaterReflectionAlpha: 0
+Palette: 1196179795
+PlacedObjects: LightBeam><459.073><121.1534><-418.5~-1.5~-419.5001~401~0.499939~401~-270.9999~33.99998~0.09565204~1~1~0~None~0~0, DeepProcessing><483.6935><79.81207><0.5~448.5~399.5~448~399~0.5~3~463.5~0.423913~0.9293478~0.2826087, SuperStructureVacuumTubes><49.82239><552.2177><275~116.5~3~0, PWLightrod><50.52612><118.131><-236.1795~172~0.1141304~0~406.3043~0.25~0.6391303~1~0.2456526, PWLightrod><65.43024><118.7883><-287.6795~5~0.1304348~0~406.3043~0~0.6391303~1~0.2456519, PWLightrod><538.042><73.69556><160.3205~-56.5~0.09782602~45~236.9564~0.4021726~0.6391296~1~0.2456519, 
+AmbientSounds: OMNI><SO_SFX-DataTrans.ogg><22.43488><470.8123><0.1032615><1, 
+WetTerrain: OFF

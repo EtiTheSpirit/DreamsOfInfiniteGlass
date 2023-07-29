@@ -22,23 +22,23 @@ namespace XansCharacter.Character.NPC.Iterator {
 
 		private static void OnReadyForAI(On.Room.orig_ReadyForAI originalMethod, Room @this) {
 			originalMethod(@this);
-			if (@this.abstractRoom.name == "16_AI") {
-				Log.LogTrace("I want to spawn glass.");
-				@this.oracleWantToSpawn = Oracles.GLASS_ORACLE_ID;
-				try {
-					if (@this.abstractRoom == null) {
-						Log.LogWarning("But I cannot, because the abstract room is null.");
-						return;
+			if (@this.abstractRoom.name == $"{DreamsOfInfiniteGlassPlugin.REGION_PREFIX}_AI") {
+				if (@this.world != null && @this.game != null) {
+					Log.LogTrace($"I want to spawn glass, the room is {DreamsOfInfiniteGlassPlugin.REGION_PREFIX}_AI.");
+					@this.oracleWantToSpawn = Oracles.GLASS_ORACLE_ID;
+					try {
+						if (@this.abstractRoom == null) {
+							Log.LogWarning("But I cannot, because the abstract room is null.");
+							return;
+						}
+						GlassOracle obj = new GlassOracle(new AbstractPhysicalObject(@this.world, AbstractPhysicalObject.AbstractObjectType.Oracle, null, new WorldCoordinate(@this.abstractRoom.index, 15, 15, -1), @this.game.GetNewID()), @this, new Vector2(500, 360));
+						Log.LogTrace("Construction complete.");
+						@this.AddObject(obj);
+						@this.waitToEnterAfterFullyLoaded = Math.Max(@this.waitToEnterAfterFullyLoaded, 80);
+					} catch (Exception exc) {
+						Log.LogError($"Failed to spawn Glass: {exc}");
 					}
-					GlassOracle obj = new GlassOracle(new AbstractPhysicalObject(@this.world, AbstractPhysicalObject.AbstractObjectType.Oracle, null, new WorldCoordinate(@this.abstractRoom.index, 15, 15, -1), @this.game.GetNewID()), @this, new Vector2(500, 360));
-					Log.LogTrace("Construction complete.");
-					@this.AddObject(obj);
-					@this.waitToEnterAfterFullyLoaded = Math.Max(@this.waitToEnterAfterFullyLoaded, 80);
-				} catch (Exception exc) { 
-					Log.LogError($"Failed to spawn Glass: {exc}");
 				}
-			} else {
-				Log.LogTrace($"I can't spawn glass in {@this.abstractRoom.name}");
 			}
 		}
 

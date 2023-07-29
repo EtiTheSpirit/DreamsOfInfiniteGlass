@@ -1,0 +1,7 @@
+[ADD]glass_conduitbuzz_LOOP/vol=0.1 : glass-conduitbuzz
+[ADD]glass_devicewarn_LOOP/vol=0.75/dopplerFac=0.0 : glass-devicewarn
+[ADD]glass_industrial_alarm/vol=0.5/dopplerFac=0.0 : glass-industrialalarm
+[ADD]glass_stock_shock/vol=0.3 : glass-stockshock
+[ADD]glass_gigaboom/vol=0.5 : glass-gigaboom
+[ADD]glass_singularity/vol=0.5/dopplerFac=0.0 : glass-singularitybuildup
+[ADD]glass_mech_broken/vol=0.3/dopplerFac=0.0 : glass-mech-broken

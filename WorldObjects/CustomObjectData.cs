@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UnityEngine;
 using XansCharacter.Data.Registry;
+using static RegionKit.Modules.Particles.V1.PBehaviourModule;
 
 namespace XansCharacter.WorldObjects {
 
@@ -130,7 +131,7 @@ namespace XansCharacter.WorldObjects {
 			public Color color;
 
 			public ColoredGridRectObjectData(PlacedObject owner) : base(owner) {
-				color = new Color(0.611f, 1.000f, 0.982f, 1.0f);
+				color = StableZapCoil.DEFAULT_COLOR;
 			}
 
 			public override void FromString(string s) {

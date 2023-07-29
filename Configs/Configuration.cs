@@ -15,14 +15,23 @@ namespace XansCharacter.Configs {
 		/// </summary>
 		public static bool TraceLogging => _traceLogging.Value; // Default to true until configs load.
 
+		/// <summary>
+		/// If true, advanced shader systems that modify behavior on the fly are enabled.
+		/// </summary>
+		public static bool AdvancedShaderSystems => _advancedShaders.Value;
+
 		#region Backing Fields
 
 		#region Mod Meta
 		private static Configurable<bool> _traceLogging;
+		#endregion
 
+		#region Graphics and Systems
+		private static Configurable<bool> _advancedShaders;
 		#endregion
 
 		#region Interop
+
 		#endregion
 
 		#region Player Mechanics
@@ -84,11 +93,16 @@ namespace XansCharacter.Configs {
 
 		public static string GetCategoryDescription(string cat) {
 			if (_categoryDescriptions.TryGetValue(cat, out string categoryDesc)) return categoryDesc;
-			return "It seems Xan forgot to put a description on this category. Tell him good job.";
+			return "It seems Xan forgot to put a description on this category.";
 		}
 
 		#endregion
 
+		/// <summary>
+		/// This should not be called by you. It is called by the remix config screen class of this mod.
+		/// </summary>
+		/// <param name="cfg"></param>
+		/// <exception cref="InvalidOperationException"></exception>
 		internal static void Initialize(ConfigHolder cfg) {
 			if (Initialized) throw new InvalidOperationException("Configurations have already been initialized!");
 			Log.LogMessage("Initializing configuration file.");
@@ -103,9 +117,19 @@ You should activate this if you are trying to find bugs in the mod.",
 			false);
 			Log.LogTrace("TRACE LOGGING IS ENABLED. The logs will be cluttered with information only useful when debugging, and trace entries will incur a performance cost. You have been warned!");
 
-			_currentSection = "Interop";
-			SetCurrentSectionDescription("Settings that relate to interactions between this mod and other mods.");
+			_currentSection = "Core Systems";
+			SetCurrentSectionDescription("Settings that relate to critical internal systems.");
 
+			CreateConfig(ref _advancedShaders, true, "Advanced Shaders", description:
+$@"This mod makes heavy use of custom shaders. This option will enable advanced features
+that can dramatically improve performance in this mod's regions, but which might also
+break the renderer in certain weird edge cases that could not be found during testing.",
+			false);
+
+			// _currentSection = "Interop";
+			//SetCurrentSectionDescription("Settings that relate to interactions between this mod and other mods.");
+
+			
 
 			Initialized = true;
 		}

@@ -1,0 +1,70 @@
+This conversation exists to test the parameterized conversation driver.
+
+The purpose of this custom driver is to enable the player to make choices in dialogue, as well as to introduce advanced concepts such
+as branching and contextual event signals rather than just the two preset PEBBLESWAIT and whatever else was there (i forgor:skull:)
+
+It also supports features like comments and embedded lines, to make the editing side much, much easier!
+Now, to begin:
+
+# This line should be treated as a comment because it starts with a '#' symbol, and more importantly, it appears on its own line with a line break above it.
+
+# If you are reading this right now, it broke.
+
+In contrast (sorry, if you are viewing this in game, the previous statement was a comment), a # symbol being on a continued chat line
+# <== like that, immediately on the following line, should not be registered as a comment.
+
+\# Additionally, it is possible to force a line to display anyway by putting a \ before the #
+
+You should have seen a forced comment just now.
+The system also supports events. Take, for example, the text color change event.
+
+EVT::SetColor,r=1,g=0.2,b=0.2
+
+Now I am red.
+
+EVT::SetColor,r=1,g=1,b=1
+
+And now I am not.
+
+################################################################################
+
+There are also jumps, including conditional jumps. Let's test a normal jump now.
+
+EVT::Jmp,label=JUMPTEST1
+
+If you are reading this line, the jump system has failed spectacularly.
+
+EVT::Label,name=JUMPTEST1
+
+That was fun. In hindsight I can't be certain if I just stepped anyway, or actually jumped, but that's for you to know (not me).
+
+This next message will jump based on the player's slugcat ID. 
+If you are the mech or the survivor, you will see a super secret message.
+If you aren't, the conversation will end immediately.
+
+EVT::Jmp,slugcats=Mech|White,fail=ENDCONVO
+
+Triple affirmative? Just say yes 3 times dumbass.
+
+EVT::Jmp,label=PASTMECH
+
+###############################################################################
+
+EVT::Label,name=ENDCONVO
+
+EVT::TerminateConversation
+
+EVT::Label,name=PASTMECH
+
+Wow, that was quite the jump! No secret information was exchanged at all. Unless it was. You'd know if it was.
+
+From here onward, the message will loop infinitely, because the system reading this message is a simple machine.
+
+Please, evaluate: while (true) Say("SO TRUE!");
+
+EVT::Label,name=INFLOOP
+
+SO TRUE!
+
+EVT::Jmp,label=INFLOOP
+

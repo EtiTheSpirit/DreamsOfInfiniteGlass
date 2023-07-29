@@ -1,0 +1,20 @@
+EVT::SetProcessing,processing=false
+
+EVT::SetBrainActivity,level=0
+
+Processing is now false. Activity set to 0%. Press MAP to move onward.
+
+EVT::SetProcessing,processing=true
+
+Processing is now true. Press MAP to force activity to 100%.
+
+EVT::SetBrainActivity,level=1
+
+Activity is now 100%. Press MAP to return it to automatic.
+
+EVT::SetBrainActivity,level=-1
+
+Activity is now AUTO. Press MAP to set processing to false.
+
+EVT::SetProcessing,processing=false
+

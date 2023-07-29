@@ -1,0 +1,25 @@
+Template: NONE
+DangerType: None
+CeilingDrips: 0
+RainIntensity: 0
+RumbleIntensity: 0
+WaveSpeed: 0
+WaveLength: 0
+WaveAmplitude: 0
+SecondWaveLength: 0
+SecondWaveAmplitude: 0
+Clouds: 0
+Grime: 0
+BkgDroneVolume: 0
+BkgDroneNoThreatVolume: 0
+RandomItemDensity: 0
+RandomItemSpearChance: 0
+WaterReflectionAlpha: 0
+Palette: 27
+EffectColorA: 9
+EffectColorB: 9
+Effects: SunBlock-1-23-131.5, ZeroG-0.9619565-23-26.5, ZeroGSpecks-0.2049308-1067.701-395.9111, 
+PlacedObjects: LightSource><204.7444><632.325><1~Environment~0~100~50~86.60254~1~0~None~0~0, LightSource><735.4358><634.7689><1~Environment~0~100~50~86.60254~1~0~None~0~0, LightSource><205.6042><104.6867><1~Environment~0~100~50~86.60254~1~0~None~0~0, LightSource><739.049><104.2608><1~Environment~0~100~50~86.60254~1~0~None~0~0, 
+AmbientSounds: OMNI><AM_IND-SuperStructure.ogg><828.1998><653.0092><0.4021739><0.7456522, OMNI><AM_WIN-StrongWnd2.ogg><649.244><654.55><0.3695652><1, OMNI><SO_SFX-DataTrans2.ogg><828.8108><578.3148><0.2608696><0.8434783, 
+FadePalette: 0, 0
+WetTerrain: OFF

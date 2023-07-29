@@ -27,21 +27,28 @@ using XansCharacter.WorldObjects;
 using XansCharacter.Configs;
 using XansTools.Utilities.ModInit;
 using XansCharacter.Data;
+using XansTools.Utilities.RW.FutileTools;
+using XansCharacter.Data.World;
 
 namespace XansCharacter {
 
 	[BepInPlugin(PLUGIN_ID, PLUGIN_NAME, PLUGIN_VERSION)]
-	[BepInDependency(XansTools.Plugin.PLUGIN_ID, BepInDependency.DependencyFlags.HardDependency)] // XansTools
-	[BepInDependency("rwmodding.coreorg.rk", BepInDependency.DependencyFlags.HardDependency)] // RegionKit
-	[BepInDependency("rwmodding.coreorg.pom", BepInDependency.DependencyFlags.HardDependency)] // POM
-	public class XansCharacterMain : BaseUnityPlugin {
-
+	[BepInDependency(XansTools.XansToolsMain.PLUGIN_ID, BepInDependency.DependencyFlags.HardDependency)]	// XansTools
+	[BepInDependency("rwmodding.coreorg.rk", BepInDependency.DependencyFlags.HardDependency)]	// RegionKit
+	[BepInDependency("rwmodding.coreorg.pom", BepInDependency.DependencyFlags.HardDependency)]	// POM
+	public class DreamsOfInfiniteGlassPlugin : BaseUnityPlugin {
 		public const string PLUGIN_NAME = "Dreams of Infinite Glass";
 		public const string PLUGIN_ID = "xan.dreamsofinfiniteglass";
 		public const string PLUGIN_VERSION = "1.0.0";
 
+		public const string REGION_PREFIX = "16";
+
+		/// <summary>
+		/// This object can be used to report errors during the mod loading phase.
+		/// </summary>
+		internal static ErrorReporter Reporter { get; private set; }
+
 		private RemixConfigScreen _cfgScr;
-		private ErrorReporter _reporter;
 		private AutoPatcher _patcher;
 
 		/// <summary>
@@ -54,7 +61,7 @@ namespace XansCharacter {
 				Log.Initialize(Logger);
 				Log.LogMessage("Loading Dreams of Infinite Glass.");
 				Log.LogMessage("Creating error reporter object...");
-				_reporter = new ErrorReporter(this);
+				Reporter = new ErrorReporter(this);
 
 				// Configuration.Initialize(); // This is now handled by the RemixConfigScreen class.
 				Log.LogMessage("Loading configs...");
@@ -83,7 +90,10 @@ namespace XansCharacter {
 				// MechPlayerMechanics.Initialize();
 				CustomObjectData.Initialize();
 				GlassOraclePatches.Initialize();
-				FutileMods.Initialize();
+				WorldShaderMarshaller.Initialize();
+
+				Log.LogTrace("Requesting buffers...");
+				FutileSettings.RequestDepthAndStencilBuffer();
 
 				On.RainWorld.OnModsInit += OnModsInitializing;
 
@@ -94,7 +104,7 @@ namespace XansCharacter {
 			} catch (Exception exc) {
 				Log.LogFatal("WAKE THE FUCK UP SAMURAI. I SHIT THE BED.");
 				Log.LogFatal(exc.ToString());
-				_reporter.DeferredReportModInitError(exc, $"Loading {PLUGIN_NAME}");
+				Reporter.DeferredReportModInitError(exc, $"Loading {PLUGIN_NAME}");
 			}
 		}
 
@@ -104,7 +114,7 @@ namespace XansCharacter {
 				MachineConnector.SetRegisteredOI(PLUGIN_ID, _cfgScr);
 			} catch (Exception exc) {
 				Log.LogFatal(exc);
-				_reporter.DeferredReportModInitError(exc, $"Registering the Remix config menu to {PLUGIN_NAME}");
+				Reporter.DeferredReportModInitError(exc, $"Registering the Remix config menu to {PLUGIN_NAME}");
 				throw;
 			}
 		}

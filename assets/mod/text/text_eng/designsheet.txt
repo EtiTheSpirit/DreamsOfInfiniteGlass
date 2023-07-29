@@ -1,0 +1,44 @@
+I see you did some digging into my archives. I suppose this is what I get for not actually taking the time to put it back onto its shelf...
+
+EVT::CndJmp,delegate=GetPlayerPearlQueryState,0=PLAYERFOUNDEARLY,1=PLAYERPERSISTENT,2=PLAYERVERYPERSISTENT,2=PLAYERCOMPLETED
+
+#########################################################################################################################################
+
+EVT::Label,name=PLAYERFOUNDEARLY
+
+Hmm...
+
+Can we wait on this pearl? It's ... sensitive. Rest assured, I'm not trying to hide this information from you for a malicious reason.
+In fact, for the sake of transparency, I will say that it is your full set of design specifications. Someone could remake you with this.
+
+The only reason I have chosen to keep this information from you is because it .. might raise some existential questions. This, of course,
+is only a negative because you are still in your testing phase. You and I both know that we need as clean a test environment as possible
+to get proper results.
+
+EVT::MovePearlToStorageSpot
+
+I'll keep it here with me. When you finish your mission, hand it to me again and I'll actually go over its contents with you. Sound good?
+
+EVT::TerminateConversation
+
+#########################################################################################################################################
+
+EVT::Label,name=PLAYERPERSISTENT
+
+I know you want me to read it... I'm sorry, it's just too much of a risk!
+
+...Yes, this is why I didn't equip you with the ability to read data pearls on your own. I'll give you that capability after the mission.
+
+EVT::TerminateConversation
+
+#########################################################################################################################################
+
+EVT::Label,name=PLAYERVERYPERSISTENT
+
+
+
+EVT::TerminateConversation
+
+#########################################################################################################################################
+
+EVT::Label,name=PLAYERCOMPLETED

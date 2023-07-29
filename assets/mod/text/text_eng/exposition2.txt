@@ -1,0 +1,20 @@
+EVT::Glass::StopEverything
+
+EVT::Glass::PlayerObservationAnimation
+
+Glass: Interesting. Of all the creatures I have seen on this world, I have yet to .. well, I suppose you aren't really a 
+"creature" by traditional definition, are you? No matter - your ability to interface more directly with my systems is nice. 
+I don't have to slow down so that an organic mind can keep up.
+
+Glass: So... What are you?
+
+SOLSTICE: In the mind? A vast artifical intelligence construct. I am equipped with all systems necessary to make me fully
+capable of sophisticated social interactions, such as this one. In the body? I currently occupy a non-standard SOLSTICE
+model chassis, which is designed to monitor harsh natural or artifical events, such as those caused by your structure.
+
+Glass: I see. I would apologize for the rain, but it's not exactly an option. It's how my kind breathes. We need that water
+to clear out slag and to keep the systems we run at appropriate temperatures. It's ... painful, if we skip out on that.
+
+SOLSTICE: I see. It is no problem, this model mimics native fauna that seem to be particularly good with navigating the
+dense pipelines on the surface. Keeping myself safe was only a matter of using the local infrastructure and paying
+attention to your activity.

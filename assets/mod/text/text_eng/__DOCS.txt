@@ -1,0 +1,41 @@
+Valid event types:
+
+EVT::SetColor,r=0,g=0,b=0 	// Set the color of all following messages. r/g/b are all required.
+
+EVT::Label,name=NAME 		// Declare a label named NAME - this can be used as a "checkpoint" in the conversation that a jump can find and go to, for branching conversations.
+
+EVT::Jmp,... 
+	// Jump to NAME based on a condition. Parameters are as follows
+	,slugcat=a|b|c			// If the player's current slugcat ID matches a/b/c (any amount, separated by |), the condition is true. False otherwise.
+							// This is a shortcut that allows the writer to avoid having to make a delegate to find a slugcat every single time.
+							// It cannot be used at the same time as delegate (see below)
+						
+	,delegate=method		// Finds a method in the conversation class that is driving this conversation. The method MUST be prefixed with JumpDelegate_
+							// It must also return uint, and must accept GlassConversation,JumpEvent:
+							// Example: ,delegate=IfTodayIsTuesday   =>  uint JumpDelegate_IfTodayIsTuesday(GlassConversation src, JumpEvent jmp)
+							// Returning 0 counts as false, anything else as true.
+							
+	,label=NAME				// If this is declared, this must be the ONLY PARAMETER on this jump - this turns it into an unconditional jump.
+						
+	,pass=NAME				// Jumps to NAME if the returned value from the method is nonzero (the check passed, it is true)
+	
+	,fail=NAME				// Jumps to NAME if the returned value from the method is zero (the check failed, it is false)
+	
+	,n=NAME					// If the return value of the method is n (a number), jump to NAME. n *may* be 0 or 1, but if this is the case, fail MUST NOT be declared.*
+	
+	,[x-y]=NAME				// If the return value of the method sits in the range of x to y (including x and y), jump to NAME. Similarly to n=NAME, fail MUST NOT be declared if 0 and/or 1 is include in this range. A value of $ can be used to indicate uint.MaxValue*
+	
+	* For both of these, pass is acceptable and serves as a fallback, i.e. 1=something,2=something_else,pass=any_other_nonzero
+							
+	Working example:
+		EVT::CndJmp,delegate=GetScavengerKills,0=NOKILLS,[1-9]=SOMEKILLS,[10-$]=MURDERER
+	
+EVT::TerminateConversation	// Forcefully ends the conversation. Best used in branches. This functions much like a return statement in a function.
+
+Valid parameters:
+
+
+,delay=0.0f					// WORKS ON ALL EVENTS. Delay for the provided amount of time, in seconds. This measure of time is affected by the game's timescale.
+							// This operates by setting initialWait to Round(delay*40)
+
+,initialWait=0				// WORKS ON ALL EVENTS. Directly set the initialWait value of the DialogueEvent which delays in ticks instead of seconds.

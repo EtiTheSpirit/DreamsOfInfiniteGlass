@@ -1,0 +1,20 @@
+Template: NONE
+DangerType: None
+CeilingDrips: 0
+RainIntensity: 0
+RumbleIntensity: 0
+WaveSpeed: 0
+WaveLength: 0
+WaveAmplitude: 0
+SecondWaveLength: 0
+SecondWaveAmplitude: 0
+Grime: 0
+BkgDroneVolume: 0.251087
+RandomItemDensity: 0
+RandomItemSpearChance: 0
+WaterReflectionAlpha: 1
+Palette: 1196179795
+Effects: ZeroG-1-0-0, ZeroGSpecks-1-1.5-52, SunBlock-1-1.5-100.5,  -1-0-0, 
+PlacedObjects: GravityDisruptor><469.5862><349.9445><, SuperStructureVacuumTubes><990.3289><411.2714><155.5~275.5~3~0, StableZapCoil><451.0793><514.6836><40.5~140~0.5294777~1~0.2591745~0.5000004, 
+AmbientSounds: OMNI><AM_IND-SuperStructure.ogg><13.69873><140.2727><0.2554334><1, 
+WetTerrain: OFF

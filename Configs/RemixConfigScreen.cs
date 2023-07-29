@@ -45,7 +45,7 @@ namespace XansCharacter.Configs {
 
 			// Set data
 			userData.SetStatic(PATH, Application.persistentDataPath);
-			cfg.owner.mod.id = XansCharacterMain.PLUGIN_ID;
+			cfg.owner.mod.id = DreamsOfInfiniteGlassPlugin.PLUGIN_ID;
 			ConfigHolder.configDirPath = null; // Set to null so it re-evalulates
 
 			cfg.Reload(); // Forcefully load these ASAP
@@ -81,7 +81,6 @@ namespace XansCharacter.Configs {
 			base.Initialize();
 			Configuration.GetAllConfigs(out IReadOnlyDictionary<string, IReadOnlyList<ConfigurableBase>> configs, out IReadOnlyList<string> categories);
 			OpTab[] tabs = new OpTab[categories.Count];
-			float height = 58;
 			UIconfig last = null;
 
 			// Default small font is 9px with 6px line spacing.
@@ -92,6 +91,7 @@ namespace XansCharacter.Configs {
 				textParams.lineHeightOffset = -3f;
 			}
 			for (int i = 0; i < configs.Count; i++) {
+				float height = 58;
 				string category = categories[i];
 				OpTab tab = new OpTab(this, Translate(category));
 				OpLabel catName = new OpLabel(RelativeOffset(0, 0, 0, 15), new Vector2(WINDOW_WIDTH, 30), Translate(category), FLabelAlignment.Center, true, null);

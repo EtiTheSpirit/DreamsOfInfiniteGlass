@@ -296,7 +296,6 @@
     <Compile Include="Character\NPC\Iterator\Interaction\GlassConversations.cs" />
     <Compile Include="Configs\Configuration.cs" />
     <Compile Include="Configs\RemixConfigScreen.cs" />
-    <Compile Include="Data\FutileMods.cs" />
     <Compile Include="Data\Players\PlayerAdditionalStats.cs" />
     <Compile Include="Data\Players\PlayerStorage.cs" />
     <Compile Include="Data\Players\PlayerStorageKey.cs" />
@@ -304,16 +303,18 @@
     <Compile Include="Data\Registry\PlaceableObjects.cs" />
     <Compile Include="Data\Registry\Slugcats.cs" />
     <Compile Include="Data\Registry\Sounds.cs" />
+    <Compile Include="Data\World\WorldShaderMarshaller.cs" />
     <Compile Include="LoadedAssets\XansAssets.cs" />
     <Compile Include="Log.cs" />
+    <Compile Include="WorldObjects\CustomLayerLightSource.cs" />
     <Compile Include="WorldObjects\SuperStructureVacuumTubes.cs" />
     <Compile Include="WorldObjects\StableZapCoil.cs" />
     <Compile Include="WorldObjects\CustomObjectData.cs" />
-    <Compile Include="XansCharacterMain.cs" />
+    <Compile Include="DreamsOfInfiniteGlassPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="assets\xansshaders" />
+    <EmbeddedResource Include="assets\embedded\xansshaders" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XansTools\XansTools.csproj">
@@ -324,8 +325,101 @@
   <ItemGroup>
     <Compile Include="Character\NPC\Iterator\Interaction\GlassConversation.ShadowHooks.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="assets\mod\plugins\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="assets\mod\modify\soundeffects\sounds.txt" />
+    <Content Include="assets\mod\world\16-rooms\16_gen00_settings.txt" />
+    <Content Include="assets\mod\world\16-rooms\16_gen01_settings.txt" />
+    <Content Include="assets\mod\world\16-rooms\16_grav0_settings.txt" />
+    <Content Include="assets\mod\world\16-rooms\16_RF_00.txt" />
+    <Content Include="assets\mod\world\16-rooms\16_RF_00_1.png" />
+    <Content Include="assets\mod\world\16-rooms\16_RF_00_2.png" />
+    <Content Include="assets\mod\world\16-rooms\16_RF_00_3.png" />
+    <Content Include="assets\mod\world\16-rooms\16_RF_00_4.png" />
+    <Content Include="assets\mod\world\16-rooms\16_rf_00_settings.txt" />
+    <Content Include="assets\mod\world\16\keywords_template.txt" />
+    <Content Include="assets\mod\world\16\map_16.png" />
+    <Content Include="assets\mod\world\16\map_16.txt" />
+    <Content Include="assets\mod\world\16\map_image_16.txt" />
+    <Content Include="assets\mod\world\16\regioncolor.txt" />
+    <Content Include="assets\mod\modify\world\regions.txt" />
+    <Content Include="assets\mod\music\procedural\16.txt" />
+    <Content Include="assets\mod\music\procedural\th_16 - bass.ogg" />
+    <Content Include="assets\mod\music\procedural\th_16 - hat.ogg" />
+    <Content Include="assets\mod\music\procedural\th_16 - kick.ogg" />
+    <Content Include="assets\mod\music\procedural\th_16 - lead.ogg" />
+    <Content Include="assets\mod\music\procedural\th_16 - vox.ogg" />
+    <Content Include="assets\mod\music\songs\BM_16_TRANSITIONSEAL.ogg" />
+    <Content Include="assets\mod\NOTE-README-BEFORE-EDITING-ANYTHING.txt" />
+    <Content Include="assets\mod\palettes\Coordinate Guide.txt" />
+    <Content Include="assets\mod\palettes\palette1196179795.png" />
+    <Content Include="assets\mod\palettes\palette825639241.png" />
+    <Content Include="assets\mod\palettes\palette825644875.png" />
+    <Content Include="assets\mod\scenes\characterselect\main.png" />
+    <Content Include="assets\mod\soundeffects\glass-conduitbuzz.wav" />
+    <Content Include="assets\mod\soundeffects\glass-devicewarn.wav" />
+    <Content Include="assets\mod\soundeffects\glass-gigaboom.wav" />
+    <Content Include="assets\mod\soundeffects\glass-industrialalarm.wav" />
+    <Content Include="assets\mod\soundeffects\glass-mech-broken.wav" />
+    <Content Include="assets\mod\soundeffects\glass-singularitybuildup.wav" />
+    <Content Include="assets\mod\soundeffects\glass-stockshock.wav" />
+    <Content Include="assets\mod\soundeffects\soundcreds.txt" />
+    <Content Include="assets\mod\text\colors.txt" />
+    <Content Include="assets\mod\text\text_eng\closingthoughts.txt" />
+    <Content Include="assets\mod\text\text_eng\cursedending.txt" />
+    <Content Include="assets\mod\text\text_eng\designsheet.txt" />
+    <Content Include="assets\mod\text\text_eng\exposition.txt" />
+    <Content Include="assets\mod\text\text_eng\exposition2.txt" />
+    <Content Include="assets\mod\text\text_eng\testconversation.txt" />
+    <Content Include="assets\mod\text\text_eng\__DOCS.txt" />
+    <Content Include="assets\mod\world\16-rooms\16_AI.txt" />
+    <Content Include="assets\mod\world\16-rooms\16_AI_1.png" />
+    <Content Include="assets\mod\world\16-rooms\16_AI_settings.txt" />
+    <Content Include="assets\mod\world\16-rooms\16_GEN00.txt" />
+    <Content Include="assets\mod\world\16-rooms\16_GEN00_1.png" />
+    <Content Include="assets\mod\world\16-rooms\16_GEN01.txt" />
+    <Content Include="assets\mod\world\16-rooms\16_GEN01_1.png" />
+    <Content Include="assets\mod\world\16-rooms\16_GEN01_2.png" />
+    <Content Include="assets\mod\world\16-rooms\16_GRAV0.txt" />
+    <Content Include="assets\mod\world\16-rooms\16_GRAV0_1.png" />
+    <Content Include="assets\mod\world\16-rooms\16_TSEAL_HALL.txt" />
+    <Content Include="assets\mod\world\16-rooms\16_TSEAL_HALL_1.png" />
+    <Content Include="assets\mod\world\16-rooms\16_TSEAL_HALL_2.png" />
+    <Content Include="assets\mod\world\16-rooms\16_TSEAL_HALL_3.png" />
+    <Content Include="assets\mod\world\16\16_settingstemplate_general.txt" />
+    <Content Include="assets\mod\world\16\displayname.txt" />
+    <Content Include="assets\mod\world\16\properties.txt" />
+    <Content Include="assets\mod\world\16\world_16.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\mod\modinfo.json" />
+  </ItemGroup>
   <PropertyGroup Label="UserMacros">
     <CL>"$(DevEnvDir)..\..\VC\Tools\MSVC\14.36.32532\bin\Hostx64\x64\cl.exe"</CL>
+    <ModDirNoTrailingSlash>E:\Steam Games\steamapps\common\Rain World\RainWorld_Data\StreamingAssets\mods\dreamsofinfiniteglass</ModDirNoTrailingSlash>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
   </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>ECHO Copying newer files from the mod folder...
+
+ROBOCOPY "$(ModDirNoTrailingSlash)" "$(ProjectDir)\assets\\mod" /XO /IS /IT /NDL /NJH /NJS /NP /NS /NC
+if %25ERRORLEVEL%25 GEQ 8 GOTO ERR
+
+ECHO Copying mod contents from solution folder...
+ROBOCOPY "$(ProjectDir)\assets\\mod" "$(ModDirNoTrailingSlash)" /E /XO /IS /IT /NDL /NJH /NJS /NP /NS /NC
+if %25ERRORLEVEL%25 GEQ 8 GOTO ERR
+:OK
+ECHO Copy almost done, moving mod plugin now...
+COPY "$(TargetPath)" "$(ModDirNoTrailingSlash)\\plugins\$(TargetFileName)"
+exit 0 
+
+:ERR
+ECHO Failed to copy files!
+exit 1</PostBuildEvent>
+  </PropertyGroup>
 </Project>

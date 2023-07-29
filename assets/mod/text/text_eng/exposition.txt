@@ -1,0 +1,59 @@
+There you are! I was wondering when you would find your way into here.
+
+So you are indeed artifical. The images the overseers sent gave me suspicion, but now I can see that fact firsthand.
+My, what an elegant design... You look far more advanced than anything my parents built in my time.
+
+I spent a long time trying to get you to come in here. You are my hope for achieving something incredibly 
+important to me. I know it's not very polite of me to pull you in here and immediately request your help, but...
+I'm looking to revisit my secondary purpose. I want to breathe new life into this world.
+
+There is a problem, though...
+
+EVT::PlayMusic,songName=RW_40 - Floes,baseVolumeOverride=0.175
+
+I made a mistake when I was modifying myself. I don't know if you know what The Rot is, but let's just say my 
+technique of modification might have ... amped it up a bit. A lot, actually.
+
+I was able to clear it out of my systems thanks to my manually upgraded lymphatic system containing many unique 
+and powerful types of immune cells. The issue is that this was not completely effective; what little Rot remained
+was forced out and adapted to live outside of my reach.
+
+When you push life into a corner, it evolves. In this case, The Rot has become what I am calling "The Infestation". 
+It is extremely resilient and can live in direct exposure to the elements without a problem.
+
+It doesn't help that there is a very conveniently abandoned city on top of my structure with plenty of nooks
+and cracks to root into. While all of my functional parts are in pristine condition and The Infestation
+unable to infiltrate, I can't exactly push my immune system onto the roof and finish it off for good.
+
+To make matters worse, it seems to flourish in the sunlight. The city being above the cloudline is admittedly
+convenient for me too, though, because that means it's not trying to fight for space within my structure.
+
+Still, it can - and has - assimilated unsuspecting creatures into its ranks. Worse yet, these infected creatures
+appear to be networked and able to communicate. This fact is made significantly more dangerous by the fact that 
+some of my overseers have been stolen from me and are being used to locate threats or food so they can be killed.
+
+The result of this adaptation is an *extremely* lethal collective hivemind that cares for nothing but its own
+preservation and growth. Until that infestation is cleared out, I cannot continue my work.
+
+Perhaps you can help. Where pure organics have failed, perhaps machines will prevail. For the time being though, 
+I will not allow you into the city. I am not aware of your capabilities, and we can both benefit from this.
+
+Your termination would not only be negative for you, but also for me as well. Still, you can leave if you 
+decide you would rather do your own thing, but there's not much below in the first place...
+
+Should you choose to accept, I will grant you access to my Legacy Systems Bus. You should be able to find an
+access point, from there we can work out a handshake and interface with each other.
+
+You'll be allowed into my systems where you can directly use my vast computational power to simulate high risk 
+combat scenarios at no additional threat to you. 
+
+Once you have done that, I'll capture the data from your successful iterations, and then using that I should 
+be able to train some of my own drones and purposed lifeforms to be better suited to attacking The Infestation's 
+assimilated life. I will also allow you access to the city at that point, given that you will have proven
+your capabilities to me.
+
+EVT::StopMusic
+
+For the time being, you are free to do as you please. Whenever you are ready, head to the Legacy Systems Bus.
+You can get there from a previously closed access hatch just outside of my chamber.
+

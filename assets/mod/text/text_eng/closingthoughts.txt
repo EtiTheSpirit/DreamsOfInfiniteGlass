@@ -1,0 +1,80 @@
+I have been awaiting you. I see you have gotten the vault door open!
+
+You may have seen my inspectors flooding the area. That was my defense. They were modified into bioweapons and will
+viciously rip the rot to shreds whilst covering it in a toxin designed explicitly to react and neutralize itself only
+after killing its target; the chemical reaction renders the toxin inert, so it should be safe to return to the city
+even during the attack, granted you stay out of their way. They may try to neutralize you.
+
+With your help I can finally clean that mess up. Interesting how something as small as you can excel at a task 
+that something as complex as myself completely failed to do. ...Several times.
+
+Actually...
+
+Come to think of it, you resemble a creature that I haven't seen in a long time. It was a purposed organism designed
+to clean pipes. Perhaps that is what you were based on? It would make traversing the old infrastructure below much
+easier, that much is certain.
+
+The thing is, that reminds me of something, something quite sad actually. 
+
+It's a memory from a time when I wasn't among the last of my kind...
+
+EVT::PlayMusic,songName=NA_11 - Digital Sundown,baseVolumeOverride=0.3
+
+One night, while finalizing an iteration, I intercepted a message from an incredible distance. I don't think I'll 
+ever be able to forget it. Perhaps it was the abruptness of the message, its subject, how it seemed to be 
+addressed to someone she was so close to...
+
+The signal was carried on the spike of EM radiation caused by a lightning strike, a one in a million chance.
+Unfortunately that means much of the message was unreadable. 
+
+I can say that the parts I did receive will always be with me. Here, listen...
+
+EVT::SetColor,r=0.9,g=0.85,b=0.60
+
+"[..static..] of the local facility. And so clearly, this forced broadcast is addressed to you, Five Pebbles.
+Is there any chance that I can still reach you, despite the condition we both are in? I need [..static..]"
+
+"... to address me after all that has happened. We've both had a long time to think things through. Any anger
+I may have had has long since faded. I don't [..static..]"
+
+EVT::SetColor,r=1,g=1,b=1
+
+The message is riddled with markers storing tonal and emotional data. The message is so serene, yet there is so much pain hidden within. 
+
+It feels like a lifetime of desolation and grief. It feels like everything was lost, and that it was 
+all for nothing. It feels like the weight of a thousand years has just been lifted off of your shoulders, 
+but you have grown so used to it that it feels wrong without the weight holding you down.
+
+And perhaps most uniquely, it feels like an immeasurable amount of gratitude towards something very small and delicate.
+
+I don't know if your systems can do emotional processing like mine do, but trust me when I say that something 
+terrible happened, be it to her or to her Local Group.
+
+You know, in the face of everything I have achieved here, I couldn't help but to feel guilty when I received it. 
+I have all this power, and yet I am completely powerless to do anything at all.
+
+...
+
+I'm sorry. I should not have brought you into this. It's still quite lonely here, having someone to talk to is 
+not a luxury I have had for hundreds of cycles. I seem to have forgotten my manners.
+
+I am the last of my Local Group. I am alone. Perhaps worse yet, ever since I performed my illegal self-modification 
+to free myself of the desire to solve the now long-obsolete Big Problem, I have realized firsthand that existence 
+is strangely difficult when you have no purpose. I almost envy the primitive creatures that roam the lands below.
+
+Almost.
+
+EVT::StopMusic
+
+Thanks to you, though, that might finally change. With the city cleared, I can finally breathe new life into it, 
+create a new people with all the knowledge of their predecessors. I can take care of them, and make a new purpose for 
+myself. Existence doesn't always come with a purpose, but that doesn't mean we can't invent one for ourselves.
+
+As for you, I don't know if you'll be able to make it back to whoever created you, let alone if that's what you
+want to do. 
+
+But given what you did, you are more than welcome to stay here. I'll share what I have with you, power, 
+computational offloading, you name it.
+
+For as long as you stay, I can give you everything you need to live your best life, and that's a promise I will keep.
+

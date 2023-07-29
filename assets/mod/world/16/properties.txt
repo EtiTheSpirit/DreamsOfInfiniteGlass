@@ -1,0 +1,13 @@
+overseersSpawnChance: 0.0
+overseersMin: 0
+overseersMax: 4
+Subregion: Dreams of Infinite Glass
+Subregion: Dreams of Infinite Glass (Transition Seal)
+Subregion: Dreams of Infinite Glass (Parallel Memory Conflux)
+Subregion: Dreams of Infinite Glass (Central Processing Unit)
+Subregion: Dreams of Infinite Glass (Fabrication Centre)
+Subregion: Dreams of Infinite Glass (Illegal Modification)
+Subregion: Dreams of Infinite Glass (Legacy Systems Bus)
+Subregion: Dreams of Infinite Glass (Iterative Testing Arena)
+playerGuideOverseerSpawnChance: 0.0
+Room Setting Templates: General

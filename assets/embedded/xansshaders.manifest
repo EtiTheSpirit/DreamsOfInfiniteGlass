@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 987026315
+CRC: 1512472310
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 8e6b3f1b2ee0d1002416578ee1759eab
+    Hash: fa2f3edffd29a7fc561653341a116848
   TypeTreeHash:
     serializedVersion: 2
     Hash: 68c985bf88fecc38b460cdb825182138
@@ -13,10 +13,7 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/NativeAdditiveColorNoAlpha.shader
-- Assets/NativeAdditiveVectorCircle.shader
-- Assets/GlassHaloFX.shader
-- Assets/NativeAdditiveColor.shader
-- Assets/GlassHaloFXCircle.shader
-- Assets/StencilTest.shader
+- Assets/Shaders/Levels/LevelColor.shader
+- Assets/Shaders/Objects/NativeAdditiveVectorCircle.shader
+- Assets/Shaders/Objects/NativeAdditiveColor.shader
 Dependencies: []

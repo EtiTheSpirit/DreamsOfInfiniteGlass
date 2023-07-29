@@ -1,0 +1,15 @@
+RainIntensity: 0
+RumbleIntensity: 0
+WaveSpeed: 0.5
+WaveLength: 1
+WaveAmplitude: 0
+SecondWaveLength: 0.1449273
+SecondWaveAmplitude: 0
+Grime: 0
+BkgDroneVolume: 0.2565218
+BkgDroneNoThreatVolume: 1
+RandomItemDensity: 0
+RandomItemSpearChance: 0
+WaterReflectionAlpha: 1
+PlacedObjects: StableZapCoil><149.6325><27.10025><261~46~0.5321735~1~0.255~0.5, StableZapCoil><132.4269><329.8466><208.5~40.5~0.5321742~1~0.255~0.5, StableZapCoil><51.67984><410.5439><45.5~90~0.532174~1~0.255~0.5, StableZapCoil><125.127><548.05><106.5~43.5~0.5321742~1~0.255~0.5, SuperStructureVacuumTubes><48.81976><189.5795><118.5~73.5~3~0, SuperStructureVacuumTubes><851.4443><871.6639><78.5~176~3~0, SuperStructureVacuumTubes><551.5588><870.3088><139.0001~179.5~3~0, SuperStructureVacuumTubes><669.6861><291.4484><267.5~281~3~0, SuperStructureVacuumTubes><549.2142><30.25604><375.5~82.5~3~0, PWLightrod><196.824><210.5198><-202.1795~32.5~0.2880435~90~323.6951~0.201~0.639~1~0.246, 
+WetTerrain: OFF

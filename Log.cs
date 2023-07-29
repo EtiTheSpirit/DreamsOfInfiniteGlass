@@ -14,7 +14,6 @@ namespace XansCharacter {
 
 		internal static void Initialize(ManualLogSource logSource) {
 			_logSource = logSource;
-			XansTools.Log.GetShouldTraceLog = () => Configuration.TraceLogging;
 		}
 		private static string ToString(object o) {
 			return o?.ToString() ?? "null";

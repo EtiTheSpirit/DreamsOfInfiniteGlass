@@ -1,0 +1,7 @@
+16_GEN00: 59.7><-74.7><182.6001><-49.3><1><Dreams of Infinite Glass><46><37
+16_GEN01: 203.7><5.299997><288.1><-32.3><1><Dreams of Infinite Glass><48><75
+16_AI: -32.3><219.3><166.1><289.2><1><Dreams of Infinite Glass><46><37
+16_TSEAL_HALL: -238.8><-174.7><-141.9><-149.3><1><Dreams of Infinite Glass (Transition Seal)><152><35
+OffScreenDen_16: 7.700006><24.8><-494.9><-58.30001><1><><0><0
+Connection: 16_GEN00,16_GEN01,36,13,9,7,0,2
+Connection: 16_GEN00,16_TSEAL_HALL,19,4,146,17,3,0

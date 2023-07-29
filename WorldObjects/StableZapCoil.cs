@@ -21,7 +21,7 @@ namespace XansCharacter.WorldObjects {
 	/// </summary>
 	public class StableZapCoil : ZapCoil {
 
-		public static Color DEFAULT_COLOR { get; } = new Color(0.532f, 1.000f, 0.255f, 0.500f);
+		public static Color DEFAULT_COLOR { get; } = new Color(162f/255f, 1.0f, 62f/255f, 0.500f);
 
 		public static Color ALARM_LIGHT_COLOR { get; } = new Color(1.000f, 0.100f, 0.100f, 1.000f);
 
@@ -38,7 +38,7 @@ namespace XansCharacter.WorldObjects {
 			get => _unmodulatedColor;
 			set {
 				_unmodulatedColor = value;
-				_intensity = value.a;
+				_intensity = value.a; 
 				_data.color = value;
 			}
 		}
@@ -154,9 +154,9 @@ namespace XansCharacter.WorldObjects {
 				if (_flicker.IsOdd()) {
 					return 0.75f;
 				}
-				return 0.5f;
+				return 0.50f;
 			}
-			return 1;
+			return 1.00f;
 		}
 
 		[Obsolete("The disrupted loop is not available for this class.", true)]
@@ -176,8 +176,8 @@ namespace XansCharacter.WorldObjects {
 			_centerLight.HardSetRad(rect.Area);
 
 			// TODO: Why do these not work?
-			_alarmLight1 = new LightSource(ConnectorPositionA.TileToWorldCoord(), false, ALARM_LIGHT_COLOR, this);
-			_alarmLight2 = new LightSource(ConnectorPositionB.TileToWorldCoord(), false, ALARM_LIGHT_COLOR, this);
+			_alarmLight1 = new LightSource(ConnectorPositionA.TileToWorldCoord(), false, ALARM_LIGHT_COLOR, this, true);
+			_alarmLight2 = new LightSource(ConnectorPositionB.TileToWorldCoord(), false, ALARM_LIGHT_COLOR, this, true);
 			_alarmLight1.HardSetRad(5f);
 			_alarmLight2.HardSetRad(5f);
 
@@ -301,7 +301,7 @@ namespace XansCharacter.WorldObjects {
 			room.PlaySoundNoDoppler(Sounds.STOCK_ZAP_SOUND, zapContact, 1f, 1.5f);
 			room.PlaySoundNoDoppler(Sounds.INDUSTRIAL_ALARM, zapContact, 0.5f, 1.0f);
 			_powerState = 0;
-			_ticksRemainingKnockout = 40 * 5; // RW runs at 40 ticks per second
+			_ticksRemainingKnockout = Mathematical.SecondsToTicks(5.0f);
 
 			Color alarmColor = ALARM_LIGHT_COLOR.AlphaAsIntensity();
 			_alarmLight1.color = alarmColor;

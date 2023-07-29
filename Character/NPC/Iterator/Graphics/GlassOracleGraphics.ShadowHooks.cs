@@ -35,27 +35,15 @@ namespace XansCharacter.Character.NPC.Iterator.Graphics {
 			// On.LightSource.AddToContainer += OnAddingLightToContainer;
 		}
 
-		/*
-		private static void OnAddingLightToContainer(On.LightSource.orig_AddToContainer originalMethod, LightSource @this, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer newContatiner) {
-			// First, modify the layer:
-			if (@this.room.abstractRoom.name == "16_AI") {
-				sLeaser.sprites[0].sortZ = 1;
-				// Do not modify sprites[1] - AI chamber layers will never use the Fade light type, thus [1] is never used.
-			}
-			// Call original method now.
-			originalMethod(@this, sLeaser, rCam, newContatiner);
-		}
-		*/
-
 		private static bool GetNewLayerName(LightSource __instance, ref string __result) {
-			if (__instance.room.abstractRoom.name == "16_AI") {
+			if (__instance.room.abstractRoom.name == $"{DreamsOfInfiniteGlassPlugin.REGION_PREFIX}_AI") {
 				__result = "Foreground"; // Override the light layer.
 				
 				// Normally it goes to ForegroundLights or Water
 				// This override is performed specifically for this one room because of the custom shaders used on Glass's halo.
 				// Due to how they operate (and more, due to the fact that they are translucent), they would falsely cast a shadow
 				// which can be prevented by pulling the light down to the same layer they exist on.
-				Log.LogTrace("A light was changed to the Foreground layer due to being in 16_AI.");
+				Log.LogTrace($"A light was changed to the Foreground layer due to being in {DreamsOfInfiniteGlassPlugin.REGION_PREFIX}_AI.");
 				return false;
 			}
 			return true;
@@ -84,14 +72,14 @@ namespace XansCharacter.Character.NPC.Iterator.Graphics {
 					index = @this.firstSprite + i;
 					FSprite sprite = sLeaser.sprites[index];
 					sprite.color = GlassOracleGraphics.GLASS_SPARK_COLOR_IDLE;
-					sprite.shader = XansAssets.XAdditiveVectorCircle;
+					sprite.shader = XansAssets.AdditiveVertexColoredVectorCircle;
 				}
 				for (int i = 0; i < @this.connections.Length; i++) {
 					// MYCELIA
 					index = @this.firstSprite + i + NUM_VECTOR_CIRCLES;
 					FSprite sprite = sLeaser.sprites[index];
 					sprite.color = GlassOracleGraphics.GLASS_SPARK_COLOR_IDLE;
-					sprite.shader = XansAssets.XAdditiveVtxClr;
+					sprite.shader = XansAssets.AdditiveVertexColored;
 				}
 
 				index = @this.firstBitSprite;
@@ -101,7 +89,7 @@ namespace XansCharacter.Character.NPC.Iterator.Graphics {
 					for (int bitIndex = 0; bitIndex < bits.Length; bitIndex++) {
 						FSprite sprite = sLeaser.sprites[index++];
 						sprite.color = GlassOracleGraphics.GLASS_SPARK_COLOR_IDLE;
-						sprite.shader = XansAssets.XAdditiveVtxClr;
+						sprite.shader = XansAssets.AdditiveVertexColored;
 					}
 				}
 			}

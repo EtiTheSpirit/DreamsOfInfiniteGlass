@@ -1,0 +1,103 @@
+// This is the coordinate guide, which outlines the purpose of each pixel, with the additional context of iterators.
+
+COLOR ROWS:
+	Palettes contain two color groups split vertically. The top half is when the game is normal, bottom half when it is raining.
+	ROW 0 => Metadata (see below)
+	ROW 1 => ??? (debug?)
+	ROW 2 => Exposed to sunlight, upwards surface
+	ROW 3 => Exposed to sunlight, forwards surface
+	ROW 4 => Exposed to sunlight, downwards surface
+	ROWS 5/6/7 => Same as 2/3/4, but whilst in shadow.
+	LOWER DUPLICATE HALF OF IMAGE: Colors while raining.
+	
+[5, 1] =>
+	rgb = iterator arm color low
+	
+[5, 2] =>
+	rgb = iterator arm color high
+	
+[0, 7] =>
+	rgb = sky color
+	
+[1, 7] =>
+	rgb = fog color
+	
+[2, 7] =>
+	rgb = black color
+	
+[4, 7] =>
+	rgb = water color #1
+	
+[5, 7] =>
+	rgb = water color #2
+	
+[6, 7] =>
+	rgb = water surface color #1
+	
+[7, 7] =>
+	rgb = water surface color #2
+	
+[8, 7] =>
+	rgb = water shine color
+
+[9, 7] => 
+	ONE CHANNEL ALLOWED. ALL OTHERS *MUST* BE ZERO.
+	r > 0: fog amount = 1 - r // Darkening fog amount (?) Affects the color of level pixels beneath the fog as well.
+	b > 0: fog amount = 1 + b // Hazy fog amount (?)
+	
+[10, 7] =>
+	rgb = shortcut 1
+	
+[11, 7] =>
+	rgb = shortcut 2
+	
+[12, 7] =>
+	rgb = shortcut 3
+	
+[13, 7] =>
+	rgb = shortcut symbol
+
+[30, 7] =>
+	r = native darkness (inverted in value, but intuitive visually, black = 100% darkness)
+	gb = 0
+	TO FUTURE XAN: Past Xan thought this was the Darkness *effect*. It is not.
+	This value directly affects the alpha of most lights (and, reminder, light alpha = its depth *and* intensity as a sort of weird amalgam). Getting a proper value for this is very finnicky.
+	
+	
+	
+	
+	
+public Color PixelColorAtCoordinate(Vector2 coord)
+{
+	Vector2 worldLocation = coord - this.CamPos(this.currentCameraPosition);
+	Color pixOnLevelTexture = this.levelTexture.GetPixel(Mathf.FloorToInt(worldLocation.x), Mathf.FloorToInt(worldLocation.y));
+	if (pixOnLevelTexture.r == 1f && pixOnLevelTexture.g == 1f && pixOnLevelTexture.b == 1f)
+	{
+		return this.paletteTexture.GetPixel(0, 7);
+	}
+	int colorIndex = Mathf.FloorToInt(pixOnLevelTexture.r * 255f);
+	float isShade = 0f;
+	if (colorIndex > 90)
+	{
+		colorIndex -= 90;
+	}
+	else
+	{
+		isShade = 1f;
+	}
+	int row = Mathf.FloorToInt((float)colorIndex / 30f); // For every 30 brightness, go down a row.
+	int column = (colorIndex - 1) % 30; // This converts the pixel color to an index from 0 to 29, but the offset is a little odd (r=0 = index 29, but otherwise the color in the level png is the pixel number (starting from 1) rather than index (starting from 0) so you count the pixels in english not in code).
+	
+	// 1, 23
+	
+	// In all sensible cases, row will be >= 2
+	return Color.Lerp(
+		Color.Lerp(
+			this.paletteTexture.GetPixel(column, row + 3), 
+			this.paletteTexture.GetPixel(column, row), 
+			isShade
+		), 
+		this.paletteTexture.GetPixel(1, 7), 
+		(float)column * (1f - this.paletteTexture.GetPixel(9, 7).r) / 30f
+	);
+}

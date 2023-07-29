@@ -28,7 +28,7 @@ namespace XansCharacter.Data.Registry {
 		public static readonly SoundID SINGULARITY_MERGED_CHARGE = new SoundID("glass_singularity", true);
 
 		public static readonly SoundID MECH_BROKEN_LOOP = new SoundID("glass_mech_broken", true);
-
+		
 
 	}
 }

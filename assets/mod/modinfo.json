@@ -1,0 +1,11 @@
+{
+	"id": "xan.dreamsofinfiniteglass",
+	"name": "Dreams of Infinite Glass",
+	"version": "1.0.0",
+	"hide_version": false,
+	"authors": "Xan // Eti",
+	"description": "The story of an isolated, advanced self-modifying iterator named \"Dreams of Infinite Glass\" - one who learned to perform just about every taboo in the book.",
+	"checksum_override_version": false,
+	"requirements": ["regionkit", "moreslugcats", "xanstools"],
+	"requirements_names": ["Region Kit", "More Slugcats", "Xan's Tools"]
+}
