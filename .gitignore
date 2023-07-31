@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Xan's C Preprocessor Horror (hey chat peep the horror)
+*_P.g.cs
