@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 using UnityEngine;
 using XansTools.Utilities;
 using XansTools.Exceptions;
-using static XansCharacter.Character.NPC.Iterator.Interaction.GlassConversation;
 
 namespace XansCharacter.Character.NPC.Iterator.Interaction {
 
@@ -21,7 +20,7 @@ namespace XansCharacter.Character.NPC.Iterator.Interaction {
 	/// <para/>
 	/// This operates fundamentally differently than the base <see cref="Conversation"/> type.
 	/// </summary>
-	public abstract partial class GlassConversation : Conversation {
+	public abstract class GlassConversation : Conversation {
 
 		private int _eventIndex = 0;
 		private int _lastResetEventIndex = -1;

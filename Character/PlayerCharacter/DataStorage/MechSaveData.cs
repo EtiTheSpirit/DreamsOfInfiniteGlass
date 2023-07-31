@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace XansCharacter.Character.PlayerCharacter.DataStorage {
+namespace XansCharacter.Character.PlayerCharacter.DataStorage { 
 	public static class MechSaveData {
 
 		public static readonly DeathPersistentSaveData.Tutorial BATTERY_TUTORIAL = new DeathPersistentSaveData.Tutorial("mech_battery", true);
@@ -13,7 +13,7 @@ namespace XansCharacter.Character.PlayerCharacter.DataStorage {
 		public static readonly DeathPersistentSaveData.Tutorial RAREFACTION_CELL_TUTORIAL = new DeathPersistentSaveData.Tutorial("mech_rarefaction_recharge", true);
 
 		[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-		internal static void CallToStaticallyReference() {}
+		internal static void CallToStaticallyReference() {} 
 
 		public static DeathPersistentSaveData GetPermSaveData(Player player) {
 			if (player.room.game.session is StoryGameSession story) {

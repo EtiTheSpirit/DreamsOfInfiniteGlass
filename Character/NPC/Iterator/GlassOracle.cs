@@ -17,6 +17,14 @@ using XansTools.Utilities.Attributes;
 using Random = UnityEngine.Random;
 
 namespace XansCharacter.Character.NPC.Iterator {
+
+	/// <summary>
+	/// The oracle representing Dreams of Infinite Glass.
+	/// Ordinarily (especially after the advisories of other modders) this would not extend <see cref="Oracle"/>, but given the fact that all overrides call
+	/// <see langword="base"/> (except for <see cref="Consious"/>, which behaves a bit like a hook without calling orig()), 
+	/// and given the fact that this is only ever spawned in my own region, I do not foresee any issues.
+	/// </summary>
+	[Obsolete("Custom extended classes are destructive!", true)]
 	public class GlassOracle : Oracle {
 
 		/// <summary>
@@ -24,12 +32,6 @@ namespace XansCharacter.Character.NPC.Iterator {
 		/// </summary>
 		[ShadowedOverride]
 		public new bool Consious => health > 0;
-
-		/// <summary>
-		/// Whether or not the iterator is currently in the processing stage, from which the chamber will become red and the halo color will change accordingly.
-		/// The graphical changes are handled in <see cref="GlassOracleGraphics"/>.
-		/// </summary>
-		public bool IsBusyProcessing { get; private set; } = false;
 
 		/// <summary>
 		/// This save string is used when determining <see cref="HasTalkedBefore"/>
@@ -79,7 +81,7 @@ namespace XansCharacter.Character.NPC.Iterator {
 
 		public GlassOracle(AbstractPhysicalObject abstractPhysicalObject, Room room, Vector2 position) : base(abstractPhysicalObject, room) {
 			// Undo all of the garbage that the base ctor just did.
-			ID = Oracles.GLASS_ORACLE_ID;
+			ID = Oracles.GlassID;
 			health = 16161616; // 16 // 16 // 16 // 16 //
 			ResetIterator();
 			CreateChunksAt(position);
@@ -120,12 +122,6 @@ namespace XansCharacter.Character.NPC.Iterator {
 				graphicsModule = new GlassOracleGraphics(this);
 			}
 		}
-
-		public void SetIsProcessing(bool isProcessing) {
-			IsBusyProcessing = isProcessing;
-		}
-
-
 
 		/// <summary>
 		/// Creates two new <see cref="BodyChunk"/>s at the provided location for this iterator's body.

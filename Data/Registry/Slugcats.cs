@@ -228,7 +228,7 @@ It's not very clear who made it, nor why.";
 
 		private static Color OnGettingDefaultSlugcatColor(On.PlayerGraphics.orig_DefaultSlugcatColor originalMethod, SlugcatStats.Name slugcatID) {
 			if (slugcatID == MechID) {
-				return new Color();
+				return new Color(0.5f, 0.5f, 0.5f, 1.0f);
 			}
 			return originalMethod(slugcatID);
 		}

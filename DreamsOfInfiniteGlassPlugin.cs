@@ -19,7 +19,6 @@ using XansCharacter.Character.NPC.Iterator.Graphics;
 using XansCharacter.Character.NPC.Iterator.Interaction;
 using XansCharacter.Character.PlayerCharacter;
 using XansCharacter.Character.PlayerCharacter.DataStorage;
-using XansCharacter.Data.Players;
 using XansCharacter.Data.Registry;
 using XansCharacter.LoadedAssets;
 using XansTools.Utilities;
@@ -81,16 +80,16 @@ namespace XansCharacter {
 				Harmony harmony = new Harmony(PLUGIN_ID);
 				_patcher = new AutoPatcher();
 				_patcher.Initialize(harmony);
-				GlassOracle_ShadowHooks.MakeShadowHooks(_patcher);
-				GlassOracleGraphics_ShadowHooks.MakeShadowHooks(_patcher);
+				GlassOracleGraphicsHooks.Initialize(_patcher);
 
 				Log.LogTrace("Standard On/IL hooks...");
 				Slugcats.Initialize();
-				MechPlayer.Initialize();
+				// MechPlayerData.Initialize();
 				// MechPlayerMechanics.Initialize();
 				CustomObjectData.Initialize();
-				GlassOraclePatches.Initialize();
 				WorldShaderMarshaller.Initialize();
+				GlassOracleHooks.Initialize(_patcher);
+				GlassOracleGraphicsHooks.Initialize(_patcher);
 
 				Log.LogTrace("Requesting buffers...");
 				FutileSettings.RequestDepthAndStencilBuffer();

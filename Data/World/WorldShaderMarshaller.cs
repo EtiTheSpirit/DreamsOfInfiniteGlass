@@ -92,7 +92,7 @@ namespace XansCharacter.Data.World {
 					if (data.Key == "USE_GLASS_LEVEL_SHADER") {
 						if (data.Value) {
 							Log.LogDebug("Swapping to specialized level shader.");
-							camera.levelGraphic.shader = XansAssets.SpecializedLevelShader;
+							camera.levelGraphic.shader = XansAssets.Shaders.SpecializedLevelShader;
 						} else {
 							Log.LogDebug("Using standard level shader.");
 							// Do nothing, let the vanilla code swap it out.

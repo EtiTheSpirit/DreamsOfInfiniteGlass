@@ -10,7 +10,7 @@ using static XansCharacter.Character.NPC.Iterator.Interaction.GlassConversations
 namespace XansCharacter.Character.NPC.Iterator {
 	public class GlassOracleBehavior : OracleBehavior, Conversation.IOwnAConversation, GlassConversation.IParameterizedEventReceiver {
 
-		public new GlassOracle oracle => ((OracleBehavior)this).oracle as GlassOracle;
+		public bool IsBusyProcessing { get; set; }
 
 		public override DialogBox dialogBox {
 			get {
@@ -83,7 +83,7 @@ namespace XansCharacter.Character.NPC.Iterator {
 		/// </summary>
 		public float CurrentConnectionActivity { get; set; } = -1;
 
-		public GlassOracleBehavior(GlassOracle oracle) : base(oracle) {
+		public GlassOracleBehavior(Oracle oracle) : base(oracle) {
 			_origin = oracle.firstChunk.pos;
 			SetNewDestination(_origin);
 		}
@@ -234,14 +234,14 @@ namespace XansCharacter.Character.NPC.Iterator {
 				}
 			} else if (evt.EventName == "FuckingDie") {
 				evt.TryGetParameterAs("funnyRagdoll", out bool funny);
-				oracle.FuckingDie(funny);
+				// oracle.FuckingDie(funny);
 			} else if (evt.EventName == "SetBrainActivity") {
 				if (evt.TryGetParameterAs("level", out float level)) {
 					CurrentConnectionActivity = level;
 				}
 			} else if (evt.EventName == "SetProcessing") {
 				if (evt.TryGetParameterAs("processing", out bool processing)) {
-					oracle.SetIsProcessing(processing);
+					IsBusyProcessing = processing;
 				}
 			}
 		}

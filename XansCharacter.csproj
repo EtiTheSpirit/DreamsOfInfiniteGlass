@@ -12,25 +12,30 @@
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <MACROHACK_NAME>MacroHack.h</MACROHACK_NAME>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;REQUIRES_HARMONY_ARGS_PATCH</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;REQUIRES_HARMONY_ARGS_PATCH;MECH_HOOK_UTILS_AVAILABLE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DEBUG_PREPROCESSOR_FLAG>/D DEBUG /D REQUIRES_HARMONY_ARGS_PATCH /D MECH_HOOK_UTILS_AVAILABLE</DEBUG_PREPROCESSOR_FLAG>
+    <MACROHACK_NAME>MacroHack.h</MACROHACK_NAME>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;REQUIRES_HARMONY_ARGS_PATCH</DefineConstants>
+    <DefineConstants>TRACE;REQUIRES_HARMONY_ARGS_PATCH;MECH_HOOK_UTILS_AVAILABLE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DEBUG_PREPROCESSOR_FLAG>/D RELEASE /D REQUIRES_HARMONY_ARGS_PATCH /D MECH_HOOK_UTILS_AVAILABLE</DEBUG_PREPROCESSOR_FLAG>
+    <MACROHACK_NAME>MacroHack.h</MACROHACK_NAME>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony">
@@ -278,27 +283,24 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Character\PlayerCharacter\DataStorage\MechPlayerState.cs" />
-    <Compile Include="Character\PlayerCharacter\DataStorage\MechRuntimeData.cs" />
+    <Compile Include="Character\NPC\Iterator\Graphics\ShallowGlassOracleGraphics.cs" />
+    <Compile Include="Character\NPC\Iterator\ShallowGlassOracle.cs" />
+    <Compile Include="Character\PlayerCharacter\DataStorage\MechPlayerData.cs" />
     <Compile Include="Character\PlayerCharacter\DataStorage\MechSaveData.cs" />
     <Compile Include="Character\PlayerCharacter\FX\CollapseEffect.cs" />
-    <Compile Include="Character\PlayerCharacter\MechPlayer.cs" />
-    <Compile Include="Character\PlayerCharacter\MechPlayer.ShadowHooks.cs" />
-    <Compile Include="Character\PlayerCharacter\MechPlayerGraphics.cs" />
-    <Compile Include="Character\PlayerCharacter\MechPlayerMechanics.cs" />
-    <Compile Include="Character\NPC\Iterator\GlassOracle.cs" />
-    <Compile Include="Character\NPC\Iterator\GlassOraclePatches.cs" />
-    <Compile Include="Character\NPC\Iterator\GlassOracle.ShadowHooks.cs" />
+    <Compile Include="Character\PlayerCharacter\Hooks\MechPlayerMechanics.Capabilities.cs" />
+    <Compile Include="Character\PlayerCharacter\Hooks\MechPlayerMechanics.Combat.cs" />
+    <Compile Include="Character\PlayerCharacter\MechPlayerHUD.cs" />
+    <Compile Include="Character\PlayerCharacter\Hooks\MechPlayerMechanics.cs" />
+    <None Include="Character\NPC\Iterator\GlassOracle.cs" />
+    <Compile Include="Character\NPC\Iterator\GlassOracleHooks.cs" />
     <Compile Include="Character\NPC\Iterator\GlassOracleBehavior.cs" />
-    <Compile Include="Character\NPC\Iterator\Graphics\GlassOracleGraphics.cs" />
-    <Compile Include="Character\NPC\Iterator\Graphics\GlassOracleGraphics.ShadowHooks.cs" />
+    <None Include="Character\NPC\Iterator\Graphics\GlassOracleGraphics.cs" />
+    <Compile Include="Character\NPC\Iterator\Graphics\GlassOracleGraphicsHooks.cs" />
     <Compile Include="Character\NPC\Iterator\Interaction\GlassConversation.cs" />
     <Compile Include="Character\NPC\Iterator\Interaction\GlassConversations.cs" />
     <Compile Include="Configs\Configuration.cs" />
     <Compile Include="Configs\RemixConfigScreen.cs" />
-    <Compile Include="Data\Players\PlayerAdditionalStats.cs" />
-    <Compile Include="Data\Players\PlayerStorage.cs" />
-    <Compile Include="Data\Players\PlayerStorageKey.cs" />
     <Compile Include="Data\Registry\Oracles.cs" />
     <Compile Include="Data\Registry\PlaceableObjects.cs" />
     <Compile Include="Data\Registry\Slugcats.cs" />
@@ -317,18 +319,11 @@
     <EmbeddedResource Include="assets\embedded\xansshaders" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\XansTools\XansTools.csproj">
-      <Project>{9c2c160a-6137-4076-a14f-02398a4da9ff}</Project>
-      <Name>XansTools</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Character\NPC\Iterator\Interaction\GlassConversation.ShadowHooks.cs" />
-  </ItemGroup>
-  <ItemGroup>
+    <Folder Include="assets\mod\hud\" />
     <Folder Include="assets\mod\plugins\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="assets\description.txt" />
     <Content Include="assets\mod\modify\soundeffects\sounds.txt" />
     <Content Include="assets\mod\world\16-rooms\16_gen00_settings.txt" />
     <Content Include="assets\mod\world\16-rooms\16_gen01_settings.txt" />
@@ -392,14 +387,29 @@
     <Content Include="assets\mod\world\16\displayname.txt" />
     <Content Include="assets\mod\world\16\properties.txt" />
     <Content Include="assets\mod\world\16\world_16.txt" />
+    <Content Include="DevTooling\MacroHack.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\mod\modinfo.json" />
+    <Compile Include="Character\PlayerCharacter\Hooks\MechPlayerMechanics.CreatureWorldInteractions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\XansTools\XansTools.csproj">
+      <Project>{9c2c160a-6137-4076-a14f-02398a4da9ff}</Project>
+      <Name>XansTools</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="UserMacros">
     <CL>"$(DevEnvDir)..\..\VC\Tools\MSVC\14.36.32532\bin\Hostx64\x64\cl.exe"</CL>
     <ModDirNoTrailingSlash>E:\Steam Games\steamapps\common\Rain World\RainWorld_Data\StreamingAssets\mods\dreamsofinfiniteglass</ModDirNoTrailingSlash>
   </PropertyGroup>
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Inputs="@(Preprocess)" Outputs="@(Preprocess->'%(Filename)_P.g.cs')">
+    <Error Condition="Exists($(CL))" Text="Unable to find cl.exe (Searched for it at $(CL))! The version of MSVC might be wrong in this project file, or you need to install Visual C++ SDK" />
+    <Exec Command="$(CL) @(Preprocess) $(DEBUG_PREPROCESSOR_FLAG) /FI $(ProjectDir)DevTooling\$(MACROHACK_NAME) /C /P /Fi%(RelativeDir)%(Filename)_P.g.cs" />
+    <ItemGroup>
+      <Compile Include="@(Preprocess->'%(RelativeDir)%(Filename)_P.g.cs')" />
+    </ItemGroup>
+  </Target>
   <PropertyGroup>
     <RunPostBuildEvent>Always</RunPostBuildEvent>
   </PropertyGroup>
@@ -407,13 +417,15 @@
   <PropertyGroup>
     <PostBuildEvent>ECHO Copying newer files from the mod folder...
 
-ROBOCOPY "$(ModDirNoTrailingSlash)" "$(ProjectDir)\assets\\mod" /XO /IS /IT /NDL /NJH /NJS /NP /NS /NC
+ROBOCOPY "$(ModDirNoTrailingSlash)" "$(ProjectDir)\assets\\mod" /E /XO /IS /IT /NDL /NJH /NJS /NP /NS /NC
 if %25ERRORLEVEL%25 GEQ 8 GOTO ERR
+GOTO OK1
 
+:OK1
 ECHO Copying mod contents from solution folder...
 ROBOCOPY "$(ProjectDir)\assets\\mod" "$(ModDirNoTrailingSlash)" /E /XO /IS /IT /NDL /NJH /NJS /NP /NS /NC
 if %25ERRORLEVEL%25 GEQ 8 GOTO ERR
-:OK
+
 ECHO Copy almost done, moving mod plugin now...
 COPY "$(TargetPath)" "$(ModDirNoTrailingSlash)\\plugins\$(TargetFileName)"
 exit 0 

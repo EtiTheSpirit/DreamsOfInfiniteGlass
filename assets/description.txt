@@ -1,0 +1,5 @@
+﻿The story of an isolated, advanced self-modifying iterator named \"Dreams of Infinite Glass\" - one who learned to perform just about every taboo in the book.
+
+Additional Credits:
+* Vigaro (A significant portion of the underlying toolkit driving this mod contains stuff you wanted to do 
+* Lurzard (cool and good)
