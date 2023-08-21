@@ -17,10 +17,10 @@ namespace XansCharacter.LoadedAssets {
 
 
 		internal static void Initialize() {
-			On.RainWorld.LoadResources += OnLoadingResources;
+			On.RainWorld.PostModsInit += OnPostModsInit;
 		}
 
-		private static void OnLoadingResources(On.RainWorld.orig_LoadResources originalMethod, RainWorld @this) {
+		private static void OnPostModsInit(On.RainWorld.orig_PostModsInit originalMethod, RainWorld @this) {
 			originalMethod(@this);
 			try {
 				Log.LogMessage("Loading assets...");
@@ -33,7 +33,7 @@ namespace XansCharacter.LoadedAssets {
 				Shaders.SpecialBatteryMeterShader = bundle.FindFShader("Dreams of Infinite Glass/HUD/Meter");
 
 				Log.LogDebug("Loading images...");
-				Sprites.BatteryHudMask = new Sprites.SpriteProvider("batterybar_mask");
+				//Sprites.BatteryHudMask = new Sprites.SpriteProvider("batterybar_mask.png");
 
 				Log.LogDebug("Loading complete!");
 			} catch (Exception error) {
@@ -41,9 +41,8 @@ namespace XansCharacter.LoadedAssets {
 				throw;
 			} finally {
 				Log.LogTrace("Disposing of this hook, as it is no longer needed...");
-				On.RainWorld.LoadResources -= OnLoadingResources;
+				On.RainWorld.PostModsInit -= OnPostModsInit;
 			}
-			
 		}
 
 		public static class Shaders {
@@ -115,6 +114,9 @@ namespace XansCharacter.LoadedAssets {
 				}
 
 				private static string GetHUDElementPath(string subdirectory, string name) {
+					for (int num = ModManager.ActiveMods.Count - 1; num >= 0; num--) {
+						Log.LogTrace(ModManager.ActiveMods[num].path);
+					}
 					return AssetManager.ResolveFilePath(Path.Combine(subdirectory, name));
 				}
 

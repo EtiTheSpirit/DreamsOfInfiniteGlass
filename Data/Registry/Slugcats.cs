@@ -235,7 +235,8 @@ It's not very clear who made it, nor why.";
 
 
 		private static List<string> OnGettingDefaultBodyPartColorList(On.PlayerGraphics.orig_DefaultBodyPartColorHex orig, SlugcatStats.Name slugcatID) {
-			throw new NotImplementedException();
+			//throw new NotImplementedException();
+			return orig(slugcatID);
 		}
 
 		#endregion

@@ -1,0 +1,10 @@
+EVT::Glass::StopEverything
+
+EVT::Glass::PlayerObservationAnimation
+
+Glass: Interesting. Of all the creatures I have seen on this world, I have yet to .. well, I suppose you aren't really a 
+"creature" by traditional definition, are you? No matter - your ability to interface more directly with my systems is nice. 
+I don't have to slow down so that an organic mind can keep up.
+
+Glass: Sorry. That's inconsiderate of me. A significant portion of my own form is organic, but I digress...
+

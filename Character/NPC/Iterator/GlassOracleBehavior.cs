@@ -1,14 +1,19 @@
-﻿using HUD;
+﻿using System;
+using HUD;
 using UnityEngine;
 using RWCustom;
 using XansCharacter.Character.NPC.Iterator.Interaction;
 using GameHUD = HUD.HUD;
 using Random = UnityEngine.Random;
 using Music;
-using static XansCharacter.Character.NPC.Iterator.Interaction.GlassConversations;
+using XansTools.Utilities.General;
+// using static XansCharacter.Character.NPC.Iterator.Interaction.GlassConversations;
 
 namespace XansCharacter.Character.NPC.Iterator {
 	public class GlassOracleBehavior : OracleBehavior, Conversation.IOwnAConversation, GlassConversation.IParameterizedEventReceiver {
+
+		public new GlassOracle oracle => _glass.Get();
+		private WeakReference<GlassOracle> _glass;
 
 		public bool IsBusyProcessing { get; set; }
 
@@ -83,7 +88,8 @@ namespace XansCharacter.Character.NPC.Iterator {
 		/// </summary>
 		public float CurrentConnectionActivity { get; set; } = -1;
 
-		public GlassOracleBehavior(Oracle oracle) : base(oracle) {
+		public GlassOracleBehavior(GlassOracle glass) : base(glass) {
+			_glass = new WeakReference<GlassOracle>(glass);
 			_origin = oracle.firstChunk.pos;
 			SetNewDestination(_origin);
 		}
@@ -193,7 +199,7 @@ namespace XansCharacter.Character.NPC.Iterator {
 								plr.song.FadeOut(100f);
 							}
 						}
-						_currentConversation = new VeryFunnyConversation(this);
+						_currentConversation = GlassConversations.ImBack(this);
 						_currentConversation.AddEvents();
 						PrepareRoomForConversation();
 					}
@@ -202,39 +208,9 @@ namespace XansCharacter.Character.NPC.Iterator {
 		}
 
 		public void EventFired(GlassConversation.ParameterizedEvent evt) {
-			if (evt.EventName == "PlayMusic") {
-				ProcessManager mgr = oracle.room.game.manager;
-				MusicPlayer plr = mgr.musicPlayer;
-
-				if (evt.TryGetParameterAs("songName", out string songName)) {
-					if (plr.song != null) {
-						plr.song.FadeOut(100f);
-					}
-					plr.nextSong = new Song(plr, songName, MusicPlayer.MusicContext.StoryMode);
-					plr.nextSong.playWhenReady = false;
-				} else {
-					Log.LogWarning("PlayMusic event was missing its songName parameter.");
-				}
-				if (evt.TryGetParameterAs("baseVolumeOverride", out float volume)) {
-					plr.nextSong.baseVolume = volume;
-				}
-			} else if (evt.EventName == "StopMusic") {
-				ProcessManager mgr = oracle.room.game.manager;
-				MusicPlayer plr = mgr.musicPlayer;
-				if (plr.song != null) {
-					plr.song.FadeOut(100f);
-				}
-				plr.nextSong = null;
-			} else if (evt.EventName == "SetColor") {
-				bool success = evt.TryGetParameterAs("r", out float r);
-				success &= evt.TryGetParameterAs("g", out float g);
-				success &= evt.TryGetParameterAs("b", out float b);
-				if (success) {
-					evt.owner.dialogBox.currentColor = new Color(r, g, b);
-				}
-			} else if (evt.EventName == "FuckingDie") {
+			if (evt.EventName == "FuckingDie") {
 				evt.TryGetParameterAs("funnyRagdoll", out bool funny);
-				// oracle.FuckingDie(funny);
+				oracle.FuckingDie(funny);
 			} else if (evt.EventName == "SetBrainActivity") {
 				if (evt.TryGetParameterAs("level", out float level)) {
 					CurrentConnectionActivity = level;

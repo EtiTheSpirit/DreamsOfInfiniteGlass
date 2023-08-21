@@ -9,7 +9,7 @@ using UnityEngine;
 using static XansCharacter.WorldObjects.CustomObjectData;
 using Random = UnityEngine.Random;
 
-namespace XansCharacter.WorldObjects {
+namespace XansCharacter.WorldObjects.Decorative {
 
 	/// <summary>
 	/// An alternate SuperStructureFuses that appears more like electronic vacuum tubes

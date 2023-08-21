@@ -1,20 +1,17 @@
-EVT::SetProcessing,processing=false
+EVT::SetColor,r=0.2,g=1.0,b=0.2
 
-EVT::SetBrainActivity,level=0
+Glass: Hold on, I'm getting a transmission.
 
-Processing is now false. Activity set to 0%. Press MAP to move onward.
+EVT::SetColor,r=1,g=0.2,b=0.2
 
-EVT::SetProcessing,processing=true
+???: It's so sad Steve Jobs died from ligma...
 
-Processing is now true. Press MAP to force activity to 100%.
+EVT::SetColor,r=0.2,g=1.0,b=0.2
 
-EVT::SetBrainActivity,level=1
+Glass: ...Who the hell is steve jobs?
 
-Activity is now 100%. Press MAP to return it to automatic.
+EVT::SetColor,r=1,g=0.2,b=0.2
 
-EVT::SetBrainActivity,level=-1
+???: Ligma balls.
 
-Activity is now AUTO. Press MAP to set processing to false.
-
-EVT::SetProcessing,processing=false
-
+EVT::FuckingDie,funnyRagdoll=false

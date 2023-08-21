@@ -31,13 +31,23 @@ namespace XansCharacter.Character.PlayerCharacter.FX {
 		private LightningBolt[] _bolts = new LightningBolt[10];
 		private int _currentBolts = 0;
 
+		/// <summary>
+		/// This is set to true upon the detonation going off. Delete the player on the Update() where this is true.
+		/// </summary>
+		public bool DetonationCompleted { get; private set; }
+
 		public CollapseEffect(Room room, Vector2 at, Creature causedBy = null) {
 			this.room = room;
 			_src = causedBy;
 			_at = at;
 		}
 
-		public CollapseEffect(Player onPlayer) : this(onPlayer.room, onPlayer.firstChunk.pos, onPlayer) { }
+		public CollapseEffect(MechPlayer onPlayer) : this(onPlayer.room, onPlayer.firstChunk.pos, onPlayer) { }
+
+		public void UpdatePosition(ref CollapseEffect fieldStoringThis, Vector2 position) {
+			_at = position;
+			if (_stop) fieldStoringThis = null;
+		}
 
 		public override void Update(bool eu) {
 			if (_stop) return;
@@ -49,6 +59,7 @@ namespace XansCharacter.Character.PlayerCharacter.FX {
 				PreExplode();
 			} else if (_ticksLive == PRE_EXPLODE_AT + TICKS_UNTIL_MAIN_EXPLODE) {
 				Explode();
+				DetonationCompleted = true;
 			} else if (_ticksLive == PRE_EXPLODE_AT + TICKS_UNTIL_MAIN_EXPLODE + TICKS_UNTIL_DESTROY) {
 				_stop = true;
 				Destroy();

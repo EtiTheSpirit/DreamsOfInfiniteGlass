@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using UnityEngine;
 using XansTools.Utilities;
 using XansTools.Exceptions;
+using XansTools.Utilities.RW;
+using Music;
 
 namespace XansCharacter.Character.NPC.Iterator.Interaction {
 
@@ -181,7 +183,7 @@ namespace XansCharacter.Character.NPC.Iterator.Interaction {
 								Log.LogTrace($"Registered jump label: {label.Target}");
 							}
 						} else {
-							Log.LogTrace($"Event failed to parse! Event line contents (line {lineNumber}): {line}");
+							Log.LogWarning($"Event failed to parse! Event line contents (line {lineNumber}): {line}");
 						}
 					} else {
 						//Log.LogWarning("A line declared a new event EVT:: but had nothing after that.");
@@ -264,6 +266,7 @@ namespace XansCharacter.Character.NPC.Iterator.Interaction {
 			/// <returns></returns>
 			public static bool TryParseParameterizedEvent(Conversation owner, string linePastEvt, int lineNumber, out ParameterizedEvent evt) {
 				string[] info = linePastEvt.Split(',');
+				evt = null;
 				if (info.Length == 0) {
 					Log.LogError($"Unable to parse parameterized event [{linePastEvt}] - It has no event (you can't just declare an empty event block without at least a name i.e. EVT::NameHere)");
 					evt = null;
@@ -299,7 +302,40 @@ namespace XansCharacter.Character.NPC.Iterator.Interaction {
 					evt = new LabelEvent(owner, eventName, lineNumber, @params);
 				} else if (eventName == "TerminateConversation") {
 					evt = new TerminateEvent(owner, eventName, lineNumber, @params);
-				} else {
+				} else if (eventName == "PlayMusic") {
+					ProcessManager mgr = WorldTools.Game.manager;
+					MusicPlayer plr = mgr.musicPlayer;
+					if (@params.TryGetValue("songName", out string songName)) {
+						if (plr.song != null) {
+							plr.song.FadeOut(100f);
+						}
+						plr.nextSong = new Song(plr, songName, MusicPlayer.MusicContext.StoryMode);
+						plr.nextSong.playWhenReady = false;
+					} else {
+						Log.LogWarning("PlayMusic event was missing its songName parameter.");
+					}
+					if (@params.TryGetValue("baseVolumeOverride", out string volumeStr) && float.TryParse(volumeStr, out float volume)) {
+						plr.nextSong.baseVolume = volume;
+					}
+				} else if (eventName == "StopMusic") {
+					ProcessManager mgr = WorldTools.Game.manager;
+					MusicPlayer plr = mgr.musicPlayer;
+					if (plr.song != null) {
+						plr.song.FadeOut(100f);
+					}
+					plr.nextSong = null;
+				} else if (eventName == "SetColor") {
+					bool success = @params.TryGetValue("r", out string rs);
+					success &= @params.TryGetValue("g", out string gs);
+					success &= @params.TryGetValue("b", out string bs);
+					success &= float.TryParse(rs, out float r);
+					success &= float.TryParse(gs, out float g);
+					success &= float.TryParse(bs, out float b);
+					if (success) {
+						owner.dialogBox.currentColor = new Color(r, g, b);
+					}
+				}
+				if (evt == null) {
 					evt = new ParameterizedEvent(owner, eventName, lineNumber, @params);
 				}
 

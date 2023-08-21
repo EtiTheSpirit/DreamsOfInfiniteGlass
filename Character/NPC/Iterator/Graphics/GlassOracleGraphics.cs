@@ -1,25 +1,82 @@
-﻿using IL.MoreSlugcats;
-using RWCustom;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using XansCharacter.LoadedAssets;
-using XansTools.Utilities;
 using XansTools.Utilities.Attributes;
 using XansTools.Utilities.RW;
+using XansTools.Utilities;
+using XansCharacter.Data.Registry;
+using RWCustom;
+using XansCharacter.LoadedAssets;
 
 namespace XansCharacter.Character.NPC.Iterator.Graphics {
+	public sealed class GlassOracleGraphics : Extensible.OracleGraphics {
 
-	[Obsolete("Custom extended classes are destructive!", true)]
-	public class GlassOracleGraphics : OracleGraphics {
+		internal static void Initialize() {
+			On.OracleGraphics.ctor += (originalMethod, @this, ow) => {
+				originalMethod(@this, ow);
+				if (@this.oracle.ID == Oracles.GlassID) {
+					Binder<GlassOracleGraphics>.Bind(@this, ow);
+				}
+			};
+			On.OracleGraphics.Gown.Color += GetGownColor;
+			On.OracleGraphics.Halo.DrawSprites += OnDrawHaloSprites;
+			On.OracleGraphics.Halo.InitiateSprites += OnBuildHaloSprites;
+			On.OracleGraphics.Halo.Update += OnHaloUpdating;
+		}
 
-		/// <summary>
-		/// Shadows the oracle property so its my type instead of the vanilla type.
-		/// </summary>
-		public new GlassOracle oracle => ((OracleGraphics)this).oracle as GlassOracle;
+		GlassOracleGraphics(OracleGraphics original, PhysicalObject ow) : base(original) {
+			Log.LogDebug("Extensible.OracleGraphics for Dreams of Infinite Glass constructed.");
+			
+			totalSprites = 0;
+
+			gown = new OracleGraphics.Gown(this);
+			head = NewRadialBodyPart(5f, 0.995f);
+			hands = new GenericBodyPart[2];
+			feet = new GenericBodyPart[2];
+
+			knees = new Vector2[2, 2];
+			for (int x = 0; x < 2; x++) {
+				for (int y = 0; y < 2; y++) {
+					knees[x, y] = oracle.firstChunk.pos;
+				}
+			}
+			for (int index = 0; index < 2; index++) {
+				hands[index] = NewRadialBodyPart(2f, 0.98f);
+				feet[index] = NewRadialBodyPart(2f, 0.98f);
+			}
+
+			Oracle.OracleArm.Joint[] armJoints = oracle.arm.joints;
+			armJointGraphics = new OracleGraphics.ArmJointGraphics[armJoints.Length];
+
+			for (int i = 0; i < armJoints.Length; i++) {
+				AllocateSpritesFromObject(ref totalSprites, ref armJointGraphics[i], new OracleGraphics.ArmJointGraphics(this, armJoints[i], totalSprites), joint => joint.totalSprites);
+			}
+
+			AllocateSpritesFromObject(ref firstUmbilicalSprite, ref umbCord, new OracleGraphics.UbilicalCord(this, totalSprites), cord => cord.totalSprites);
+			AllocateSprites(ref firstBodyChunkSprite, 2);
+			AllocateSprites(ref neckSprite);
+			AllocateSprites(ref firstFootSprite, 4);
+			AllocateSpritesFromObject(ref totalSprites, ref halo, new OracleGraphics.Halo(this, totalSprites), halo => halo.totalSprites);
+			AllocateSprites(ref robeSprite);
+			AllocateSprites(ref firstHandSprite, 4);
+			AllocateSprites(ref firstHeadSprite, 11); // Vanilla used 10, offset due to HoopSprite
+			AllocateSprites(ref fadeSprite);
+			AllocateSpritesFromObject(ref firstArmBaseSprite, ref armBase, new OracleGraphics.ArmBase(this, totalSprites), arm => arm.totalSprites);
+
+			Log.LogTrace(totalSprites);
+			Log.LogTrace(firstUmbilicalSprite);
+			Log.LogTrace(firstBodyChunkSprite);
+			Log.LogTrace(neckSprite);
+			Log.LogTrace(firstFootSprite);
+			Log.LogTrace(robeSprite);
+			Log.LogTrace(firstHandSprite);
+			Log.LogTrace(firstHeadSprite);
+			Log.LogTrace(fadeSprite);
+			Log.LogTrace(firstArmBaseSprite);
+		}
 
 		#region Constant Data
 
@@ -90,34 +147,27 @@ namespace XansCharacter.Character.NPC.Iterator.Graphics {
 
 		#region Helper Methods for Sprite Indexing and Creation
 
-		[ShadowedOverride]
-		public new int FootSprite(int side, int part) {
+		public override int FootSprite(int side, int part) {
 			return firstFootSprite + side * 2 + part;
 		}
 
-		[ShadowedOverride]
-		public new int HandSprite(int side, int part) {
+		public override int HandSprite(int side, int part) {
 			return firstHandSprite + side * 2 + part;
 		}
-
-		[ShadowedOverride]
-		public new int PhoneSprite(int side, int part) {
+		public override int PhoneSprite(int side, int part) {
 			if (side == 0) {
 				return firstHeadSprite + part;
 			}
 			return firstHeadSprite + 8 + part;
 		}
 
-		[ShadowedOverride]
-		public new int EyeSprite(int eyeIndex) {
+		public override int EyeSprite(int eyeIndex) {
 			return firstHeadSprite + 6 + eyeIndex;
 		}
 
-		[ShadowedOverride]
-		public new int HeadSprite => firstHeadSprite + 4; // Vanilla did 3, offset due to HoopSprite
+		public override int HeadSprite => firstHeadSprite + 4; // Vanilla did 3, offset due to HoopSprite
 
-		[ShadowedOverride]
-		public new int ChinSprite => firstHeadSprite + 5; // Vanilla did 4, offset due to HoopSprite
+		public override int ChinSprite => firstHeadSprite + 5; // Vanilla did 4, offset due to HoopSprite
 
 		public int HoopSprite => firstHeadSprite + 3; // This takes 3 so that it draws at the earliest stage, behind everything else.
 
@@ -125,13 +175,9 @@ namespace XansCharacter.Character.NPC.Iterator.Graphics {
 
 		public int ForeheadSymbolSprite => ForeheadBackgroundSprite + 1;
 
-		[Obsolete("For mnemonic purposes, consider using ForeheadBackgroundSprite.")]
-		[ShadowedOverride]
-		public new int MoonThirdEyeSprite => ForeheadBackgroundSprite;
+		public override int MoonThirdEyeSprite => ForeheadBackgroundSprite;
 
-		[Obsolete("For mnemonic purposes, consider using ForeheadSymbolSprite.")]
-		[ShadowedOverride]
-		public new int MoonSigilSprite => ForeheadSymbolSprite;
+		public override int MoonSigilSprite => ForeheadSymbolSprite;
 
 		private GenericBodyPart NewRadialBodyPart(float radius, float friction) => new GenericBodyPart(this, radius, 0.5f, friction, oracle.firstChunk);
 
@@ -163,51 +209,12 @@ namespace XansCharacter.Character.NPC.Iterator.Graphics {
 
 		#endregion
 
-		// more than just "ow" tbh chief
-		public GlassOracleGraphics(PhysicalObject ow) : base(ow) {
-			// base.ctor //
-			voiceFreqSamples = new float[64];
-			totalSprites = 0;
-			///////////////
-
-			gown = new Gown(this);
-			head = NewRadialBodyPart(5f, 0.995f);
-			hands = new GenericBodyPart[2];
-			feet = new GenericBodyPart[2];
-
-			knees = new Vector2[2, 2];
-			for (int x = 0; x < 2; x++) {
-				for (int y = 0; y < 2; y++) {
-					knees[x, y] = oracle.firstChunk.pos;
-				}
-			}
-			for (int index = 0; index < 2; index++) {
-				hands[index] = NewRadialBodyPart(2f, 0.98f);
-				feet[index] = NewRadialBodyPart(2f, 0.98f);
-			}
-
-			Oracle.OracleArm.Joint[] armJoints = oracle.arm.joints;
-			armJointGraphics = new ArmJointGraphics[armJoints.Length];
-			for (int i = 0; i < armJoints.Length; i++) {
-				AllocateSpritesFromObject(ref totalSprites, ref armJointGraphics[i], new ArmJointGraphics(this, armJoints[i], totalSprites), joint => joint.totalSprites);
-			}
-
-			AllocateSpritesFromObject(ref firstUmbilicalSprite, ref umbCord, new UbilicalCord(this, totalSprites), cord => cord.totalSprites);
-			AllocateSprites(ref firstBodyChunkSprite, 2);
-			AllocateSprites(ref neckSprite);
-			AllocateSprites(ref firstFootSprite, 4);
-			AllocateSpritesFromObject(ref totalSprites, ref halo, new Halo(this, totalSprites), halo => halo.totalSprites);
-			AllocateSprites(ref robeSprite);
-			AllocateSprites(ref firstHandSprite, 4);
-			AllocateSprites(ref firstHeadSprite, 11); // Vanilla used 10, offset due to HoopSprite
-			AllocateSprites(ref fadeSprite);
-			AllocateSpritesFromObject(ref firstArmBaseSprite, ref armBase, new ArmBase(this, totalSprites), arm => arm.totalSprites);
-		}
 
 		public override void InitiateSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam) {
+			Log.LogDebug("Initiating sprites...");
 			// IMPORTANT SPECIAL BEHAVIOR:
 			// To work around an issue with the lights, the sprites of Glass need to be put on a higher layer!
-			// (The issue, for future Xan, is that your transparent halo hologram VFX casted shadows)
+			// (The issue in question, future Xan, is that your transparent halo hologram VFX casted shadows)
 
 			// The lights also need to be constructed here, and *MUST NOT* be declared in the room as objects
 			// The rationale for this has to do with the fact that changing the layer could adversely affect other lights.
@@ -216,11 +223,12 @@ namespace XansCharacter.Character.NPC.Iterator.Graphics {
 			_roomLights[1] = _roomLights[1] ?? new LightSource(new Vector2(205, 105), false, GLASS_AI_CHAMBER_CLR_IDLE_B, oracle);
 			_roomLights[2] = _roomLights[2] ?? new LightSource(new Vector2(735, 635), false, GLASS_AI_CHAMBER_CLR_IDLE_A, oracle);
 			_roomLights[3] = _roomLights[3] ?? new LightSource(new Vector2(735, 105), false, GLASS_AI_CHAMBER_CLR_IDLE_B, oracle);
-			
+
 			for (int i = 0; i < _roomLights.Length; i++) {
 				LightSource src = _roomLights[i];
 				src.HardSetRad(625);
 				src.HardSetAlpha(1.0f);
+				
 				rCam.room.AddObject(src);
 			}
 
@@ -262,6 +270,7 @@ namespace XansCharacter.Character.NPC.Iterator.Graphics {
 			}
 
 			// TODO: Do I want a forehead symbol thingy?
+			// ITERATOR CUTIE MARK ITERATOR CUTIE MARK ITERATOR CUTIE MARK
 			// sLeaser.sprites[ForeheadBackgroundSprite] = new FSprite("Circle20", true);
 			// sLeaser.sprites[ForeheadSymbolSprite] = new FSprite("mouseEyeA5", true); // Change this sprite, the eye is for SOS
 			umbCord.InitiateSprites(sLeaser, rCam);
@@ -292,6 +301,10 @@ namespace XansCharacter.Character.NPC.Iterator.Graphics {
 			if (oracle == null || oracle.room == null) {
 				return;
 			}
+			
+			// TODO: If I plan to adapt this to public use I really, *really* want a matrix class so that
+			// matrix transformations can be done rather than just doing trig. It'd be so, so much easier.
+			
 			Vector2 bodyPos = Vector2.Lerp(owner.firstChunk.lastPos, owner.firstChunk.pos, timeStacker);
 			Vector2 bodyUp = Custom.DirVec(Vector2.Lerp(owner.bodyChunks[1].lastPos, owner.bodyChunks[1].pos, timeStacker), bodyPos);
 			Vector2 bodyForward = Custom.PerpendicularVector(bodyUp);
@@ -315,7 +328,7 @@ namespace XansCharacter.Character.NPC.Iterator.Graphics {
 			gown.DrawSprite(robeSprite, sLeaser, rCam, timeStacker, camPos);
 			halo.DrawSprites(sLeaser, rCam, timeStacker, camPos);
 			armBase.DrawSprites(sLeaser, rCam, timeStacker, camPos);
-			
+
 			Vector2 headToBody = Custom.DirVec(headPos, bodyPos);
 			Vector2 neckForward = Custom.PerpendicularVector(headToBody);
 			sLeaser.sprites[HeadSprite].x = headPos.x - camPos.x;
@@ -363,18 +376,7 @@ namespace XansCharacter.Character.NPC.Iterator.Graphics {
 				sLeaser.sprites[EyeSprite(side)].y = eyePositionBase.y - camPos.y;
 				sLeaser.sprites[EyeSprite(side)].alpha = 0.5f + 0.5f * blink;
 				Vector2 headphonePosBase = headPos + neckForward * Mathf.Clamp(Mathf.Lerp(7f, 5f, Mathf.Abs(relativeLookDirection.x)) * signFromSide, -11f, 11f);
-				/*
-				for (int headphonePart = 0; headphonePart < 2; headphonePart++) {
-					bool isBottomPart = headphonePart == 0;
-					float scaleFactor = (isBottomPart ? 1f : 0.8f) / 20f;
-					sLeaser.sprites[PhoneSprite(sideFacingScreen, headphonePart)].rotation = Custom.VecToDeg(headToBody);
-					sLeaser.sprites[PhoneSprite(sideFacingScreen, headphonePart)].scaleY = 5.5f * scaleFactor;
-					sLeaser.sprites[PhoneSprite(sideFacingScreen, headphonePart)].scaleX = Mathf.Lerp(3.5f, 5f, Mathf.Abs(relativeLookDirection.x)) * scaleFactor;
-					sLeaser.sprites[PhoneSprite(sideFacingScreen, headphonePart)].x = headphonePosBase.x - camPos.x;
-					sLeaser.sprites[PhoneSprite(sideFacingScreen, headphonePart)].y = headphonePosBase.y - camPos.y;
-				}
-				*/
-
+				
 				// Extracted from loop (there is only one circle instead of two)
 				float headphoneX = headphonePosBase.x - camPos.x;
 				float headphoneY = headphonePosBase.y - camPos.y;
@@ -384,24 +386,15 @@ namespace XansCharacter.Character.NPC.Iterator.Graphics {
 				sLeaser.sprites[PhoneSprite(sideFacingScreen, 0)].scaleX = Mathf.Lerp(3.5f, 5f, Mathf.Abs(relativeLookDirection.x)) * scaleFactor;
 				sLeaser.sprites[PhoneSprite(sideFacingScreen, 0)].x = headphoneX;
 				sLeaser.sprites[PhoneSprite(sideFacingScreen, 0)].y = headphoneY;
-				/*
-				sLeaser.sprites[PhoneSprite(sideFacingScreen, 2)].x = headphonePosBase.x - camPos.x;
-				sLeaser.sprites[PhoneSprite(sideFacingScreen, 2)].y = headphonePosBase.y - camPos.y;
-				sLeaser.sprites[PhoneSprite(sideFacingScreen, 2)].rotation = Custom.AimFromOneVectorToAnother(bodyPos, headphonePosBase - headToBody * 40f - lookForward * 10f);
-				*/
-				// Modified to support the double wings
 
 				sLeaser.sprites[PhoneSprite(sideFacingScreen, 1)].x = headphoneX;
 				sLeaser.sprites[PhoneSprite(sideFacingScreen, 1)].y = headphoneY;
 				sLeaser.sprites[PhoneSprite(sideFacingScreen, 1)].scaleX = relativeLookDirection.x;
 				sLeaser.sprites[PhoneSprite(sideFacingScreen, 1)].rotation = baseRot + 15f;
-				//sLeaser.sprites[PhoneSprite(sideFacingScreen, 1)].rotation = Custom.AimFromOneVectorToAnother(headPos, headPos + relativeLookDirection) + 102.0f;
 				sLeaser.sprites[PhoneSprite(sideFacingScreen, 2)].x = headphoneX;
 				sLeaser.sprites[PhoneSprite(sideFacingScreen, 2)].y = headphoneY;
 				sLeaser.sprites[PhoneSprite(sideFacingScreen, 2)].scaleX = relativeLookDirection.x;
 				sLeaser.sprites[PhoneSprite(sideFacingScreen, 2)].rotation = baseRot - 35f;
-				//sLeaser.sprites[PhoneSprite(sideFacingScreen, 2)].rotation = Custom.AimFromOneVectorToAnother(headPos, headPos + relativeLookDirection) + 90f;
-
 
 				Vector2 handPos = Vector2.Lerp(hands[side].lastPos, hands[side].pos, timeStacker);
 				Vector2 shoulderPos = bodyPos + bodyForward * -4f * signFromSide;
@@ -466,10 +459,10 @@ namespace XansCharacter.Character.NPC.Iterator.Graphics {
 				}
 			}
 			*/
-			
-			umbCord.DrawSprites(sLeaser, rCam, timeStacker, camPos);
-			//base.DrawSprites(sLeaser, rCam, timeStacker, camPos); // DO NOT CALL
 
+			umbCord.DrawSprites(sLeaser, rCam, timeStacker, camPos);
+
+			// Don't call base behavior here. It does not apply.
 			// Do the operation manually from GraphicsModule
 			DebugLabel[] dbgLabels = DEBUGLABELS;
 			if (dbgLabels != null && dbgLabels.Length != 0) {
@@ -505,7 +498,7 @@ namespace XansCharacter.Character.NPC.Iterator.Graphics {
 			for (int i = 0; i < armJointGraphics.Length; i++) {
 				armJointGraphics[i].ApplyPalette(sLeaser, rCam, palette);
 			}
-			
+
 			Color bodyColor = GLASS_BODY_COLOR;
 			for (int bodyChunk = 0; bodyChunk < owner.bodyChunks.Length; bodyChunk++) {
 				sLeaser.sprites[firstBodyChunkSprite + bodyChunk].color = bodyColor;
@@ -525,7 +518,7 @@ namespace XansCharacter.Character.NPC.Iterator.Graphics {
 					sLeaser.sprites[PhoneSprite(side, 2)].color = armJointGraphics[0].HighLightColor(default);
 				}
 				sLeaser.sprites[HandSprite(side, 0)].color = bodyColor;
-				
+
 				if (gown != null) {
 					for (int vertex = 0; vertex < 7; vertex++) {
 						(sLeaser.sprites[HandSprite(side, 1)] as TriangleMesh).verticeColors[vertex * 4 + 0] = gown.Color(0.4f);
@@ -653,5 +646,114 @@ namespace XansCharacter.Character.NPC.Iterator.Graphics {
 				}
 			}
 		}
+
+		#region Halo
+
+		private static void OnHaloUpdating(On.OracleGraphics.Halo.orig_Update originalMethod, OracleGraphics.Halo @this) {
+			GlassOracleBehavior behavior = @this.owner.oracle.oracleBehavior as GlassOracleBehavior;
+			if (behavior != null) {
+				if (behavior.CurrentConnectionActivity >= 0) {
+					@this.connectionsFireChance = behavior.CurrentConnectionActivity;
+				}
+			}
+			originalMethod(@this);
+		}
+
+		private static void OnBuildHaloSprites(On.OracleGraphics.Halo.orig_InitiateSprites originalMethod, OracleGraphics.Halo @this, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam) {
+			originalMethod(@this, sLeaser, rCam);
+
+			if (@this.owner.oracle.ID == Oracles.GlassID) {
+				rCam.room.lightAngle = Vector2.zero;
+				int index;
+				const int NUM_VECTOR_CIRCLES = 2;
+
+				for (int i = 0; i < NUM_VECTOR_CIRCLES; i++) {
+					// VECTOR CIRCLES
+					index = @this.firstSprite + i;
+					FSprite sprite = sLeaser.sprites[index];
+					sprite.color = GLASS_SPARK_COLOR_IDLE;
+					sprite.shader = XansAssets.Shaders.AdditiveVertexColoredVectorCircle;
+				}
+				for (int i = 0; i < @this.connections.Length; i++) {
+					// MYCELIA
+					index = @this.firstSprite + i + NUM_VECTOR_CIRCLES;
+					FSprite sprite = sLeaser.sprites[index];
+					sprite.color = GLASS_SPARK_COLOR_IDLE;
+					sprite.shader = XansAssets.Shaders.AdditiveVertexColored;
+				}
+
+				index = @this.firstBitSprite;
+				for (int bitGroupIndex = 0; bitGroupIndex < @this.bits.Length; bitGroupIndex++) {
+					// FILLED CHUNKS AROUND HALO
+					OracleGraphics.Halo.MemoryBit[] bits = @this.bits[bitGroupIndex];
+					for (int bitIndex = 0; bitIndex < bits.Length; bitIndex++) {
+						FSprite sprite = sLeaser.sprites[index++];
+						sprite.color = GLASS_SPARK_COLOR_IDLE;
+						sprite.shader = XansAssets.Shaders.AdditiveVertexColored;
+					}
+				}
+			}
+		}
+		private static void OnDrawHaloSprites(On.OracleGraphics.Halo.orig_DrawSprites originalMethod, OracleGraphics.Halo @this, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos) {
+			originalMethod(@this, sLeaser, rCam, timeStacker, camPos);
+			if (@this.owner.oracle.ID == Oracles.GlassID) {
+				int spriteIndex;
+
+				for (int connectionIndex = 0; connectionIndex < @this.connections.Length; connectionIndex++) {
+					// MYCELIA
+					spriteIndex = @this.firstSprite + connectionIndex + 2;
+					FSprite sprite = sLeaser.sprites[spriteIndex];
+					OracleGraphics.Halo.Connection connection = @this.connections[connectionIndex];
+					if (connection.lightUp > 0.05f) {
+						ClampVerticesIntoChamber(sprite, @this.owner.oracle.arm, camPos);
+					}
+				}
+
+				for (int connectionIndex = 0; connectionIndex < @this.connections.Length; connectionIndex++) {
+					// MYCELIA
+					spriteIndex = @this.firstSprite + connectionIndex + 2;
+					FSprite sprite = sLeaser.sprites[spriteIndex];
+					OracleGraphics.Halo.Connection connection = @this.connections[connectionIndex];
+					sprite.alpha = connection.lightUp <= 0.05f ? 0f : 1f; // This is okay, alpha controls its brightness.
+				}
+
+			}
+		}
+
+		#endregion
+
+		#region Utils
+
+		private static void ClampVerticesIntoChamber(Vector2[] vertices, Vector2 min, Vector2 max, Vector2 camPos) {
+			float minX = (min.x - camPos.x) - 20;
+			float maxX = (max.x - camPos.x) + 20;
+			float minY = (min.y - camPos.y) - 20;
+			float maxY = (max.y - camPos.y) + 20;
+
+			for (int i = 0; i < vertices.Length; i++) {
+				vertices[i] = new Vector2(Mathf.Clamp(vertices[i].x, minX, maxX), Mathf.Clamp(vertices[i].y, minY, maxY));
+			}
+		}
+
+		private static void ClampVerticesIntoChamber(FSprite sprite, Oracle.OracleArm arm, Vector2 camPos) {
+			if (sprite is TriangleMesh triangleMesh) {
+				Vector2 min = arm.cornerPositions[3];
+				Vector2 max = arm.cornerPositions[1];
+				ClampVerticesIntoChamber(triangleMesh.vertices, min, max, camPos);
+			}
+		}
+
+		#endregion
+
+		#region Gown
+
+		private static Color GetGownColor(On.OracleGraphics.Gown.orig_Color originalMethod, OracleGraphics.Gown @this, float f) {
+			if (@this.owner.oracle.ID == Oracles.GlassID) {
+				return Color.Lerp(GLASS_ROBE_COLOR_BASE, GLASS_ROBE_COLOR_HIGHLIGHT, f);
+			}
+			return originalMethod(@this, f);
+		}
+
+		#endregion
 	}
 }

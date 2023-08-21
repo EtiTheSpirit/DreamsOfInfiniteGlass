@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using XansCharacter.Character.PlayerCharacter;
 using XansCharacter.Data.Registry;
 using XansTools.Utilities;
 using XansTools.Utilities.RW;
@@ -13,7 +14,7 @@ using XansTools.Utilities.RW.SoundObjects;
 using static XansCharacter.WorldObjects.CustomObjectData;
 using Random = UnityEngine.Random;
 
-namespace XansCharacter.WorldObjects {
+namespace XansCharacter.WorldObjects.Decorative {
 
 	/// <summary>
 	/// A variation of a superstructure zap coil that does not flicker nor sputter.
@@ -246,7 +247,11 @@ namespace XansCharacter.WorldObjects {
 									TriggerSpecialZap(chunk.pos + contact * chunk.rad, chunk.rad);
 									chunk.vel -= (contact * 6f + Custom.RNV() * Random.value) / chunk.mass;
 									if (physicsObject is Creature creature) {
-										creature.Die();
+										if (creature is Player player && Extensible.Player.Binder<MechPlayer>.TryGetBinding(player, out WeakReference<MechPlayer> mechRef) && mechRef.TryGetTarget(out MechPlayer mech)) {
+											mech.Die(true);
+										} else {
+											creature.Die();
+										}
 									}
 									if (ModManager.MSC && physicsObject is ElectricSpear spear) {
 										spear.Recharge();

@@ -1,37 +1,64 @@
-﻿using HarmonyLib;
-using HUD;
-using RegionKit.Modules.Effects;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using XansCharacter.Character.NPC.Iterator.Graphics;
-using XansCharacter.Character.NPC.Iterator.Interaction;
+using UnityEngine.UIElements;
 using XansCharacter.Data.Registry;
-using XansTools.Utilities;
 using XansTools.Utilities.Attributes;
+using RWBodyChunkConnection = PhysicalObject.BodyChunkConnection;
+using RWOracleArm = Oracle.OracleArm;
 using Random = UnityEngine.Random;
+using XansTools.Utilities;
+using XansCharacter.Character.NPC.Iterator.Graphics;
+using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace XansCharacter.Character.NPC.Iterator {
+	public sealed class GlassOracle : Extensible.Oracle {
 
-	/// <summary>
-	/// The oracle representing Dreams of Infinite Glass.
-	/// Ordinarily (especially after the advisories of other modders) this would not extend <see cref="Oracle"/>, but given the fact that all overrides call
-	/// <see langword="base"/> (except for <see cref="Consious"/>, which behaves a bit like a hook without calling orig()), 
-	/// and given the fact that this is only ever spawned in my own region, I do not foresee any issues.
-	/// </summary>
-	[Obsolete("Custom extended classes are destructive!", true)]
-	public class GlassOracle : Oracle {
+		public override bool Consious => health > 0;
 
-		/// <summary>
-		/// Whether or not the iterator is conscious.
-		/// </summary>
-		[ShadowedOverride]
-		public new bool Consious => health > 0;
+		internal static void Initialize() {
+			On.Oracle.ctor += (originalMethod, @this, abstractPhysicalObject, room) => {
+				originalMethod(@this, abstractPhysicalObject, room);
+				if (room.oracleWantToSpawn == Oracles.GlassID) {
+					Binder<GlassOracle>.Bind(@this, abstractPhysicalObject, room);
+				}
+			};
+			On.Oracle.Destroy += (originalMethod, @this) => {
+				if (@this.ID == Oracles.GlassID) {
+					Binder<GlassOracle>.TryReleaseBinding(@this);
+				}
+				originalMethod(@this);
+			};
+			On.Room.ReadyForAI += (originalMethod, @this) => {
+				originalMethod(@this);
+				if (@this.abstractRoom.name == $"{DreamsOfInfiniteGlassPlugin.REGION_PREFIX}_AI") {
+					if (@this.world != null && @this.game != null) {
+						Log.LogTrace($"I want to spawn glass, the room is {DreamsOfInfiniteGlassPlugin.REGION_PREFIX}_AI.");
+						@this.oracleWantToSpawn = Oracles.GlassID;
+						try {
+							if (@this.abstractRoom == null) {
+								Log.LogWarning("But I cannot, because the abstract room is null.");
+								return;
+							}
+							Oracle obj = new Oracle(
+								new AbstractPhysicalObject(@this.world, AbstractPhysicalObject.AbstractObjectType.Oracle, null, new WorldCoordinate(@this.abstractRoom.index, 15, 15, -1), @this.game.GetNewID()),
+								@this
+							);
+							Log.LogTrace("Construction complete.");
+							@this.AddObject(obj);
+							@this.waitToEnterAfterFullyLoaded = Math.Max(@this.waitToEnterAfterFullyLoaded, 80);
+						} catch (Exception exc) {
+							Log.LogError($"Failed to spawn Glass: {exc}");
+						}
+					}
+				}
+			};
+		}
+
 
 		/// <summary>
 		/// This save string is used when determining <see cref="HasTalkedBefore"/>
@@ -78,30 +105,45 @@ namespace XansCharacter.Character.NPC.Iterator {
 				}
 			}
 		}
-
-		public GlassOracle(AbstractPhysicalObject abstractPhysicalObject, Room room, Vector2 position) : base(abstractPhysicalObject, room) {
+		GlassOracle(Oracle original, AbstractPhysicalObject abstractPhysicalObject, Room inRoom) : base(original) {
+			Log.LogDebug("Extensible.Oracle for Dreams of Infinite Glass constructed.");
 			// Undo all of the garbage that the base ctor just did.
+
 			ID = Oracles.GlassID;
+			Log.LogTrace("Set ID.");
 			health = 16161616; // 16 // 16 // 16 // 16 //
+			Log.LogTrace("Set health.");
 			ResetIterator();
-			CreateChunksAt(position);
-			bodyChunkConnections = new BodyChunkConnection[] {
-				new BodyChunkConnection(bodyChunks[0], bodyChunks[1], 9f, BodyChunkConnection.Type.Normal, 1f, 0.5f)
+			Log.LogTrace("Reset iterator.");
+			CreateChunksAt(new Vector2(350f, 350f));
+			Log.LogTrace("Created body chunks.");
+			bodyChunkConnections = new RWBodyChunkConnection[] {
+				new RWBodyChunkConnection(bodyChunks[0], bodyChunks[1], 9f, RWBodyChunkConnection.Type.Normal, 1f, 0.5f)
 			};
+			Log.LogTrace("Created body chunk connections.");
 			oracleBehavior = new GlassOracleBehavior(this);
+			Log.LogTrace("Created behavior.");
 		}
+
 
 		#region Utility Methods
 		/// <summary>
 		/// Resets all data stored in this object. Destroys all objects. A clean slate.
 		/// </summary>
 		private void ResetIterator() {
-			mySwarmers.RemoveThenDestroyAll();
-			marbles.RemoveThenDestroyAll();
-			myScreen.RemoveThenDestroy();
-			MoonLight.RemoveThenDestroy();
+			mySwarmers?.DestroyAllAndClear();
+			Log.LogTrace("Destroyed stray neurons.");
+			marbles?.DestroyAllAndClear();
+			Log.LogTrace("Destroyed stray pearls.");
+			myScreen?.Destroy();
+			myScreen = null;
+			Log.LogTrace("Destroyed unused projection screen.");
+			MoonLight?.Destroy();
+			MoonLight = null;
+			Log.LogTrace("Destroyed extra light source.");
 
 			bodyChunks = new BodyChunk[2];
+			Log.LogTrace("Created new body chunks.");
 			airFriction = 0.99f;
 			gravity = 0f;
 			bounce = 0.1f;
@@ -109,18 +151,16 @@ namespace XansCharacter.Character.NPC.Iterator {
 			collisionLayer = 1;
 			waterFriction = 0.92f;
 			buoyancy = 0f;
-			arm = new OracleArm(this);
+			Log.LogTrace("Physical properties set.");
+			arm = new RWOracleArm(this);
+			Log.LogTrace("Constructed a new arm.");
 			arm.isActive = true;
+			Log.LogTrace("Activated this arm.");
 			arm.cornerPositions[0] = room.MiddleOfTile(9, 32);
 			arm.cornerPositions[1] = room.MiddleOfTile(37, 32);
 			arm.cornerPositions[2] = room.MiddleOfTile(37, 4);
 			arm.cornerPositions[3] = room.MiddleOfTile(9, 4);
-		}
-
-		public override void InitiateGraphicsModule() {
-			if (graphicsModule == null) {
-				graphicsModule = new GlassOracleGraphics(this);
-			}
+			Log.LogTrace("Set arm corner positions.");
 		}
 
 		/// <summary>
@@ -135,6 +175,7 @@ namespace XansCharacter.Character.NPC.Iterator {
 
 		public override void Update(bool eu) {
 			base.Update(eu);
+
 			if (eu && _isDeadWithFunnyRagdoll) {
 				_funnyTicks++;
 				if (_funnyTicks >= 4) {
@@ -145,7 +186,7 @@ namespace XansCharacter.Character.NPC.Iterator {
 			}
 		}
 
-		public void FuckingDie(bool funnyRagdoll) {
+		public void FuckingDie(bool withFunnyRagdoll) {
 			if (health == 0) return;
 			Vector2 pos = bodyChunks[0].pos;
 			room.AddObject(new ShockWave(pos, 500f, 0.75f, 18, false));
@@ -154,7 +195,7 @@ namespace XansCharacter.Character.NPC.Iterator {
 			room.PlaySound(SoundID.SS_AI_Give_The_Mark_Boom, pos, 1f, 0.5f + Random.value * 0.5f);
 			health = 0;
 			gravity = 0.9f;
-			_isDeadWithFunnyRagdoll = funnyRagdoll;
+			_isDeadWithFunnyRagdoll = withFunnyRagdoll;
 		}
 
 	}

@@ -1,6 +1,7 @@
 ﻿using HUD;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,41 +12,20 @@ namespace XansCharacter.Character.NPC.Iterator.Interaction {
 
 		private static readonly Conversation.ID DYNAMIC_CONVERSATION = new Conversation.ID("DynamicallyAssembledConversation", true);
 
-		public class GlassExpositionConversation : GlassConversation {
-
-			public GlassExpositionConversation(GlassOracleBehavior glass) : base(glass, DYNAMIC_CONVERSATION, glass.dialogBox, glass.player) { }
-
-			public override void AddCustomEvents() {
-				LoadGlassConversation("exposition", null);
-			}
-
+		public static GlassConversation ImBack(GlassOracleBehavior gls) {
+			return new GlassAnyConversation(gls, Path.Combine("debug", "imback"));
 		}
 
-		public class GlassClosingThoughtsConversation : GlassConversation {
+		private class GlassAnyConversation : GlassConversation {
 
-			public GlassClosingThoughtsConversation(GlassOracleBehavior glass) : base(glass, DYNAMIC_CONVERSATION, glass.dialogBox, glass.player) { }
+			private string _identity;
 
-			public override void AddCustomEvents() {
-				LoadGlassConversation("closingthoughts", null);
+			public GlassAnyConversation(GlassOracleBehavior glass, string filePathID) : base(glass, DYNAMIC_CONVERSATION, glass.dialogBox, glass.player) {
+				_identity = filePathID;
 			}
 
-		}
-
-		public class VeryFunnyConversation : GlassConversation {
-
-			public VeryFunnyConversation(GlassOracleBehavior glass) : base(glass, DYNAMIC_CONVERSATION, glass.dialogBox, glass.player) { }
-
 			public override void AddCustomEvents() {
-				LoadGlassConversation("cursedending", null);
-			}
-
-		}
-
-		public class TestConversation : GlassConversation {
-			public TestConversation(GlassOracleBehavior glass) : base(glass, DYNAMIC_CONVERSATION, glass.dialogBox, glass.player) { }
-
-			public override void AddCustomEvents() {
-				LoadGlassConversation("testconversation", null);
+				LoadGlassConversation(_identity, null);
 			}
 		}
 

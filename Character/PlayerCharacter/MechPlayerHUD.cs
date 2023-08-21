@@ -12,35 +12,41 @@ using XansTools.Utilities;
 namespace XansCharacter.Character.PlayerCharacter {
 	public class MechPlayerHUD : HudPart {
 
-		public MechPlayerData Player { get; }
+		public MechPlayer Player { get; }
 
 		private FContainer HUD2 => hud.fContainers[1];
 
 		private FSprite _batteryMeter;
+
+		private MaterialPropertyBlock _props = new MaterialPropertyBlock();
 
 		private float _batteryChargePhase;
 		private float _batteryChargeIntensity;
 		private float _batterySapPhase;
 		private float _batterySapIntensity;
 
-		public MechPlayerHUD(MechPlayerData player, HUD.HUD parent) : base(parent) {
+		public MechPlayerHUD(MechPlayer player, HUD.HUD parent) : base(parent) {
 			Player = player;
 			_batteryMeter = XansAssets.Sprites.BatteryHudMask.CreateNew();
 			_batteryMeter.shader = XansAssets.Shaders.SpecialBatteryMeterShader;
 			HUD2.AddChild(_batteryMeter);
 		}
+
 		public override void ClearSprites() {
 			HUD2.RemoveChild(_batteryMeter);
 			_batteryMeter = null;
 		}
 
 		public override void Update() {
-			Material batteryMtl = _batteryMeter._renderLayer._material;
-			batteryMtl.SetFloat("_Value", Player.GetClampedBatteryCharge() * 0.01f);
-			if (Player.BatteryState < 0) {
+			Renderer renderer = _batteryMeter._renderLayer._meshRenderer;
+			renderer.GetPropertyBlock(_props);
+			_props.SetFloat("_Value", Player.Battery.ClampedCharge * 0.01f);
+			renderer.SetPropertyBlock(_props);
+
+			if (Player.Battery.IsDraining) {
 				_batteryChargeIntensity = Mathf.Clamp01(_batteryChargeIntensity - Mathematical.RW_DELTA_TIME);
 				_batterySapIntensity = Mathf.Clamp01(_batterySapIntensity + Mathematical.RW_DELTA_TIME);
-			} else if (Player.BatteryState > 0) {
+			} else if (Player.Battery.IsCharging) {
 				_batteryChargeIntensity = Mathf.Clamp01(_batteryChargeIntensity + Mathematical.RW_DELTA_TIME);
 				_batterySapIntensity = Mathf.Clamp01(_batterySapIntensity - Mathematical.RW_DELTA_TIME);
 			} else {
@@ -59,15 +65,18 @@ namespace XansCharacter.Character.PlayerCharacter {
 		public override void Draw(float timeStacker) {
 			_batteryMeter.x = Futile.screen.pixelWidth - 130;
 			_batteryMeter.y = Futile.screen.pixelHeight - 66;
-			Material batteryMtl = _batteryMeter._renderLayer._material;
 			Color clr = Color.Lerp(
 				Color.red,
 				Color.green,
-				Player.GetClampedBatteryCharge() * 0.01f
+				Player.Battery.ClampedCharge * 0.01f
 			);
 			clr = Color.Lerp(clr, Color.magenta, Trig01(Mathf.Sin, _batterySapPhase, _batterySapIntensity));
 			clr = Color.Lerp(clr, Color.cyan, Trig01(Mathf.Cos, _batteryChargePhase, _batteryChargeIntensity));
-			batteryMtl.SetColor("_Color", clr);
+
+			Renderer renderer = _batteryMeter._renderLayer._meshRenderer;
+			renderer.GetPropertyBlock(_props);
+			_props.SetColor("_Color", clr);
+			renderer.SetPropertyBlock(_props);
 		}
 	}
 }

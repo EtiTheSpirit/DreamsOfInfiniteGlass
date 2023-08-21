@@ -28,6 +28,7 @@ using XansTools.Utilities.ModInit;
 using XansCharacter.Data;
 using XansTools.Utilities.RW.FutileTools;
 using XansCharacter.Data.World;
+using XansCharacter.WorldObjects.Injections;
 
 namespace XansCharacter {
 
@@ -48,7 +49,6 @@ namespace XansCharacter {
 		internal static ErrorReporter Reporter { get; private set; }
 
 		private RemixConfigScreen _cfgScr;
-		private AutoPatcher _patcher;
 
 		/// <summary>
 		/// Disable optimization and inlining because this needs to call everything it explicitly goes out of its way to call (mostly static initializers that are empty)
@@ -76,22 +76,16 @@ namespace XansCharacter {
 				MechSaveData.CallToStaticallyReference();
 
 				Log.LogMessage("Performing patches...");
-				Log.LogTrace("Shadowed hooks...");
-				Harmony harmony = new Harmony(PLUGIN_ID);
-				_patcher = new AutoPatcher();
-				_patcher.Initialize(harmony);
-				GlassOracleGraphicsHooks.Initialize(_patcher);
+				Log.LogTrace("Generating extensibles...");
+				GenerateExtensibles();
 
 				Log.LogTrace("Standard On/IL hooks...");
 				Slugcats.Initialize();
-				// MechPlayerData.Initialize();
-				// MechPlayerMechanics.Initialize();
 				CustomObjectData.Initialize();
 				WorldShaderMarshaller.Initialize();
-				GlassOracleHooks.Initialize(_patcher);
-				GlassOracleGraphicsHooks.Initialize(_patcher);
+				ZapCoilContextualizer.Initialize();
 
-				Log.LogTrace("Requesting buffers...");
+				Log.LogTrace("Requesting buffers..."); 
 				FutileSettings.RequestDepthAndStencilBuffer();
 
 				On.RainWorld.OnModsInit += OnModsInitializing;
@@ -104,9 +98,9 @@ namespace XansCharacter {
 				Log.LogFatal("WAKE THE FUCK UP SAMURAI. I SHIT THE BED.");
 				Log.LogFatal(exc.ToString());
 				Reporter.DeferredReportModInitError(exc, $"Loading {PLUGIN_NAME}");
+				throw;
 			}
 		}
-
 		private void OnModsInitializing(On.RainWorld.orig_OnModsInit originalMethod, RainWorld @this) {
 			originalMethod(@this);
 			try {
@@ -116,6 +110,12 @@ namespace XansCharacter {
 				Reporter.DeferredReportModInitError(exc, $"Registering the Remix config menu to {PLUGIN_NAME}");
 				throw;
 			}
+		}
+
+		private void GenerateExtensibles() {
+			MechPlayer.Initialize();
+			GlassOracle.Initialize();
+			GlassOracleGraphics.Initialize();
 		}
 	}
 }

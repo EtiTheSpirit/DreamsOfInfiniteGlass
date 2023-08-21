@@ -12,7 +12,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UnityEngine;
 using XansCharacter.Data.Registry;
-using static RegionKit.Modules.Particles.V1.PBehaviourModule;
+using XansCharacter.WorldObjects.Decorative;
 
 namespace XansCharacter.WorldObjects {
 
@@ -103,7 +103,7 @@ namespace XansCharacter.WorldObjects {
 		private static void OnRoomLoaded(On.Room.orig_Loaded originalMethod, Room @this) {
 			originalMethod(@this);
 			foreach (PlacedObject obj in @this.roomSettings.placedObjects) {
-				Log.LogTrace($"An instance of {obj.type.value} was loaded.");
+				// Log.LogTrace($"An instance of {obj.type.value} was loaded.");
 				if (obj.type == PlaceableObjects.STABLE_ZAP_COIL) {
 					ColoredGridRectObjectData data = obj.data as ColoredGridRectObjectData;
 					@this.AddObject(new StableZapCoil(data.Rect, data, @this));
@@ -111,7 +111,7 @@ namespace XansCharacter.WorldObjects {
 					SkinnedGridRectObjectData data = obj.data as SkinnedGridRectObjectData;
 					@this.AddObject(new SuperStructureVacuumTubes(obj, data, @this));
 				}
-				Log.LogTrace($"Done");
+				// Log.LogTrace($"Done");
 			}
 		}
 

@@ -2,6 +2,9 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
+    <LangVersion>9.0</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{462E9EF6-2A6A-4043-AC59-4CC1E3645B2B}</ProjectGuid>
@@ -16,7 +19,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
+    <DebugType>portable</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;REQUIRES_HARMONY_ARGS_PATCH;MECH_HOOK_UTILS_AVAILABLE</DefineConstants>
@@ -50,10 +53,15 @@
     <Reference Include="BepInEx.Harmony">
       <HintPath>E:\Steam Games\steamapps\common\Rain World\BepInEx\core\BepInEx.Harmony.dll</HintPath>
     </Reference>
+    <Reference Include="EXTENSIBLES-Assembly-CSharp, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>E:\Steam Games\steamapps\common\Rain World\BepInEx\plugins\EXTENSIBLES-Assembly-CSharp.dll</HintPath>
+    </Reference>
     <Reference Include="HarmonyXInterop">
       <HintPath>E:\Steam Games\steamapps\common\Rain World\BepInEx\core\HarmonyXInterop.dll</HintPath>
     </Reference>
-    <Reference Include="HOOKS-Assembly-CSharp">
+    <Reference Include="HOOKS-Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>E:\Steam Games\steamapps\common\Rain World\BepInEx\plugins\HOOKS-Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil">
@@ -283,20 +291,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Character\NPC\Iterator\Graphics\ShallowGlassOracleGraphics.cs" />
-    <Compile Include="Character\NPC\Iterator\ShallowGlassOracle.cs" />
-    <Compile Include="Character\PlayerCharacter\DataStorage\MechPlayerData.cs" />
+    <Compile Include="WorldObjects\Injections\ZapCoilContextualizer.cs" />
+    <Content Include="assets\mod\text\text_eng\debug\imback.txt" />
+    <Compile Include="Character\NPC\Iterator\GlassOracle.cs" />
+    <Compile Include="Character\NPC\Iterator\Graphics\GlassOracleGraphics.cs" />
+    <Compile Include="Character\NPC\RedFren\RedFrenAI.cs" />
+    <Compile Include="Character\NPC\RedFren\RedFrenRoamingBehavior.cs" />
+    <Compile Include="Character\PlayerCharacter\DataStorage\MechPlayerHealth.cs" />
     <Compile Include="Character\PlayerCharacter\DataStorage\MechSaveData.cs" />
     <Compile Include="Character\PlayerCharacter\FX\CollapseEffect.cs" />
-    <Compile Include="Character\PlayerCharacter\Hooks\MechPlayerMechanics.Capabilities.cs" />
-    <Compile Include="Character\PlayerCharacter\Hooks\MechPlayerMechanics.Combat.cs" />
+    <Compile Include="Character\PlayerCharacter\MechPlayer.cs" />
+    <Compile Include="Character\PlayerCharacter\MechPlayerBattery.cs" />
     <Compile Include="Character\PlayerCharacter\MechPlayerHUD.cs" />
-    <Compile Include="Character\PlayerCharacter\Hooks\MechPlayerMechanics.cs" />
-    <None Include="Character\NPC\Iterator\GlassOracle.cs" />
-    <Compile Include="Character\NPC\Iterator\GlassOracleHooks.cs" />
     <Compile Include="Character\NPC\Iterator\GlassOracleBehavior.cs" />
-    <None Include="Character\NPC\Iterator\Graphics\GlassOracleGraphics.cs" />
-    <Compile Include="Character\NPC\Iterator\Graphics\GlassOracleGraphicsHooks.cs" />
     <Compile Include="Character\NPC\Iterator\Interaction\GlassConversation.cs" />
     <Compile Include="Character\NPC\Iterator\Interaction\GlassConversations.cs" />
     <Compile Include="Configs\Configuration.cs" />
@@ -308,9 +315,10 @@
     <Compile Include="Data\World\WorldShaderMarshaller.cs" />
     <Compile Include="LoadedAssets\XansAssets.cs" />
     <Compile Include="Log.cs" />
-    <Compile Include="WorldObjects\CustomLayerLightSource.cs" />
-    <Compile Include="WorldObjects\SuperStructureVacuumTubes.cs" />
-    <Compile Include="WorldObjects\StableZapCoil.cs" />
+    <Compile Include="WorldObjects\Decorative\CustomLayerLightSource.cs" />
+    <Compile Include="WorldObjects\Decorative\SuperpositionMatrixEffect.cs" />
+    <Compile Include="WorldObjects\Decorative\SuperStructureVacuumTubes.cs" />
+    <Compile Include="WorldObjects\Decorative\StableZapCoil.cs" />
     <Compile Include="WorldObjects\CustomObjectData.cs" />
     <Compile Include="DreamsOfInfiniteGlassPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -319,12 +327,15 @@
     <EmbeddedResource Include="assets\embedded\xansshaders" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="assets\mod\hud\" />
     <Folder Include="assets\mod\plugins\" />
+    <Folder Include="Character\NPC\Machine\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\description.txt" />
+    <Content Include="assets\mod\hud\batterybar_mask.png" />
     <Content Include="assets\mod\modify\soundeffects\sounds.txt" />
+    <Content Include="assets\mod\text\text_eng\curious individuals, readme.txt" />
+    <Content Include="assets\mod\text\text_eng\pearl\prl_selfdestruct.txt" />
     <Content Include="assets\mod\world\16-rooms\16_gen00_settings.txt" />
     <Content Include="assets\mod\world\16-rooms\16_gen01_settings.txt" />
     <Content Include="assets\mod\world\16-rooms\16_grav0_settings.txt" />
@@ -363,12 +374,12 @@
     <Content Include="assets\mod\soundeffects\soundcreds.txt" />
     <Content Include="assets\mod\text\colors.txt" />
     <Content Include="assets\mod\text\text_eng\closingthoughts.txt" />
-    <Content Include="assets\mod\text\text_eng\cursedending.txt" />
-    <Content Include="assets\mod\text\text_eng\designsheet.txt" />
+    <Content Include="assets\mod\text\text_eng\debug\cursedending.txt" />
+    <Content Include="assets\mod\text\text_eng\pearl\prl_designsheet.txt" />
     <Content Include="assets\mod\text\text_eng\exposition.txt" />
-    <Content Include="assets\mod\text\text_eng\exposition2.txt" />
-    <Content Include="assets\mod\text\text_eng\testconversation.txt" />
-    <Content Include="assets\mod\text\text_eng\__DOCS.txt" />
+    <Content Include="assets\mod\text\text_eng\narrative\exposition2.txt" />
+    <Content Include="assets\mod\text\text_eng\debug\testconversation.txt" />
+    <Content Include="assets\mod\text\text_eng\debug\__DOCS.txt" />
     <Content Include="assets\mod\world\16-rooms\16_AI.txt" />
     <Content Include="assets\mod\world\16-rooms\16_AI_1.png" />
     <Content Include="assets\mod\world\16-rooms\16_AI_settings.txt" />
@@ -387,11 +398,9 @@
     <Content Include="assets\mod\world\16\displayname.txt" />
     <Content Include="assets\mod\world\16\properties.txt" />
     <Content Include="assets\mod\world\16\world_16.txt" />
-    <Content Include="DevTooling\MacroHack.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\mod\modinfo.json" />
-    <Compile Include="Character\PlayerCharacter\Hooks\MechPlayerMechanics.CreatureWorldInteractions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XansTools\XansTools.csproj">
@@ -403,6 +412,7 @@
     <CL>"$(DevEnvDir)..\..\VC\Tools\MSVC\14.36.32532\bin\Hostx64\x64\cl.exe"</CL>
     <ModDirNoTrailingSlash>E:\Steam Games\steamapps\common\Rain World\RainWorld_Data\StreamingAssets\mods\dreamsofinfiniteglass</ModDirNoTrailingSlash>
   </PropertyGroup>
+  <!--
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Inputs="@(Preprocess)" Outputs="@(Preprocess->'%(Filename)_P.g.cs')">
     <Error Condition="Exists($(CL))" Text="Unable to find cl.exe (Searched for it at $(CL))! The version of MSVC might be wrong in this project file, or you need to install Visual C++ SDK" />
     <Exec Command="$(CL) @(Preprocess) $(DEBUG_PREPROCESSOR_FLAG) /FI $(ProjectDir)DevTooling\$(MACROHACK_NAME) /C /P /Fi%(RelativeDir)%(Filename)_P.g.cs" />
@@ -410,6 +420,7 @@
       <Compile Include="@(Preprocess->'%(RelativeDir)%(Filename)_P.g.cs')" />
     </ItemGroup>
   </Target>
+  -->
   <PropertyGroup>
     <RunPostBuildEvent>Always</RunPostBuildEvent>
   </PropertyGroup>
