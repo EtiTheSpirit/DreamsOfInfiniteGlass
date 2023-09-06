@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace XansCharacter.Character.PlayerCharacter.DataStorage { 
+namespace DreamsOfInfiniteGlass.Character.PlayerCharacter.DataStorage { 
 	public static class MechSaveData {
 
 		public static readonly DeathPersistentSaveData.Tutorial BATTERY_TUTORIAL = new DeathPersistentSaveData.Tutorial("mech_battery", true);

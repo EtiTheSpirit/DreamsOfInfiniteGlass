@@ -6,10 +6,10 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using static XansCharacter.WorldObjects.CustomObjectData;
+using static DreamsOfInfiniteGlass.WorldObjects.CustomObjectData;
 using Random = UnityEngine.Random;
 
-namespace XansCharacter.WorldObjects.Decorative {
+namespace DreamsOfInfiniteGlass.WorldObjects.Decorative {
 
 	/// <summary>
 	/// An alternate SuperStructureFuses that appears more like electronic vacuum tubes

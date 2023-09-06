@@ -15,7 +15,7 @@ using XansTools.Exceptions;
 using XansTools.Utilities.RW;
 using Music;
 
-namespace XansCharacter.Character.NPC.Iterator.Interaction {
+namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Interaction {
 
 	/// <summary>
 	/// A more capable conversation type designed for the newer <see cref="ParameterizedEvent"/> system.
@@ -740,6 +740,10 @@ namespace XansCharacter.Character.NPC.Iterator.Interaction {
 			}
 		}
 
+		/// <summary>
+		/// Denotes that a type can receive <see cref="ParameterizedEvent"/>s from conversations, which allow complex scripted
+		/// interactions to occur from the conversation itself.
+		/// </summary>
 		public interface IParameterizedEventReceiver {
 
 			void EventFired(ParameterizedEvent evt);

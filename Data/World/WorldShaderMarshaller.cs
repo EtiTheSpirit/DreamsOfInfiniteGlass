@@ -6,10 +6,10 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UnityEngine;
-using XansCharacter.Configs;
-using XansCharacter.LoadedAssets;
+using DreamsOfInfiniteGlass.Configs;
+using DreamsOfInfiniteGlass.LoadedAssets;
 
-namespace XansCharacter.Data.World {
+namespace DreamsOfInfiniteGlass.Data.World {
 	public static class WorldShaderMarshaller {
 
 		internal static void Initialize() {

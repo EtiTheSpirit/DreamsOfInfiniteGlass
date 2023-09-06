@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using XansCharacter.Character.NPC.Iterator;
-using XansCharacter.Character.NPC.Iterator.Graphics;
+using DreamsOfInfiniteGlass.Character.NPC.Iterator;
+using DreamsOfInfiniteGlass.Character.NPC.Iterator.Graphics;
 using XansTools.Utilities.General;
 
-namespace XansCharacter.WorldObjects {
+namespace DreamsOfInfiniteGlass.WorldObjects {
 
 	/// <summary>
 	/// A <see cref="LightSource"/> that can be put on any layer.

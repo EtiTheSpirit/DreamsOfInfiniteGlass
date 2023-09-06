@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace XansCharacter.WorldObjects.Decorative {
+namespace DreamsOfInfiniteGlass.WorldObjects.Decorative {
 	public class SuperpositionMatrixEffect : UpdatableAndDeletable, IDrawable {
 
 		public override void Update(bool eu) {

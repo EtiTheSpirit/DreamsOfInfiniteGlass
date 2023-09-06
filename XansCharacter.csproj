@@ -10,7 +10,7 @@
     <ProjectGuid>{462E9EF6-2A6A-4043-AC59-4CC1E3645B2B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>XansCharacter</RootNamespace>
+    <RootNamespace>DreamsOfInfiniteGlass</RootNamespace>
     <AssemblyName>DreamsOfInfiniteGlass</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -328,6 +328,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="assets\mod\plugins\" />
+    <Folder Include="assets\project\" />
     <Folder Include="Character\NPC\Machine\" />
   </ItemGroup>
   <ItemGroup>
@@ -335,6 +336,7 @@
     <Content Include="assets\mod\hud\batterybar_mask.png" />
     <Content Include="assets\mod\modify\soundeffects\sounds.txt" />
     <Content Include="assets\mod\text\text_eng\curious individuals, readme.txt" />
+    <Content Include="assets\mod\text\text_eng\narrative\introdialogue.txt" />
     <Content Include="assets\mod\text\text_eng\pearl\prl_selfdestruct.txt" />
     <Content Include="assets\mod\world\16-rooms\16_gen00_settings.txt" />
     <Content Include="assets\mod\world\16-rooms\16_gen01_settings.txt" />

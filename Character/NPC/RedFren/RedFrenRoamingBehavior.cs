@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using XansCharacter.Data.Registry;
+using DreamsOfInfiniteGlass.Data.Registry;
 using XansTools.Utilities;
 using XansTools.Utilities.RW;
 
-namespace XansCharacter.Character.NPC.RedFren {
+namespace DreamsOfInfiniteGlass.Character.NPC.RedFren {
 	public class RedFrenRoamingBehavior : AIModule {
 
 		private float _boredTime;

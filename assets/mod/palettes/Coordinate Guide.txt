@@ -16,48 +16,48 @@ COLOR ROWS:
 [5, 2] =>
 	rgb = iterator arm color high
 	
-[0, 7] =>
+[0, 0] =>
 	rgb = sky color
 	
-[1, 7] =>
+[1, 0] =>
 	rgb = fog color
 	
-[2, 7] =>
+[2, 0] =>
 	rgb = black color
 	
-[4, 7] =>
+[4, 0] =>
 	rgb = water color #1
 	
-[5, 7] =>
+[5, 0] =>
 	rgb = water color #2
 	
-[6, 7] =>
+[6, 0] =>
 	rgb = water surface color #1
 	
-[7, 7] =>
+[7, 0] =>
 	rgb = water surface color #2
 	
-[8, 7] =>
+[8, 0] =>
 	rgb = water shine color
 
-[9, 7] => 
+[9, 0] => 
 	ONE CHANNEL ALLOWED. ALL OTHERS *MUST* BE ZERO.
 	r > 0: fog amount = 1 - r // Darkening fog amount (?) Affects the color of level pixels beneath the fog as well.
 	b > 0: fog amount = 1 + b // Hazy fog amount (?)
 	
-[10, 7] =>
+[10, 0] =>
 	rgb = shortcut 1
 	
-[11, 7] =>
+[11, 0] =>
 	rgb = shortcut 2
 	
-[12, 7] =>
+[12, 0] =>
 	rgb = shortcut 3
 	
-[13, 7] =>
+[13, 0] =>
 	rgb = shortcut symbol
 
-[30, 7] =>
+[30, 0] =>
 	r = native darkness (inverted in value, but intuitive visually, black = 100% darkness)
 	gb = 0
 	TO FUTURE XAN: Past Xan thought this was the Darkness *effect*. It is not.

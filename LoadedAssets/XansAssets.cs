@@ -11,7 +11,7 @@ using UnityEngine.Profiling;
 using XansTools.AssetSystems;
 using XansTools.Utilities.RW;
 
-namespace XansCharacter.LoadedAssets {
+namespace DreamsOfInfiniteGlass.LoadedAssets {
 
 	public static class XansAssets {
 

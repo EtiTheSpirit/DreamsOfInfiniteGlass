@@ -5,17 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UIElements;
-using XansCharacter.Data.Registry;
+using DreamsOfInfiniteGlass.Data.Registry;
 using XansTools.Utilities.Attributes;
 using RWBodyChunkConnection = PhysicalObject.BodyChunkConnection;
 using RWOracleArm = Oracle.OracleArm;
 using Random = UnityEngine.Random;
 using XansTools.Utilities;
-using XansCharacter.Character.NPC.Iterator.Graphics;
+using DreamsOfInfiniteGlass.Character.NPC.Iterator.Graphics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace XansCharacter.Character.NPC.Iterator {
+namespace DreamsOfInfiniteGlass.Character.NPC.Iterator {
 	public sealed class GlassOracle : Extensible.Oracle {
 
 		public override bool Consious => health > 0;

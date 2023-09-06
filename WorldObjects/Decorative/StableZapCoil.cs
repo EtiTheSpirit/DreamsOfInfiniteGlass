@@ -6,15 +6,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using XansCharacter.Character.PlayerCharacter;
-using XansCharacter.Data.Registry;
+using DreamsOfInfiniteGlass.Character.PlayerCharacter;
+using DreamsOfInfiniteGlass.Data.Registry;
 using XansTools.Utilities;
 using XansTools.Utilities.RW;
 using XansTools.Utilities.RW.SoundObjects;
-using static XansCharacter.WorldObjects.CustomObjectData;
+using static DreamsOfInfiniteGlass.WorldObjects.CustomObjectData;
 using Random = UnityEngine.Random;
 
-namespace XansCharacter.WorldObjects.Decorative {
+namespace DreamsOfInfiniteGlass.WorldObjects.Decorative {
 
 	/// <summary>
 	/// A variation of a superstructure zap coil that does not flicker nor sputter.

@@ -6,9 +6,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using XansCharacter.Configs;
+using DreamsOfInfiniteGlass.Configs;
 
-namespace XansCharacter {
+namespace DreamsOfInfiniteGlass {
 	internal static class Log {
 		private static ManualLogSource _logSource;
 

@@ -5,9 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using XansCharacter.Data.Registry;
+using DreamsOfInfiniteGlass.Data.Registry;
 
-namespace XansCharacter.Character.NPC.Iterator.Interaction {
+namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Interaction {
 	public static class GlassConversations {
 
 		private static readonly Conversation.ID DYNAMIC_CONVERSATION = new Conversation.ID("DynamicallyAssembledConversation", true);

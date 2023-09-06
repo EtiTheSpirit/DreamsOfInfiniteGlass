@@ -11,10 +11,10 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UnityEngine;
-using XansCharacter.Data.Registry;
-using XansCharacter.WorldObjects.Decorative;
+using DreamsOfInfiniteGlass.Data.Registry;
+using DreamsOfInfiniteGlass.WorldObjects.Decorative;
 
-namespace XansCharacter.WorldObjects {
+namespace DreamsOfInfiniteGlass.WorldObjects {
 
 	/// <summary>
 	/// Adds additional behavior to <see cref="ZapCoil"/> such that <see cref="StableZapCoil"/> can work properly.

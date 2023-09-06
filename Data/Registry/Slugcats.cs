@@ -13,7 +13,7 @@ using UnityEngine;
 using XansTools.Exceptions;
 using XansTools.Utilities.Cecil;
 
-namespace XansCharacter.Data.Registry {
+namespace DreamsOfInfiniteGlass.Data.Registry {
 	public static class Slugcats {
 
 		[Obsolete("(to allow referencing the fields)", true)]

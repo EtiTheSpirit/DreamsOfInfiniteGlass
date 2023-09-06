@@ -7,11 +7,11 @@ using UnityEngine;
 using XansTools.Utilities.Attributes;
 using XansTools.Utilities.RW;
 using XansTools.Utilities;
-using XansCharacter.Data.Registry;
+using DreamsOfInfiniteGlass.Data.Registry;
 using RWCustom;
-using XansCharacter.LoadedAssets;
+using DreamsOfInfiniteGlass.LoadedAssets;
 
-namespace XansCharacter.Character.NPC.Iterator.Graphics {
+namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Graphics {
 	public sealed class GlassOracleGraphics : Extensible.OracleGraphics {
 
 		internal static void Initialize() {

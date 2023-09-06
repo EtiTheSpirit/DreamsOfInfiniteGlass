@@ -5,10 +5,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using XansCharacter.Character.PlayerCharacter;
+using DreamsOfInfiniteGlass.Character.PlayerCharacter;
 using XansTools.Utilities.Cecil;
 
-namespace XansCharacter.WorldObjects.Injections {
+namespace DreamsOfInfiniteGlass.WorldObjects.Injections {
 	public static class ZapCoilContextualizer {
 
 		internal static void Initialize() {

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using XansCharacter.Character.NPC.Iterator;
+using DreamsOfInfiniteGlass.Character.NPC.Iterator;
 
-namespace XansCharacter.Character.NPC.RedFren {
+namespace DreamsOfInfiniteGlass.Character.NPC.RedFren {
 	public class RedFrenAI : ArtificialIntelligence {
 
 		private RedFrenRoamingBehavior _roaming;

@@ -5,9 +5,21 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using XansTools.Utilities;
+using XansTools.Utilities.General;
 
-namespace XansCharacter.Character.PlayerCharacter {
+namespace DreamsOfInfiniteGlass.Character.PlayerCharacter {
 	public sealed class MechPlayerBattery {
+
+		/// <summary>
+		/// A reference to the original player object.
+		/// </summary>
+		public Player Player { get; }
+
+		/// <summary>
+		/// Attempts to get the <see cref="MechPlayer"/> associated with this object's <see cref="Player"/>. Returns null if the object was destroyed.
+		/// </summary>
+		public MechPlayer PlayerAsMech => Extensible.Player.Binder<MechPlayer>.TryGetBinding(Player, out WeakReference<MechPlayer> mech) ? mech.Get() : null;
+
 
 		/// <summary>
 		/// Charge, as a value from 0 to 100. The getter and setter will never return a value outside of this range.
@@ -50,6 +62,10 @@ namespace XansCharacter.Character.PlayerCharacter {
 		/// Whether or not the mech player already handled death.
 		/// </summary>
 		public bool AlreadyHandledDeath { get; set; } = false;
+
+		public MechPlayerBattery(Player player) {
+			Player = player;
+		}
 
 		/// <summary>
 		/// Update the charge.

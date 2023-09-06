@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace XansCharacter.Data.Registry {
+namespace DreamsOfInfiniteGlass.Data.Registry {
 	public static class PlaceableObjects {
 
 		/// <summary>

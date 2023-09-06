@@ -2,14 +2,14 @@
 using HUD;
 using UnityEngine;
 using RWCustom;
-using XansCharacter.Character.NPC.Iterator.Interaction;
+using DreamsOfInfiniteGlass.Character.NPC.Iterator.Interaction;
 using GameHUD = HUD.HUD;
 using Random = UnityEngine.Random;
 using Music;
 using XansTools.Utilities.General;
 // using static XansCharacter.Character.NPC.Iterator.Interaction.GlassConversations;
 
-namespace XansCharacter.Character.NPC.Iterator {
+namespace DreamsOfInfiniteGlass.Character.NPC.Iterator {
 	public class GlassOracleBehavior : OracleBehavior, Conversation.IOwnAConversation, GlassConversation.IParameterizedEventReceiver {
 
 		public new GlassOracle oracle => _glass.Get();

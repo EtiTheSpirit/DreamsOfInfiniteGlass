@@ -12,25 +12,25 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using XansCharacter.Character;
-using XansCharacter.Character.NPC;
-using XansCharacter.Character.NPC.Iterator;
-using XansCharacter.Character.NPC.Iterator.Graphics;
-using XansCharacter.Character.NPC.Iterator.Interaction;
-using XansCharacter.Character.PlayerCharacter;
-using XansCharacter.Character.PlayerCharacter.DataStorage;
-using XansCharacter.Data.Registry;
-using XansCharacter.LoadedAssets;
+using DreamsOfInfiniteGlass.Character;
+using DreamsOfInfiniteGlass.Character.NPC;
+using DreamsOfInfiniteGlass.Character.NPC.Iterator;
+using DreamsOfInfiniteGlass.Character.NPC.Iterator.Graphics;
+using DreamsOfInfiniteGlass.Character.NPC.Iterator.Interaction;
+using DreamsOfInfiniteGlass.Character.PlayerCharacter;
+using DreamsOfInfiniteGlass.Character.PlayerCharacter.DataStorage;
+using DreamsOfInfiniteGlass.Data.Registry;
+using DreamsOfInfiniteGlass.LoadedAssets;
 using XansTools.Utilities;
-using XansCharacter.WorldObjects;
-using XansCharacter.Configs;
+using DreamsOfInfiniteGlass.WorldObjects;
+using DreamsOfInfiniteGlass.Configs;
 using XansTools.Utilities.ModInit;
-using XansCharacter.Data;
+using DreamsOfInfiniteGlass.Data;
 using XansTools.Utilities.RW.FutileTools;
-using XansCharacter.Data.World;
-using XansCharacter.WorldObjects.Injections;
+using DreamsOfInfiniteGlass.Data.World;
+using DreamsOfInfiniteGlass.WorldObjects.Injections;
 
-namespace XansCharacter {
+namespace DreamsOfInfiniteGlass {
 
 	[BepInPlugin(PLUGIN_ID, PLUGIN_NAME, PLUGIN_VERSION)]
 	[BepInDependency(XansTools.XansToolsMain.PLUGIN_ID, BepInDependency.DependencyFlags.HardDependency)]	// XansTools
@@ -89,6 +89,7 @@ namespace XansCharacter {
 				FutileSettings.RequestDepthAndStencilBuffer();
 
 				On.RainWorld.OnModsInit += OnModsInitializing;
+
 
 				Log.LogMessage("Initialization complete. Have a nice day.");
 				Log.LogMessage("TAKE THE NICE DAY? (Y/N) > Y");

@@ -5,19 +5,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using XansCharacter.Character.PlayerCharacter.DataStorage;
-using XansCharacter.Character.PlayerCharacter.FX;
-using XansCharacter.Data.Registry;
+using DreamsOfInfiniteGlass.Character.PlayerCharacter.DataStorage;
+using DreamsOfInfiniteGlass.Character.PlayerCharacter.FX;
+using DreamsOfInfiniteGlass.Data.Registry;
 using XansTools.Utilities;
 using XansTools.Utilities.RW;
 using Random = UnityEngine.Random;
 
-namespace XansCharacter.Character.PlayerCharacter {
+namespace DreamsOfInfiniteGlass.Character.PlayerCharacter {
+
+	/// <summary>
+	/// This class represents SOLSTICE and all of its abilities.
+	/// </summary>
 	public sealed class MechPlayer : Extensible.Player {
 
-		private CollapseEffect _currentCollapseEffect = null;
-		
-		private bool _hasAlreadyExplodedForDeath;
+		/// <summary>
+		/// Damage in <see cref="Violence(BodyChunk, Vector2?, BodyChunk, PhysicalObject.Appendage.Pos, Creature.DamageType, float, float)"/> is multiplied by this value
+		/// when using SOLSTICE's unique health system.
+		/// </summary>
+		public const float DAMAGE_SCALE = 9.0f;
 
 		public MechPlayerBattery Battery { get; }
 
@@ -26,10 +32,16 @@ namespace XansCharacter.Character.PlayerCharacter {
 		/// </summary>
 		public MechPlayerHealth Health { get; }
 
+		private static DisembodiedLoopEmitter _deadIdleSound = null;
+		private CollapseEffect _currentCollapseEffect = null;
+		private bool _hasAlreadyExplodedForDeath = false;
+
+
 		internal static void Initialize() {
 			On.Player.ctor += (originalMethod, @this, abstractCreature, world) => {
 				originalMethod(@this, abstractCreature, world);
 				if (@this.slugcatStats.name == Slugcats.MechID) {
+					Log.LogWarning("Custom character is constructing.");
 					WeakReference<MechPlayer> mech = Binder<MechPlayer>.Bind(@this, abstractCreature, world);
 				}
 			};
@@ -41,21 +53,29 @@ namespace XansCharacter.Character.PlayerCharacter {
 			};
 		}
 
-		private MechPlayer() : base(null) { }
-
 		MechPlayer(Player original, AbstractCreature abstractCreature, World world) : base(original) {
 			Log.LogDebug("Extensible.Player for MechPlayer constructed.");
-			Battery = new MechPlayerBattery();
-			Health = new MechPlayerHealth();
+			Battery = new MechPlayerBattery(original);
+			Health = new MechPlayerHealth(original);
 		}
 
-		public override void Violence(BodyChunk source, Vector2? directionAndMomentum, BodyChunk hitChunk, PhysicalObject.Appendage.Pos hitAppendage, Creature.DamageType type, float damage, float stunBonus) {
+		public override void Violence(BodyChunk source, Vector2? directionAndMomentum, BodyChunk hitChunk, PhysicalObject.Appendage.Pos hitAppendage, Creature.DamageType damageType, float damage, float stunBonus) {
 			const float overrideDamage = 0f;
-			base.Violence(source, directionAndMomentum, hitChunk, hitAppendage, type, overrideDamage, stunBonus);
+			base.Violence(source, directionAndMomentum, hitChunk, hitAppendage, damageType, overrideDamage, stunBonus);
 			// Above: Call the original violence method but with 0 damage. This will prevent death under ordinary circumstances.
 
 			// Now I can manually handle the real damage here for the mech player.
-			Log.LogDebug($"Mech got attacked. The source is {source} ({source?.owner}) with {damage} damage.");
+			// In general, Rain World entities will deal anywhere from 0 to 2 damage in most cases.
+			float scaledDamage = damage * DAMAGE_SCALE;
+			Log.LogDebug($"Mech got attacked. The source is {source} ({source?.owner}) with {damage} (=> {scaledDamage}) damage.");
+			if (source.TryGetOwnerAs(out Weapon weapon)) {
+				Health.TakeDamage(scaledDamage, weapon);
+			} else if (source.TryGetOwnerAs(out Creature creature)) {
+				Health.TakeDamage(scaledDamage, creature, damageType);
+			} else {
+				Health.TakeDamage(scaledDamage, source.owner);
+			}
+			/*
 			if (source.TryGetOwnerAs(out Weapon weapon)) {
 				if (weapon is ElectricSpear electricSpear) {
 					if (electricSpear.stuckInObject == (Player)this) {
@@ -75,11 +95,12 @@ namespace XansCharacter.Character.PlayerCharacter {
 			} else {
 				// TODO
 				if (type == Creature.DamageType.Electric) {
-					
+
 				} else if (type == Creature.DamageType.Explosion) {
-					
+
 				}
 			}
+			*/
 		}
 
 
@@ -109,24 +130,44 @@ namespace XansCharacter.Character.PlayerCharacter {
 		}
 
 		public override bool AllowGrabbingBatflys() {
+			_ = base.AllowGrabbingBatflys();
+			Log.LogTrace("Disallowing the player from grabbing a batfly.");
 			return false;
 		}
 
 		public override bool CanEatMeat(Creature crit) {
+			_ = base.CanEatMeat(crit);
+			Log.LogTrace("Disallowing the player from eating meat.");
 			return false;
 		}
 
 		public override void Deafen(int df) {
-			base.Deafen(df >> 2);
+			Log.LogTrace("Deafen duration will be divided by 8.");
+			base.Deafen(df >> 3);
 		}
 
 		public override float DeathByBiteMultiplier() {
-			return Mathf.Min(base.DeathByBiteMultiplier(), 0.07f); // TODO: Maybe 0 if I use a health system.
+			float _ = base.DeathByBiteMultiplier();
+			Log.LogTrace("DeathByBiteMultiplier is being set to 0.");
+			return 0;
 		}
 
 		public override void Update(bool eu) {
 			base.Update(eu);
 			if (room != null) {
+				if (dead && !_hasAlreadyExplodedForDeath) {
+					// _hasAlreadyExplodedForDeath is false when it's not the extreme death, so I can use this here too.
+					if (_deadIdleSound == null) {
+						_deadIdleSound = room.PlayDisembodiedLoop(Sounds.MECH_BROKEN_LOOP, 1.0f, 1.0f, 0.0f);
+					}
+					_deadIdleSound.alive = true; // This must be set every frame.
+				} else {
+					if (_deadIdleSound != null) {
+						_deadIdleSound.Destroy();
+						_deadIdleSound = null;
+					}
+				}
+
 				Battery.Update(eu);
 				if (_currentCollapseEffect != null && firstChunk != null) {
 					_currentCollapseEffect.UpdatePosition(ref _currentCollapseEffect, firstChunk.pos);

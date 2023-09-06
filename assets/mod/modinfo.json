@@ -6,6 +6,6 @@
 	"authors": "Xan // Eti",
 	"description": "The story of an isolated, advanced self-modifying iterator named \"Dreams of Infinite Glass\" - one who learned to perform just about every taboo in the book.",
 	"checksum_override_version": false,
-	"requirements": ["regionkit", "moreslugcats", "xanstools"],
-	"requirements_names": ["Region Kit", "More Slugcats", "Xan's Tools"]
+	"requirements": [ "xan.extensibles", "moreslugcats", "regionkit", "xanstools" ],
+	"requirements_names": [ "Extensibles", "More Slugcats", "Region Kit", "Xan's Tools" ]
 }

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using XansTools.Utilities.General;
 
-namespace XansCharacter.Configs {
+namespace DreamsOfInfiniteGlass.Configs {
 	internal class RemixConfigScreen : OptionInterface {
 
 		const float WINDOW_HEIGHT = 630f - 34f; // 630px on the screen minus a 34px margin from the mod settings panel to the top of the window

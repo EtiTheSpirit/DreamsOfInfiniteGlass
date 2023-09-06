@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using XansCharacter.Character.PlayerCharacter.DataStorage;
-using XansCharacter.LoadedAssets;
+using DreamsOfInfiniteGlass.Character.PlayerCharacter.DataStorage;
+using DreamsOfInfiniteGlass.LoadedAssets;
 using XansTools.Utilities;
 
-namespace XansCharacter.Character.PlayerCharacter {
+namespace DreamsOfInfiniteGlass.Character.PlayerCharacter {
 	public class MechPlayerHUD : HudPart {
 
 		public MechPlayer Player { get; }

@@ -8,12 +8,12 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UIElements;
-using XansCharacter.Data.Registry;
+using DreamsOfInfiniteGlass.Data.Registry;
 using XansTools.Utilities;
 using XansTools.Utilities.RW;
 using Random = UnityEngine.Random;
 
-namespace XansCharacter.Character.PlayerCharacter.FX {
+namespace DreamsOfInfiniteGlass.Character.PlayerCharacter.FX {
 	public class CollapseEffect : UpdatableAndDeletable {
 		
 		public Color CollapseColor { get; set; } = new Color(0.2f, 1.0f, 0.2f);
