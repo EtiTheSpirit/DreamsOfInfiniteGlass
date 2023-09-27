@@ -1,4 +1,5 @@
-﻿using BepInEx.Configuration;
+﻿#nullable enable
+using BepInEx.Configuration;
 using Menu.Remix;
 using Menu.Remix.MixedUI;
 using RWCustom;
@@ -81,7 +82,7 @@ namespace DreamsOfInfiniteGlass.Configs {
 			base.Initialize();
 			Configuration.GetAllConfigs(out IReadOnlyDictionary<string, IReadOnlyList<ConfigurableBase>> configs, out IReadOnlyList<string> categories);
 			OpTab[] tabs = new OpTab[categories.Count];
-			UIconfig last = null;
+			UIconfig? last = null;
 
 			// Default small font is 9px with 6px line spacing.
 			FTextParams textParams = new FTextParams();

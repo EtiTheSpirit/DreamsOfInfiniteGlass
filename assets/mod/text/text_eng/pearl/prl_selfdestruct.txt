@@ -23,9 +23,9 @@ I am in excellent condition, almost new again in fact.
 
 GLS: ...
 
-GLS: I was built in the mountains, where minerals line the water. My systems were changed so that
-I can break down deposits that build up. Using this system, I got ahold of the elements needed to
-fabricate logical machinery. It started with simple devices, then devices that could make other
+GLS: I was built in the mountains, where minerals line the waterways. My systems were changed so 
+that I can break down deposits that build up. Using this system, I got ahold of the elements needed 
+to fabricate logical machinery. It started with simple devices, then devices that could make other
 devices, all the way until now, where I possess a full fabicration centre.
 
 2: ...
@@ -44,3 +44,8 @@ My personal blueprints are sending now for your reference, if it has any signifi
 
 GLS: That "nonsense" is me, in my current form. Further down you will see my Fabrication Centre.
 Observe it closely. If you aim to mimic what I did, you will need to create everything you see there.
+
+1: Thank you, Dreams of Infinite Glass. Your willingness to at least transmit the data carries its meaning.
+You should perhaps be more gratuitous, 2.
+
+2: Fine, yes. Thank you.

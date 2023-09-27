@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,7 @@ namespace DreamsOfInfiniteGlass.WorldObjects {
 	/// <summary>
 	/// A <see cref="LightSource"/> that can be put on any layer.
 	/// </summary>
+	[Obsolete("Re-evaluate if this needs to exist.")]
 	public class CustomLayerLightSource : Extensible.LightSource {
 
 		public string Layer {

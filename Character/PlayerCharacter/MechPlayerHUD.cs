@@ -1,4 +1,5 @@
-﻿using HUD;
+﻿#nullable enable
+using HUD;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +17,9 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter {
 
 		private FContainer HUD2 => hud.fContainers[1];
 
-		private FSprite _batteryMeter;
+		private FSprite? _batteryMeter;
 
-		private MaterialPropertyBlock _props = new MaterialPropertyBlock();
+		private static readonly MaterialPropertyBlock PROPS = new MaterialPropertyBlock();
 
 		private float _batteryChargePhase;
 		private float _batteryChargeIntensity;
@@ -33,15 +34,18 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter {
 		}
 
 		public override void ClearSprites() {
+			base.ClearSprites();
 			HUD2.RemoveChild(_batteryMeter);
 			_batteryMeter = null;
 		}
 
 		public override void Update() {
+			base.Update();
+			if (_batteryMeter == null) return;
 			Renderer renderer = _batteryMeter._renderLayer._meshRenderer;
-			renderer.GetPropertyBlock(_props);
-			_props.SetFloat("_Value", Player.Battery.ClampedCharge * 0.01f);
-			renderer.SetPropertyBlock(_props);
+			renderer.GetPropertyBlock(PROPS);
+			PROPS.SetFloat("_Value", Player.Battery.ClampedCharge * 0.01f);
+			renderer.SetPropertyBlock(PROPS);
 
 			if (Player.Battery.IsDraining) {
 				_batteryChargeIntensity = Mathf.Clamp01(_batteryChargeIntensity - Mathematical.RW_DELTA_TIME);
@@ -63,6 +67,8 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter {
 		}
 
 		public override void Draw(float timeStacker) {
+			base.Draw(timeStacker);
+			if (_batteryMeter == null) return;
 			_batteryMeter.x = Futile.screen.pixelWidth - 130;
 			_batteryMeter.y = Futile.screen.pixelHeight - 66;
 			Color clr = Color.Lerp(
@@ -74,9 +80,9 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter {
 			clr = Color.Lerp(clr, Color.cyan, Trig01(Mathf.Cos, _batteryChargePhase, _batteryChargeIntensity));
 
 			Renderer renderer = _batteryMeter._renderLayer._meshRenderer;
-			renderer.GetPropertyBlock(_props);
-			_props.SetColor("_Color", clr);
-			renderer.SetPropertyBlock(_props);
+			renderer.GetPropertyBlock(PROPS);
+			PROPS.SetColor("_Color", clr);
+			renderer.SetPropertyBlock(PROPS);
 		}
 	}
 }

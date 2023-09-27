@@ -1,8 +1,22 @@
-﻿#define USE_GLASS_LEVEL_SHADER
+﻿// Any line in this file not starting with #define or #undef is skipped.
+// To use this system, create a new text file in the -rooms directory with the name (room)_keywords.txt.
+// This document (keywords_template.txt) serves as the defaults. Anything not written in a specific keywords.txt file
+// will be set to the value present here.
+
+#define USE_GLASS_LEVEL_SHADER
+#define USE_EXACT_PROP_COLORS
+
+
+#undef SUNLIGHT_RENDERING_ON
+// Below: Technically useless, here just for the sake of completeness.
+#define OPTIMIZE_FOR_COHERENT_SUNLIGHT
+
+// Random Machines has a lot of little holes in it that make the skybox incoherent. Tell the system that it should not
+// expect any sort of coherence to the sky.
+#undef OPTIMIZE_FOR_COHERENT_SKY
+
+// Disable these effects.
 #undef RIMFIX_ON
 #undef GRIME_ON
 #undef IS_SWARM_ROOM
-#undef SUNLIGHT_RENDERING_ON
-#undef OPTIMIZE_FOR_COHERENT_SUNLIGHT
-#undef OPTIMIZE_FOR_COHERENT_SKY
 #undef VIRTUAL_FX

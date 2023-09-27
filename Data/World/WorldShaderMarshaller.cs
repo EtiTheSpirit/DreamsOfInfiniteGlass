@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,6 +13,12 @@ using DreamsOfInfiniteGlass.LoadedAssets;
 namespace DreamsOfInfiniteGlass.Data.World {
 	public static class WorldShaderMarshaller {
 
+		// TO FUTURE XAN, TODO:
+		// Right now, this technique causes SBCameraScroll to break (as it relies on its own level shader).
+		// You need to find time to contact its creator. You need to ask them to add a token-based switch
+		// where mods can specify that they don't want the mod to be used for an arbitrary duration or
+		// scenario.
+
 		internal static void Initialize() {
 			Log.LogMessage("Initializing world shader marshaller...");
 			On.RoomCamera.MoveCamera_Room_int += OnMoveCamera;
@@ -20,7 +27,7 @@ namespace DreamsOfInfiniteGlass.Data.World {
 		private static void OnMoveCamera(On.RoomCamera.orig_MoveCamera_Room_int originalMethod, RoomCamera @this, Room newRoom, int camPos) {
 			originalMethod(@this, newRoom, camPos);
 
-			Dictionary<string, bool> macros = GetDefaultMacros(@this, newRoom);
+			Dictionary<string, bool> macros = GetDefaultMacros(newRoom);
 			LoadIndividualMacros(@this, newRoom, macros);
 
 			if (Configuration.AdvancedShaderSystems) {
@@ -32,7 +39,7 @@ namespace DreamsOfInfiniteGlass.Data.World {
 			}
 		}
 
-		private static Dictionary<string, bool> GetDefaultMacros(RoomCamera camera, Room room) {
+		private static Dictionary<string, bool> GetDefaultMacros(Room room) {
 			Dictionary<string, bool> macros = new Dictionary<string, bool>();
 			if (room == null) return macros;
 			if (room.abstractRoom == null) return macros;

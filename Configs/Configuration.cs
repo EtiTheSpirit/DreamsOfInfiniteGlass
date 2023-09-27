@@ -1,4 +1,5 @@
-﻿using BepInEx.Configuration;
+﻿#nullable disable
+using BepInEx.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,9 +51,9 @@ namespace DreamsOfInfiniteGlass.Configs {
 
 		private static List<string> _orderedCategories = new List<string>();
 		private static IReadOnlyList<string> _orderedCategoriesCache = null;
-		private static Dictionary<string, List<ConfigurableBase>> _allConfigs = new Dictionary<string, List<ConfigurableBase>>();
+		private static readonly Dictionary<string, List<ConfigurableBase>> _allConfigs = new Dictionary<string, List<ConfigurableBase>>();
 		private static IReadOnlyDictionary<string, IReadOnlyList<ConfigurableBase>> _allConfigsCache = null;
-		private static Dictionary<string, string> _categoryDescriptions = new Dictionary<string, string>();
+		private static readonly  Dictionary<string, string> _categoryDescriptions = new Dictionary<string, string>();
 
 		private static void CreateConfig<T>(ref Configurable<T> field, T defaultValue, string name, string description, bool requiresRestart = false) {
 			//field = _config.Bind(new ConfigDefinition(_currentSection, name), defaultValue, new ConfigDescription(description));

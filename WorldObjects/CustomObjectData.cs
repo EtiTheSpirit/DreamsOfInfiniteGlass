@@ -1,4 +1,5 @@
-﻿using DevInterface;
+﻿#nullable enable
+using DevInterface;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using RegionKit.Modules.DevUIMisc.GenericNodes;
@@ -20,6 +21,9 @@ namespace DreamsOfInfiniteGlass.WorldObjects {
 	/// Adds additional behavior to <see cref="ZapCoil"/> such that <see cref="StableZapCoil"/> can work properly.
 	/// </summary>
 	public static class CustomObjectData {
+
+		// TODO: Migrate to POM.
+		// You wrote this before you even knew RK existed in the first place.
 
 		internal static void Initialize() {
 			Log.LogMessage("Injecting into object registries...");
@@ -105,10 +109,10 @@ namespace DreamsOfInfiniteGlass.WorldObjects {
 			foreach (PlacedObject obj in @this.roomSettings.placedObjects) {
 				// Log.LogTrace($"An instance of {obj.type.value} was loaded.");
 				if (obj.type == PlaceableObjects.STABLE_ZAP_COIL) {
-					ColoredGridRectObjectData data = obj.data as ColoredGridRectObjectData;
+					ColoredGridRectObjectData data = (ColoredGridRectObjectData)obj.data;
 					@this.AddObject(new StableZapCoil(data.Rect, data, @this));
 				} else if (obj.type == PlaceableObjects.SUPERSTRUCTURE_VACUUM_TUBES) {
-					SkinnedGridRectObjectData data = obj.data as SkinnedGridRectObjectData;
+					SkinnedGridRectObjectData data = (SkinnedGridRectObjectData)obj.data;
 					@this.AddObject(new SuperStructureVacuumTubes(obj, data, @this));
 				}
 				// Log.LogTrace($"Done");
@@ -162,7 +166,7 @@ namespace DreamsOfInfiniteGlass.WorldObjects {
 
 			public ColoredGridRectObjectRepresentation(DevUI owner, string IDstring, DevUINode parentNode, PlacedObject pObj, string name, string panelTitle) : base(owner, IDstring, parentNode, pObj, name) {
 				ColoredGridRectObjectPanel panel = new ColoredGridRectObjectPanel(owner, "Colored_Grid_Rect_Panel", this, new Vector2(0f, 100f), new Vector2(250f, 95f), panelTitle);
-				panel.pos = (pObj.data as ColoredGridRectObjectData).handlePos;
+				panel.pos = ((ColoredGridRectObjectData)pObj.data).handlePos;
 				subNodes.Add(panel);
 				
 				// TODO: Why does adding a line completely brick the widget?
@@ -210,8 +214,7 @@ namespace DreamsOfInfiniteGlass.WorldObjects {
 				public override void Refresh() {
 					base.Refresh();
 
-					ColoredGridRectObjectRepresentation parent = parentNode as ColoredGridRectObjectRepresentation;
-					if (parent is null) {
+					if (parentNode is not ColoredGridRectObjectRepresentation parent) {
 						Log.LogError($"Failed to acquire parentNode as ColoredGridRectObjectRepresentation. It is: {parentNode}");
 						if (parentNode != null) {
 							Log.LogError(parentNode.GetType().FullName);
@@ -219,8 +222,7 @@ namespace DreamsOfInfiniteGlass.WorldObjects {
 						return;
 					}
 					PlacedObject obj = parent.pObj;
-					ColoredGridRectObjectData colorInfo = obj.data as ColoredGridRectObjectData;
-					if (colorInfo is null) {
+					if (obj.data is not ColoredGridRectObjectData colorInfo) {
 						Log.LogError($"Failed to acquire obj.data as ColoredGridRectObjectData. It is: {obj.data}");
 						if (obj.data != null) {
 							Log.LogError(obj.data.GetType().FullName);
@@ -309,8 +311,7 @@ namespace DreamsOfInfiniteGlass.WorldObjects {
 				public override void Refresh() {
 					base.Refresh();
 
-					SkinnedGridRectObjectRepresentation parent = parentNode as SkinnedGridRectObjectRepresentation;
-					if (parent is null) {
+					if (parentNode is not SkinnedGridRectObjectRepresentation parent) {
 						Log.LogError($"Failed to acquire parentNode as ColoredGridRectObjectRepresentation. It is: {parentNode}");
 						if (parentNode != null) {
 							Log.LogError(parentNode.GetType().FullName);
@@ -318,8 +319,7 @@ namespace DreamsOfInfiniteGlass.WorldObjects {
 						return;
 					}
 					PlacedObject obj = parent.pObj;
-					SkinnedGridRectObjectData displayInfo = obj.data as SkinnedGridRectObjectData;
-					if (displayInfo is null) {
+					if (obj.data is not SkinnedGridRectObjectData displayInfo) {
 						Log.LogError($"Failed to acquire obj.data as ColoredGridRectObjectData. It is: {obj.data}");
 						if (obj.data != null) {
 							Log.LogError(obj.data.GetType().FullName);

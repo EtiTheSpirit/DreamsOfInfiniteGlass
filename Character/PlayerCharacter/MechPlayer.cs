@@ -1,4 +1,5 @@
-﻿using MoreSlugcats;
+﻿#nullable enable
+using MoreSlugcats;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,8 @@ using DreamsOfInfiniteGlass.Data.Registry;
 using XansTools.Utilities;
 using XansTools.Utilities.RW;
 using Random = UnityEngine.Random;
+using DreamsOfInfiniteGlass.WorldObjects.Physics;
+using XansTools.Utilities.General;
 
 namespace DreamsOfInfiniteGlass.Character.PlayerCharacter {
 
@@ -25,6 +28,9 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter {
 		/// </summary>
 		public const float DAMAGE_SCALE = 9.0f;
 
+		/// <summary>
+		/// The player's battery. This is a replacement for their cycle timer.
+		/// </summary>
 		public MechPlayerBattery Battery { get; }
 
 		/// <summary>
@@ -32,16 +38,22 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter {
 		/// </summary>
 		public MechPlayerHealth Health { get; }
 
-		private static DisembodiedLoopEmitter _deadIdleSound = null;
-		private CollapseEffect _currentCollapseEffect = null;
+		private static DisembodiedLoopEmitter? _deadIdleSound = null;
+		private CollapseEffect? _currentCollapseEffect = null;
 		private bool _hasAlreadyExplodedForDeath = false;
 
+		private WeakReference<FreezableBodyChunk> _anchorable = new WeakReference<FreezableBodyChunk>(null!);
+
+		/// <summary>
+		/// A reference to <see cref="PhysicalObject.firstChunk"/> as a <see cref="FreezableBodyChunk"/>.
+		/// </summary>
+		public FreezableBodyChunk? FirstChunkAnchorable => _anchorable.Get();
 
 		internal static void Initialize() {
 			On.Player.ctor += (originalMethod, @this, abstractCreature, world) => {
 				originalMethod(@this, abstractCreature, world);
 				if (@this.slugcatStats.name == Slugcats.MechID) {
-					Log.LogWarning("Custom character is constructing.");
+					Log.LogDebug("Custom character is constructing...");
 					WeakReference<MechPlayer> mech = Binder<MechPlayer>.Bind(@this, abstractCreature, world);
 				}
 			};
@@ -53,11 +65,16 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter {
 			};
 		}
 
+#pragma warning disable IDE0051, IDE0060
 		MechPlayer(Player original, AbstractCreature abstractCreature, World world) : base(original) {
 			Log.LogDebug("Extensible.Player for MechPlayer constructed.");
 			Battery = new MechPlayerBattery(original);
 			Health = new MechPlayerHealth(original);
+
+			// Now bind this.
+			_anchorable = Extensible.BodyChunk.Binder<FreezableBodyChunk>.Bind(original.firstChunk);
 		}
+#pragma warning restore IDE0051, IDE0060
 
 		public override void Violence(BodyChunk source, Vector2? directionAndMomentum, BodyChunk hitChunk, PhysicalObject.Appendage.Pos hitAppendage, Creature.DamageType damageType, float damage, float stunBonus) {
 			const float overrideDamage = 0f;
@@ -73,7 +90,7 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter {
 			} else if (source.TryGetOwnerAs(out Creature creature)) {
 				Health.TakeDamage(scaledDamage, creature, damageType);
 			} else {
-				Health.TakeDamage(scaledDamage, source.owner);
+				Health.TakeDamage(scaledDamage, source?.owner);
 			}
 			/*
 			if (source.TryGetOwnerAs(out Weapon weapon)) {
@@ -152,14 +169,21 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter {
 			return 0;
 		}
 
+
+
 		public override void Update(bool eu) {
 			base.Update(eu);
+
+			// Manage stats
+			airInLungs = 1.0f;
+			drown = 0.0f;
+			lungsExhausted = false;
+			exhausted = false;
+			
 			if (room != null) {
 				if (dead && !_hasAlreadyExplodedForDeath) {
 					// _hasAlreadyExplodedForDeath is false when it's not the extreme death, so I can use this here too.
-					if (_deadIdleSound == null) {
-						_deadIdleSound = room.PlayDisembodiedLoop(Sounds.MECH_BROKEN_LOOP, 1.0f, 1.0f, 0.0f);
-					}
+					_deadIdleSound ??= room.PlayDisembodiedLoop(Sounds.MECH_BROKEN_LOOP, 1.0f, 1.0f, 0.0f);
 					_deadIdleSound.alive = true; // This must be set every frame.
 				} else {
 					if (_deadIdleSound != null) {
@@ -168,33 +192,42 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter {
 					}
 				}
 
-				Battery.Update(eu);
+				Battery.Update();
 				if (_currentCollapseEffect != null && firstChunk != null) {
 					_currentCollapseEffect.UpdatePosition(ref _currentCollapseEffect, firstChunk.pos);
 				} else if (_currentCollapseEffect != null && _currentCollapseEffect.DetonationCompleted) {
+					if (FirstChunkAnchorable != null) {
+						FirstChunkAnchorable.Frozen = true;
+					}
 					Destroy();
+				} else if (!slatedForDeletetion) {
+					if (FirstChunkAnchorable != null) {
+						FirstChunkAnchorable.Frozen = false;
+					}
 				}
 
 				const float DISRUPTOR_RECHARGE_DIST = 400;
 				const float DISRUPTOR_RECHARGE_DIST_SQR = DISRUPTOR_RECHARGE_DIST * DISRUPTOR_RECHARGE_DIST;
-				Vector2 playerPos = firstChunk.pos;
-				IEnumerable<UpdatableAndDeletable> disruptors = room.updateList.Where(obj => obj is GravityDisruptor);  // TODO: Is this even a good idea?
-																														// I could cache it.
-				foreach (UpdatableAndDeletable obj in disruptors) {
-					if (obj is GravityDisruptor grav) {
-						if ((grav.pos - playerPos).sqrMagnitude < DISRUPTOR_RECHARGE_DIST_SQR) {
-							//BatteryCharge += Mathematical.RW_DELTA_TIME * 2f; // Allow overcharge?
-							// TODO: Charge tokens
+				if (firstChunk != null) {
+					Vector2 playerPos = firstChunk.pos;
+					IEnumerable<UpdatableAndDeletable> disruptors = room.updateList.Where(obj => obj is GravityDisruptor);  // TODO: Is this even a good idea?
+																															// I could cache it.
+					foreach (UpdatableAndDeletable obj in disruptors) {
+						if (obj is GravityDisruptor grav) {
+							if ((grav.pos - playerPos).sqrMagnitude < DISRUPTOR_RECHARGE_DIST_SQR) {
+								//BatteryCharge += Mathematical.RW_DELTA_TIME * 2f; // Allow overcharge?
+								// TODO: Charge tokens
+							}
 						}
 					}
 				}
 
-				if (!Battery.IsDead) {
+				if (!Battery.IsBatteryDead) {
 					Battery.AlreadyHandledDeath = false;
 				}
-				if (Battery.IsDead && !Battery.AlreadyHandledDeath) {
+				if (Battery.IsBatteryDead && !Battery.AlreadyHandledDeath) {
 					Battery.AlreadyHandledDeath = true;
-					Die(); // L
+					Die(); // L + Skill Issue
 					return;
 				}
 

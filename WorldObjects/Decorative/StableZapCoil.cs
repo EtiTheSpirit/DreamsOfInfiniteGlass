@@ -1,4 +1,5 @@
-﻿using MoreSlugcats;
+﻿#nullable enable
+using MoreSlugcats;
 using RWCustom;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ using XansTools.Utilities.RW;
 using XansTools.Utilities.RW.SoundObjects;
 using static DreamsOfInfiniteGlass.WorldObjects.CustomObjectData;
 using Random = UnityEngine.Random;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DreamsOfInfiniteGlass.WorldObjects.Decorative {
 
@@ -161,7 +163,13 @@ namespace DreamsOfInfiniteGlass.WorldObjects.Decorative {
 		}
 
 		[Obsolete("The disrupted loop is not available for this class.", true)]
-		public new DynamicSoundLoop disruptedLoop;
+
+		public new DynamicSoundLoop disruptedLoop {
+			[DoesNotReturn]
+			get {
+				throw new NotSupportedException();
+			}
+		}
 
 		public StableZapCoil(IntRect rect, ColoredGridRectObjectData data, Room room) : base(rect, room) {
 			_data = data; 
@@ -346,9 +354,7 @@ namespace DreamsOfInfiniteGlass.WorldObjects.Decorative {
 				lastLife = life;
 				life -= 1f / lifeTime;
 				if (lastLife < 0f) {
-					if (lightsource != null) {
-						lightsource.Destroy();
-					}
+					lightsource?.Destroy();
 					Destroy();
 				}
 			}

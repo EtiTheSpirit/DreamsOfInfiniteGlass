@@ -1,4 +1,5 @@
-﻿using RWCustom;
+﻿#nullable enable
+using RWCustom;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -213,10 +214,8 @@ namespace DreamsOfInfiniteGlass.WorldObjects.Decorative {
 
 		public void ApplyPalette(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette) { }
 
-		public void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer newContatiner) {
-			if (newContatiner == null) {
-				newContatiner = rCam.ReturnFContainer("Foreground");
-			}
+		public void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer? newContatiner) {
+			newContatiner ??= rCam.ReturnFContainer("Foreground");
 			for (int i = 0; i < sLeaser.sprites.Length; i++) {
 				sLeaser.sprites[i].RemoveFromContainer();
 				newContatiner.AddChild(sLeaser.sprites[i]);
@@ -288,7 +287,7 @@ namespace DreamsOfInfiniteGlass.WorldObjects.Decorative {
 			#endregion
 
 			#region Animations
-			public void AnimateAsEmber(bool powered, int frame) {
+			public void AnimateAsEmber(bool powered) {
 				// The tube heat should render a bright greenish-cyan, arbitrary energetic look.
 				float flux = (Random.value * 0.0125f) + 0.0025f;
 				if (powered) {
@@ -353,7 +352,7 @@ namespace DreamsOfInfiniteGlass.WorldObjects.Decorative {
 				tubeHeat = Mathf.Round(electricalUsage);
 			}
 
-			public void AnimateAsConstant(bool powered, int frame) {
+			public void AnimateAsConstant(bool powered) {
 				float flux = 0.0125f;
 				if (!powered) {
 					flux = -0.0125f;
@@ -394,7 +393,7 @@ namespace DreamsOfInfiniteGlass.WorldObjects.Decorative {
 				switch (animation) {
 					default:
 					case AnimationType.Ember:
-						AnimateAsEmber(powered, frame);
+						AnimateAsEmber(powered);
 						break;
 					case AnimationType.UniformPulse:
 						AnimateAsUniformPulse(powered, frame);
@@ -406,7 +405,7 @@ namespace DreamsOfInfiniteGlass.WorldObjects.Decorative {
 						AnimateAsFlash(powered, frame);
 						break;
 					case AnimationType.Solid:
-						AnimateAsConstant(powered, frame);
+						AnimateAsConstant(powered);
 						break;
 				}
 			}

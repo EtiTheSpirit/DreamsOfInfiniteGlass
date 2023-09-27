@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -105,6 +106,8 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator {
 				}
 			}
 		}
+
+#pragma warning disable IDE0051, IDE0060
 		GlassOracle(Oracle original, AbstractPhysicalObject abstractPhysicalObject, Room inRoom) : base(original) {
 			Log.LogDebug("Extensible.Oracle for Dreams of Infinite Glass constructed.");
 			// Undo all of the garbage that the base ctor just did.
@@ -124,6 +127,7 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator {
 			oracleBehavior = new GlassOracleBehavior(this);
 			Log.LogTrace("Created behavior.");
 		}
+#pragma warning restore IDE0051, IDE0060
 
 
 		#region Utility Methods

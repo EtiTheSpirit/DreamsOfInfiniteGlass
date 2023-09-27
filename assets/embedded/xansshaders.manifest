@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 3320134922
+CRC: 1987696902
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 0623fb22aacf57598e7d559e07072b22
+    Hash: e34848fa34d6ae03a7278aa8502da0c6
   TypeTreeHash:
     serializedVersion: 2
     Hash: 68c985bf88fecc38b460cdb825182138
@@ -15,6 +15,7 @@ SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/Shaders/Levels/LevelColor.shader
 - Assets/Shaders/Objects/NativeAdditiveVectorCircle.shader
+- Assets/Shaders/Objects/MultOverlay.shader
 - Assets/Shaders/Objects/NativeAdditiveColor.shader
 - Assets/Shaders/HUD/BatteryBar.shader
 Dependencies: []

@@ -1,4 +1,5 @@
-﻿using MoreSlugcats;
+﻿#nullable enable
+using MoreSlugcats;
 using Noise;
 using RWCustom;
 using System;
@@ -12,6 +13,8 @@ using DreamsOfInfiniteGlass.Data.Registry;
 using XansTools.Utilities;
 using XansTools.Utilities.RW;
 using Random = UnityEngine.Random;
+using XansTools.Utilities.General;
+using DreamsOfInfiniteGlass.WorldObjects.Physics;
 
 namespace DreamsOfInfiniteGlass.Character.PlayerCharacter.FX {
 	public class CollapseEffect : UpdatableAndDeletable {
@@ -22,7 +25,7 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter.FX {
 		private int _ticksLive = 0;
 		private int _specialChance = TICKS_UNTIL_DESTROY;
 		private Vector2 _at;
-		private Creature _src;
+		private Creature? _src;
 
 		private const int PRE_EXPLODE_AT = 110;
 		private const int TICKS_UNTIL_MAIN_EXPLODE = 100;
@@ -36,7 +39,7 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter.FX {
 		/// </summary>
 		public bool DetonationCompleted { get; private set; }
 
-		public CollapseEffect(Room room, Vector2 at, Creature causedBy = null) {
+		public CollapseEffect(Room room, Vector2 at, Creature? causedBy = null) {
 			this.room = room;
 			_src = causedBy;
 			_at = at;
@@ -44,7 +47,7 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter.FX {
 
 		public CollapseEffect(MechPlayer onPlayer) : this(onPlayer.room, onPlayer.firstChunk.pos, onPlayer) { }
 
-		public void UpdatePosition(ref CollapseEffect fieldStoringThis, Vector2 position) {
+		public void UpdatePosition(ref CollapseEffect? fieldStoringThis, Vector2 position) {
 			_at = position;
 			if (_stop) fieldStoringThis = null;
 		}

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,7 +31,7 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter.DataStorage {
 		/// <summary>
 		/// Attempts to get the <see cref="MechPlayer"/> associated with this object's <see cref="Player"/>. Returns <see langword="null"/> if the object was destroyed.
 		/// </summary>
-		public MechPlayer PlayerAsMech => Extensible.Player.Binder<MechPlayer>.TryGetBinding(Player, out WeakReference<MechPlayer> mech) ? mech.Get() : null;
+		public MechPlayer? PlayerAsMech => Extensible.Player.Binder<MechPlayer>.TryGetBinding(Player, out WeakReference<MechPlayer> mech) ? mech.Get() : null;
 
 		public MechPlayerHealth(Player player) {
 			Player = player;
@@ -65,7 +66,8 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter.DataStorage {
 		/// <param name="damage"></param>
 		/// <param name="from"></param>
 		/// <param name="damageType">The damage type, or null for no type in particular.</param>
-		internal void TakeDamage(float damage, Creature from, Creature.DamageType damageType = null) {
+#pragma warning disable IDE0051, IDE0060
+		internal void TakeDamage(float damage, Creature from, Creature.DamageType? damageType = null) {
 			bool violentDeath = false;
 			if (damageType == Creature.DamageType.Electric) {
 				damage *= 3.0f;
@@ -95,9 +97,9 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter.DataStorage {
 		/// </summary>
 		/// <param name="damage"></param>
 		/// <param name="from">The object responsible, where applicable.</param>
-		internal void TakeDamage(float damage, PhysicalObject from = null) {
-			
-		}
+		internal void TakeDamage(float damage, PhysicalObject? from = null) {
 
+		}
+#pragma warning restore IDE0051, IDE0060
 	}
 }

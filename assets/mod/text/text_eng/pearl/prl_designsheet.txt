@@ -35,7 +35,7 @@ EVT::TerminateConversation
 
 EVT::Label,name=PLAYERVERYPERSISTENT
 
-
+...
 
 EVT::TerminateConversation
 

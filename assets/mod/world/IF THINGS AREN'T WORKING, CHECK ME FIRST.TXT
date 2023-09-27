@@ -1,0 +1,12 @@
+﻿This document is a list of things you did that break convention, for future Xan:
+
+Did you add a swarm room? Hives not rendering?
+	>	This room needs a _keywords.txt file (see 16/keywords_template.txt) that contains #define IS_SWARM_ROOM.
+		The level shader will skip all swarm room rendering code without this macro defined.
+
+Prop custom colors wrong (fading with the background)?
+	>	You need to #define USE_EXACT_PROP_COLORS
+
+Lagging on the render thread?
+	>	Check the coherence flags. Make sure coherence is enabled when there's large areas of skybox or sunlight,
+		or if its patchy, disable coherence flags.

@@ -1,4 +1,5 @@
-﻿using BepInEx;
+﻿#nullable enable
+using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
 using Mono.Cecil.Cil;
@@ -29,6 +30,8 @@ using DreamsOfInfiniteGlass.Data;
 using XansTools.Utilities.RW.FutileTools;
 using DreamsOfInfiniteGlass.Data.World;
 using DreamsOfInfiniteGlass.WorldObjects.Injections;
+using System.Diagnostics.CodeAnalysis;
+using DreamsOfInfiniteGlass.Character.NPC.Purposed;
 
 namespace DreamsOfInfiniteGlass {
 
@@ -46,10 +49,13 @@ namespace DreamsOfInfiniteGlass {
 		/// <summary>
 		/// This object can be used to report errors during the mod loading phase.
 		/// </summary>
+		[AllowNull]
 		internal static ErrorReporter Reporter { get; private set; }
 
+		[AllowNull]
 		private RemixConfigScreen _cfgScr;
 
+#pragma warning disable IDE0051, IDE0060
 		/// <summary>
 		/// Disable optimization and inlining because this needs to call everything it explicitly goes out of its way to call (mostly static initializers that are empty)
 		/// This has no notable perf impact as Awake is only called once in RW.
@@ -84,6 +90,7 @@ namespace DreamsOfInfiniteGlass {
 				CustomObjectData.Initialize();
 				WorldShaderMarshaller.Initialize();
 				ZapCoilContextualizer.Initialize();
+				GlassOverseerGraphics.Initialize();
 
 				Log.LogTrace("Requesting buffers..."); 
 				FutileSettings.RequestDepthAndStencilBuffer();
@@ -102,6 +109,7 @@ namespace DreamsOfInfiniteGlass {
 				throw;
 			}
 		}
+#pragma warning restore IDE0051, IDE0060
 		private void OnModsInitializing(On.RainWorld.orig_OnModsInit originalMethod, RainWorld @this) {
 			originalMethod(@this);
 			try {

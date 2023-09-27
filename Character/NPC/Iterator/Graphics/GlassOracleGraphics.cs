@@ -413,10 +413,10 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Graphics {
 					Vector2 armDirectionUp = Custom.DirVec(handAtSide, bezFromHandSideToUp);
 					Vector2 armForward = Custom.PerpendicularVector(armDirectionUp) * signFromSide;
 					float handDist = Vector2.Distance(handAtSide, bezFromHandSideToUp);
-					(sLeaser.sprites[HandSprite(side, 1)] as TriangleMesh).MoveVertice(iter * 4 + 0, bezFromHandSideToUp - armDirectionUp * handDist * 0.3f - armForward * 2f - camPos);
-					(sLeaser.sprites[HandSprite(side, 1)] as TriangleMesh).MoveVertice(iter * 4 + 1, bezFromHandSideToUp - armDirectionUp * handDist * 0.3f + armForward * 2f - camPos);
-					(sLeaser.sprites[HandSprite(side, 1)] as TriangleMesh).MoveVertice(iter * 4 + 2, bezFromHandSideToUp - armForward * 2f - camPos);
-					(sLeaser.sprites[HandSprite(side, 1)] as TriangleMesh).MoveVertice(iter * 4 + 3, bezFromHandSideToUp + armForward * 2f - camPos);
+					(sLeaser.sprites[HandSprite(side, 1)] as TriangleMesh)!.MoveVertice(iter * 4 + 0, bezFromHandSideToUp - armDirectionUp * handDist * 0.3f - armForward * 2f - camPos);
+					(sLeaser.sprites[HandSprite(side, 1)] as TriangleMesh)!.MoveVertice(iter * 4 + 1, bezFromHandSideToUp - armDirectionUp * handDist * 0.3f + armForward * 2f - camPos);
+					(sLeaser.sprites[HandSprite(side, 1)] as TriangleMesh)!.MoveVertice(iter * 4 + 2, bezFromHandSideToUp - armForward * 2f - camPos);
+					(sLeaser.sprites[HandSprite(side, 1)] as TriangleMesh)!.MoveVertice(iter * 4 + 3, bezFromHandSideToUp + armForward * 2f - camPos);
 					handAtSide = bezFromHandSideToUp;
 				}
 				Vector2 feetPos = Vector2.Lerp(feet[side].lastPos, feet[side].pos, timeStacker);
@@ -435,10 +435,10 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Graphics {
 					Vector2 kneeDirUp = Custom.DirVec(kneeIdle, kneeHipToFootUp);
 					Vector2 kneeForward = Custom.PerpendicularVector(kneeDirUp) * signFromSide;
 					float legDist = Vector2.Distance(kneeIdle, kneeHipToFootUp);
-					(sLeaser.sprites[FootSprite(side, 1)] as TriangleMesh).MoveVertice(iter * 4, kneeHipToFootUp - kneeDirUp * legDist * 0.3f - kneeForward * (lastUnk0 + bendFactor) * 0.5f - camPos);
-					(sLeaser.sprites[FootSprite(side, 1)] as TriangleMesh).MoveVertice(iter * 4 + 1, kneeHipToFootUp - kneeDirUp * legDist * 0.3f + kneeForward * (lastUnk0 + bendFactor) * 0.5f - camPos);
-					(sLeaser.sprites[FootSprite(side, 1)] as TriangleMesh).MoveVertice(iter * 4 + 2, kneeHipToFootUp - kneeForward * bendFactor - camPos);
-					(sLeaser.sprites[FootSprite(side, 1)] as TriangleMesh).MoveVertice(iter * 4 + 3, kneeHipToFootUp + kneeForward * bendFactor - camPos);
+					(sLeaser.sprites[FootSprite(side, 1)] as TriangleMesh)!.MoveVertice(iter * 4, kneeHipToFootUp - kneeDirUp * legDist * 0.3f - kneeForward * (lastUnk0 + bendFactor) * 0.5f - camPos);
+					(sLeaser.sprites[FootSprite(side, 1)] as TriangleMesh)!.MoveVertice(iter * 4 + 1, kneeHipToFootUp - kneeDirUp * legDist * 0.3f + kneeForward * (lastUnk0 + bendFactor) * 0.5f - camPos);
+					(sLeaser.sprites[FootSprite(side, 1)] as TriangleMesh)!.MoveVertice(iter * 4 + 2, kneeHipToFootUp - kneeForward * bendFactor - camPos);
+					(sLeaser.sprites[FootSprite(side, 1)] as TriangleMesh)!.MoveVertice(iter * 4 + 3, kneeHipToFootUp + kneeForward * bendFactor - camPos);
 					kneeIdle = kneeHipToFootUp;
 					lastUnk0 = bendFactor;
 				}
@@ -521,10 +521,10 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Graphics {
 
 				if (gown != null) {
 					for (int vertex = 0; vertex < 7; vertex++) {
-						(sLeaser.sprites[HandSprite(side, 1)] as TriangleMesh).verticeColors[vertex * 4 + 0] = gown.Color(0.4f);
-						(sLeaser.sprites[HandSprite(side, 1)] as TriangleMesh).verticeColors[vertex * 4 + 1] = gown.Color(0f);
-						(sLeaser.sprites[HandSprite(side, 1)] as TriangleMesh).verticeColors[vertex * 4 + 2] = gown.Color(0.4f);
-						(sLeaser.sprites[HandSprite(side, 1)] as TriangleMesh).verticeColors[vertex * 4 + 3] = gown.Color(0f);
+						(sLeaser.sprites[HandSprite(side, 1)] as TriangleMesh)!.verticeColors[vertex * 4 + 0] = gown.Color(0.4f);
+						(sLeaser.sprites[HandSprite(side, 1)] as TriangleMesh)!.verticeColors[vertex * 4 + 1] = gown.Color(0f);
+						(sLeaser.sprites[HandSprite(side, 1)] as TriangleMesh)!.verticeColors[vertex * 4 + 2] = gown.Color(0.4f);
+						(sLeaser.sprites[HandSprite(side, 1)] as TriangleMesh)!.verticeColors[vertex * 4 + 3] = gown.Color(0f);
 					}
 				} else {
 					sLeaser.sprites[HandSprite(side, 1)].color = bodyColor;
@@ -557,7 +557,7 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Graphics {
 			}
 		}
 
-		public override void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer newContatiner) {
+		public override void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer? newContatiner) {
 			sLeaser.RemoveAllSpritesFromContainer();
 
 			FContainer midground = newContatiner ?? rCam.ReturnFContainer("Midground");
@@ -642,7 +642,7 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Graphics {
 			if (owner.room.game.cameras[0].AboutToSwitchRoom) {
 				for (int i = 0; i < _roomLights.Length; i++) {
 					_roomLights[i].Destroy();
-					_roomLights[i] = null;
+					_roomLights[i] = null!;
 				}
 			}
 		}
@@ -650,8 +650,7 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Graphics {
 		#region Halo
 
 		private static void OnHaloUpdating(On.OracleGraphics.Halo.orig_Update originalMethod, OracleGraphics.Halo @this) {
-			GlassOracleBehavior behavior = @this.owner.oracle.oracleBehavior as GlassOracleBehavior;
-			if (behavior != null) {
+			if (@this.owner.oracle.oracleBehavior is GlassOracleBehavior behavior) {
 				if (behavior.CurrentConnectionActivity >= 0) {
 					@this.connectionsFireChance = behavior.CurrentConnectionActivity;
 				}

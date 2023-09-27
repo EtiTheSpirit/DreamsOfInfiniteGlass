@@ -1,4 +1,5 @@
-﻿using BepInEx.Logging;
+﻿#nullable enable
+using BepInEx.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,9 +8,11 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using DreamsOfInfiniteGlass.Configs;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DreamsOfInfiniteGlass {
 	internal static class Log {
+		[AllowNull]
 		private static ManualLogSource _logSource;
 
 		internal static void Initialize(ManualLogSource logSource) {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -15,7 +16,7 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter.DataStorage {
 		[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
 		internal static void CallToStaticallyReference() {} 
 
-		public static DeathPersistentSaveData GetPermSaveData(Player player) {
+		public static DeathPersistentSaveData? GetPermSaveData(Player player) {
 			if (player.room.game.session is StoryGameSession story) {
 				return story.saveState.deathPersistentSaveData;
 			}
@@ -27,15 +28,13 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter.DataStorage {
 		}
 
 		private static bool GetTutorialValueFor(Player player, DeathPersistentSaveData.Tutorial tutorial) {
-			DeathPersistentSaveData permSaveData = GetPermSaveData(player);
+			DeathPersistentSaveData? permSaveData = GetPermSaveData(player);
 			return permSaveData != null && permSaveData.GetTutorialValue(tutorial);
 		}
 
 		private static void SetTutorialValueFor(Player player, DeathPersistentSaveData.Tutorial tutorial, bool value) {
-			DeathPersistentSaveData permSaveData = GetPermSaveData(player);
-			if (permSaveData != null) {
-				permSaveData.SetTutorialValue(tutorial, value);
-			}
+			DeathPersistentSaveData? permSaveData = GetPermSaveData(player);
+			permSaveData?.SetTutorialValue(tutorial, value);
 		}
 
 		public static bool HasShownBatteryTutorial(Player player) {

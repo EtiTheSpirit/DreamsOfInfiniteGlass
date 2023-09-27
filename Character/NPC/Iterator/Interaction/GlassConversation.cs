@@ -1,4 +1,5 @@
-﻿using HUD;
+﻿#nullable enable
+using HUD;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,6 +15,7 @@ using XansTools.Utilities;
 using XansTools.Exceptions;
 using XansTools.Utilities.RW;
 using Music;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Interaction {
 
@@ -63,7 +65,7 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Interaction {
 		/// </summary>
 		/// <param name="name"></param>
 		/// <returns></returns>
-		protected LabelEvent GetLabelEventByName(string name) {
+		protected LabelEvent? GetLabelEventByName(string name) {
 			if (_labels.TryGetValue(name, out LabelEvent label)) {
 				return label;
 			}
@@ -83,7 +85,7 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Interaction {
 		/// <param name="name"></param>
 		/// <returns></returns>
 		protected int GetLabelIndex(string name) {
-			LabelEvent label = GetLabelEventByName(name);
+			LabelEvent? label = GetLabelEventByName(name);
 			if (label == null) return -1;
 			return events.IndexOf(label);
 		}
@@ -135,8 +137,8 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Interaction {
 		/// <param name="translator"></param>
 		/// <param name="lang"></param>
 		/// <returns></returns>
-		private static string GetFilePathForText(string conversationName, SlugcatStats.Name optionallyOnlyFor, InGameTranslator translator, InGameTranslator.LanguageID lang = null) {
-			lang = lang ?? InGameTranslator.LanguageID.English;
+		private static string? GetFilePathForText(string conversationName, SlugcatStats.Name? optionallyOnlyFor, InGameTranslator translator, InGameTranslator.LanguageID? lang = null) {
+			lang ??= InGameTranslator.LanguageID.English;
 			string scugIdentifier = string.Empty;
 			if (optionallyOnlyFor != null) {
 				scugIdentifier = $"-{optionallyOnlyFor.value}";
@@ -154,11 +156,13 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Interaction {
 		/// </summary>
 		/// <param name="conversationName"></param>
 		/// <param name="optionallyOnlyFor"></param>
-		protected void LoadGlassConversation(string conversationName, SlugcatStats.Name optionallyOnlyFor) {
+		protected void LoadGlassConversation(string conversationName, SlugcatStats.Name? optionallyOnlyFor) {
 			RainWorld rw = interfaceOwner.rainWorld;
 			InGameTranslator translator = rw.inGameTranslator;
 			InGameTranslator.LanguageID currentLanguage = translator.currentLanguage;
-			string path = GetFilePathForText(conversationName, optionallyOnlyFor, translator, currentLanguage);
+			string? path = GetFilePathForText(conversationName, optionallyOnlyFor, translator, currentLanguage);
+			if (path == null) throw new FileNotFoundException($"No such conversation {conversationName} for character {(optionallyOnlyFor?.value ?? "<any>")}");
+
 			string[] contents = File.ReadAllLines(path, Encoding.UTF8);
 
 			events.Clear();
@@ -172,7 +176,7 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Interaction {
 					if (line.Length > 5) {
 						// This line is an event line.
 						string data = line.Substring(5);
-						if (ParameterizedEvent.TryParseParameterizedEvent(this, data, lineNumber, out ParameterizedEvent evt)) {
+						if (ParameterizedEvent.TryParseParameterizedEvent(this, data, lineNumber, out ParameterizedEvent? evt)) {
 							Log.LogTrace($"Event parsed successfully! Event name: {evt.EventName} (type: {evt.GetType().Name})");
 							events.Add(evt);
 							if (evt is LabelEvent label) {
@@ -238,7 +242,7 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Interaction {
 			return $"{GetType().FullName}"; // TODO: More text?
 		}
 		protected internal static uint JumpDelegate_GetSlugcatEquality(GlassConversation src, JumpEvent evt) {
-			if (evt.validScugIDs.Contains(src.currentSaveFile.value)) {
+			if (evt.ValidSlugcatIDs.Contains(src.currentSaveFile.value)) {
 				return 1;
 			}
 			return 0;
@@ -264,7 +268,7 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Interaction {
 			/// </summary>
 			/// <param name="linePastEvt"></param>
 			/// <returns></returns>
-			public static bool TryParseParameterizedEvent(Conversation owner, string linePastEvt, int lineNumber, out ParameterizedEvent evt) {
+			public static bool TryParseParameterizedEvent(Conversation owner, string linePastEvt, int lineNumber, [NotNullWhen(true)] out ParameterizedEvent? evt) {
 				string[] info = linePastEvt.Split(',');
 				evt = null;
 				if (info.Length == 0) {
@@ -306,9 +310,7 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Interaction {
 					ProcessManager mgr = WorldTools.Game.manager;
 					MusicPlayer plr = mgr.musicPlayer;
 					if (@params.TryGetValue("songName", out string songName)) {
-						if (plr.song != null) {
-							plr.song.FadeOut(100f);
-						}
+						plr.song?.FadeOut(100f);
 						plr.nextSong = new Song(plr, songName, MusicPlayer.MusicContext.StoryMode);
 						plr.nextSong.playWhenReady = false;
 					} else {
@@ -320,9 +322,7 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Interaction {
 				} else if (eventName == "StopMusic") {
 					ProcessManager mgr = WorldTools.Game.manager;
 					MusicPlayer plr = mgr.musicPlayer;
-					if (plr.song != null) {
-						plr.song.FadeOut(100f);
-					}
+					plr.song?.FadeOut(100f);
 					plr.nextSong = null;
 				} else if (eventName == "SetColor") {
 					bool success = @params.TryGetValue("r", out string rs);
@@ -335,9 +335,7 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Interaction {
 						owner.dialogBox.currentColor = new Color(r, g, b);
 					}
 				}
-				if (evt == null) {
-					evt = new ParameterizedEvent(owner, eventName, lineNumber, @params);
-				}
+				evt ??= new ParameterizedEvent(owner, eventName, lineNumber, @params);
 
 				// TO FUTURE XAN: EVT::SetField/property, EVT::Call
 				return true;
@@ -517,15 +515,22 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Interaction {
 			/// </summary>
 			public static readonly Regex RANGE_REGEX = new Regex(RANGE_REGEX_TERM);
 
-			private readonly bool _isConst;
-			private readonly string _constLabel;
-			private readonly JumpDelegate _delegate;
-			public readonly string[] validScugIDs;
+			[
+				MemberNotNullWhen(true, nameof(ConstantLabel)),
+				MemberNotNullWhen(false, nameof(Delegate))
+			]
+			private bool IsConstant { get; }
+
+			private string? ConstantLabel { get; }
+
+			private JumpDelegate? Delegate { get; }
+
+			public string[]? ValidSlugcatIDs { get; }
 
 			/// <summary>
 			/// A list of all functions to check where to jump. These must be parsed in order, and the first non-null return value must be used.
 			/// </summary>
-			private readonly List<Func<uint, string>> _jumpGetters = new List<Func<uint, string>>();
+			private readonly List<Func<uint, string?>> _jumpGetters = new List<Func<uint, string?>>();
 
 			public JumpEvent(Conversation owner, string eventName, int lineNumber, Dictionary<string, string> parameters) : base(owner, eventName, lineNumber, parameters) {
 				Log.LogTrace("Constructing jump event.");
@@ -538,8 +543,8 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Interaction {
 						throw new InvalidOperationException($"Jump event declares its label property but also declares other properties that affect the outcome of the jump. Label MUST be used without any other jump instructions (pass/fail/(numbers)/[range])! Error occurred on line {lineNumber} in conversation {owner}.");
 					}
 
-					_isConst = true;
-					_constLabel = label;
+					IsConstant = true;
+					ConstantLabel = label;
 					Log.LogTrace("All is well, conditional jump constructed successfully.");
 					return;
 				}
@@ -550,7 +555,7 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Interaction {
 					Log.LogTrace("slugcats= branch shortcut detected!");
 					string[] names = scugs.Split('|');
 					hadSlugcatsPresetDelegate = true;
-					validScugIDs = names;
+					ValidSlugcatIDs = names;
 				}
 				if (parameters.TryGetValue("delegate", out string delegateName)) {
 					Log.LogTrace("delegate= branch detected!");
@@ -558,7 +563,7 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Interaction {
 						throw new InvalidOperationException($"Attempt to declare both slugcats and delegate parameters on a conditional jump event. Error occurred on line {lineNumber} in conversation {owner}.");
 					}
 					hadExplicitDelegate = true;
-					validScugIDs = null;
+					ValidSlugcatIDs = null;
 				} else {
 					if (!hadSlugcatsPresetDelegate) {
 						throw new NotSupportedException($"There is a type of jump that is not supported. A jump's type is denoted with the existence of a slugcats property (i.e. EVT::CndJmp,slugcats=Survivor|Monk) or the existence of a delegate property (i.e. EVT::CndJmp|delegate=SomeCSharpMethodNameOfConversationClass). Error occurred on line {lineNumber} in conversation {owner}.");
@@ -566,10 +571,10 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Interaction {
 				}
 
 				if (hadSlugcatsPresetDelegate) {
-					_delegate = JumpDelegate_GetSlugcatEquality;
+					Delegate = JumpDelegate_GetSlugcatEquality;
 					Log.LogTrace("Set delegate to the preset slugcat equality checker.");
 				} else if (hadExplicitDelegate) {
-					_delegate = GetJumpDelegate(Conversation, delegateName);
+					Delegate = GetJumpDelegate(Conversation, delegateName);
 					Log.LogTrace("Set delegate to a specific method in the conversation class.");
 				}
 
@@ -665,11 +670,10 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Interaction {
 
 			public override void Activate() {
 				base.Activate();
-				if (_isConst) {
-					Conversation.Jump(this, _constLabel);
+				if (IsConstant) {
+					Conversation.Jump(this, ConstantLabel);
 				} else {
-
-					string target = GetJumpTargetName(_delegate(Conversation, this));
+					string? target = GetJumpTargetName(Delegate(Conversation, this));
 					if (target != null) {
 						Conversation.Jump(this, target);
 					}
@@ -683,10 +687,10 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Interaction {
 			/// </summary>
 			/// <param name="retn"></param>
 			/// <returns></returns>
-			public string GetJumpTargetName(uint retn) {
-				if (_isConst) return _constLabel;
-				foreach (Func<uint, string> jumpTest in _jumpGetters) {
-					string result = jumpTest(retn);
+			public string? GetJumpTargetName(uint retn) {
+				if (IsConstant) return ConstantLabel;
+				foreach (Func<uint, string?> jumpTest in _jumpGetters) {
+					string? result = jumpTest(retn);
 					if (result != null) return result;
 				}
 				return null;

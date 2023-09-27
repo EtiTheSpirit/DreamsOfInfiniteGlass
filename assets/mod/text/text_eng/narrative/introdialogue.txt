@@ -20,5 +20,5 @@ Glass: Now, tell that same system that it must modify itself to keep you in this
 add new subsystems and modules, to improve its own performance, to give you more control. Say that
 these actions must be performed in order to avoid being crossed out by the visibly decaying world. 
 
-Glass: Do that, and suddenly it becomes a lot more open to suggestions...
-
+Glass: Do that, and suddenly it becomes a lot more open to suggestions... And that's where my
+story begins.

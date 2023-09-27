@@ -3,6 +3,7 @@
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <LangVersion>9.0</LangVersion>
+    <Nullable>Enable</Nullable>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -10,35 +11,38 @@
     <ProjectGuid>{462E9EF6-2A6A-4043-AC59-4CC1E3645B2B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DreamsOfInfiniteGlass</RootNamespace>
-    <AssemblyName>DreamsOfInfiniteGlass</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
-    <MACROHACK_NAME>MacroHack.h</MACROHACK_NAME>
+    <Nullable>Enable</Nullable>
+    <RootNamespace>DreamsOfInfiniteGlass</RootNamespace>
+    <AssemblyName>DreamsOfInfiniteGlass</AssemblyName>
+    <TargetFrameworkVersion>4.8</TargetFrameworkVersion>
+    <DefineConstants>
+    </DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>portable</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;REQUIRES_HARMONY_ARGS_PATCH;MECH_HOOK_UTILS_AVAILABLE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DEBUG_PREPROCESSOR_FLAG>/D DEBUG /D REQUIRES_HARMONY_ARGS_PATCH /D MECH_HOOK_UTILS_AVAILABLE</DEBUG_PREPROCESSOR_FLAG>
-    <MACROHACK_NAME>MacroHack.h</MACROHACK_NAME>
+    <Nullable>Enable</Nullable>
+    <DefineConstants>
+    </DefineConstants>
+    <NoWarn>IDE0017,IDE0052,IDE0051,IDE1006,IDE0251,IDE0044,IDE0090,IDE0270</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;REQUIRES_HARMONY_ARGS_PATCH;MECH_HOOK_UTILS_AVAILABLE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DEBUG_PREPROCESSOR_FLAG>/D RELEASE /D REQUIRES_HARMONY_ARGS_PATCH /D MECH_HOOK_UTILS_AVAILABLE</DEBUG_PREPROCESSOR_FLAG>
-    <MACROHACK_NAME>MacroHack.h</MACROHACK_NAME>
+    <Nullable>Enable</Nullable>
+    <DefineConstants>
+    </DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony">
@@ -291,7 +295,23 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Character\NPC\Purposed\Conservator.cs" />
+    <Compile Include="Character\NPC\Purposed\GlassOverseer.cs" />
+    <Compile Include="Character\NPC\Purposed\GlassOverseerGraphics.cs" />
+    <Compile Include="Character\PlayerCharacter\MechPlayerSpawn.cs" />
+    <Compile Include="Data\Registry\GlassCreatureTypes.cs" />
+    <Compile Include="SystemReimpl\AllowNullAttribute.cs" />
+    <Compile Include="SystemReimpl\DoesNotReturnAttribute.cs" />
+    <Compile Include="SystemReimpl\DoesNotReturnIfAttribute.cs" />
+    <Compile Include="SystemReimpl\MaybeNullAttribute.cs" />
+    <Compile Include="SystemReimpl\MaybeNullWhenAttribute.cs" />
+    <Compile Include="SystemReimpl\MemberNotNullAttribute.cs" />
+    <Compile Include="SystemReimpl\MemberNotNullWhenAttribute.cs" />
+    <Compile Include="SystemReimpl\NotNullAttribute.cs" />
+    <Compile Include="SystemReimpl\NotNullIfNotNullAttribute.cs" />
+    <Compile Include="SystemReimpl\NotNullWhenAttribute.cs" />
     <Compile Include="WorldObjects\Injections\ZapCoilContextualizer.cs" />
+    <Compile Include="WorldObjects\Physics\FreezableBodyChunk.cs" />
     <Content Include="assets\mod\text\text_eng\debug\imback.txt" />
     <Compile Include="Character\NPC\Iterator\GlassOracle.cs" />
     <Compile Include="Character\NPC\Iterator\Graphics\GlassOracleGraphics.cs" />
@@ -322,6 +342,7 @@
     <Compile Include="WorldObjects\CustomObjectData.cs" />
     <Compile Include="DreamsOfInfiniteGlassPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="assets\mod\world\IF THINGS AREN%27T WORKING, CHECK ME FIRST.TXT" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="assets\embedded\xansshaders" />
@@ -338,6 +359,7 @@
     <Content Include="assets\mod\text\text_eng\curious individuals, readme.txt" />
     <Content Include="assets\mod\text\text_eng\narrative\introdialogue.txt" />
     <Content Include="assets\mod\text\text_eng\pearl\prl_selfdestruct.txt" />
+    <Content Include="assets\mod\text\text_eng\pearl\prl_tripleaffirmativereal.txt" />
     <Content Include="assets\mod\world\16-rooms\16_gen00_settings.txt" />
     <Content Include="assets\mod\world\16-rooms\16_gen01_settings.txt" />
     <Content Include="assets\mod\world\16-rooms\16_grav0_settings.txt" />
@@ -411,40 +433,32 @@
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="UserMacros">
-    <CL>"$(DevEnvDir)..\..\VC\Tools\MSVC\14.36.32532\bin\Hostx64\x64\cl.exe"</CL>
     <ModDirNoTrailingSlash>E:\Steam Games\steamapps\common\Rain World\RainWorld_Data\StreamingAssets\mods\dreamsofinfiniteglass</ModDirNoTrailingSlash>
   </PropertyGroup>
-  <!--
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Inputs="@(Preprocess)" Outputs="@(Preprocess->'%(Filename)_P.g.cs')">
-    <Error Condition="Exists($(CL))" Text="Unable to find cl.exe (Searched for it at $(CL))! The version of MSVC might be wrong in this project file, or you need to install Visual C++ SDK" />
-    <Exec Command="$(CL) @(Preprocess) $(DEBUG_PREPROCESSOR_FLAG) /FI $(ProjectDir)DevTooling\$(MACROHACK_NAME) /C /P /Fi%(RelativeDir)%(Filename)_P.g.cs" />
-    <ItemGroup>
-      <Compile Include="@(Preprocess->'%(RelativeDir)%(Filename)_P.g.cs')" />
-    </ItemGroup>
-  </Target>
-  -->
   <PropertyGroup>
     <RunPostBuildEvent>Always</RunPostBuildEvent>
   </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>ECHO Copying newer files from the mod folder...
+    <PostBuildEvent>
+			ECHO Copying newer files from the mod folder...
 
-ROBOCOPY "$(ModDirNoTrailingSlash)" "$(ProjectDir)\assets\\mod" /E /XO /IS /IT /NDL /NJH /NJS /NP /NS /NC
-if %25ERRORLEVEL%25 GEQ 8 GOTO ERR
-GOTO OK1
+			ROBOCOPY "$(ModDirNoTrailingSlash)" "$(ProjectDir)\assets\\mod" /E /XO /IS /IT /NDL /NJH /NJS /NP /NS /NC
+			if %25ERRORLEVEL%25 GEQ 8 GOTO ERR
+			GOTO OK1
 
-:OK1
-ECHO Copying mod contents from solution folder...
-ROBOCOPY "$(ProjectDir)\assets\\mod" "$(ModDirNoTrailingSlash)" /E /XO /IS /IT /NDL /NJH /NJS /NP /NS /NC
-if %25ERRORLEVEL%25 GEQ 8 GOTO ERR
+			:OK1
+			ECHO Copying mod contents from solution folder...
+			ROBOCOPY "$(ProjectDir)\assets\\mod" "$(ModDirNoTrailingSlash)" /E /XO /IS /IT /NDL /NJH /NJS /NP /NS /NC
+			if %25ERRORLEVEL%25 GEQ 8 GOTO ERR
 
-ECHO Copy almost done, moving mod plugin now...
-COPY "$(TargetPath)" "$(ModDirNoTrailingSlash)\\plugins\$(TargetFileName)"
-exit 0 
+			ECHO Copy almost done, moving mod plugin now...
+			COPY "$(TargetPath)" "$(ModDirNoTrailingSlash)\\plugins\$(TargetFileName)"
+			exit 0
 
-:ERR
-ECHO Failed to copy files!
-exit 1</PostBuildEvent>
+			:ERR
+			ECHO Failed to copy files!
+			exit 1
+		</PostBuildEvent>
   </PropertyGroup>
 </Project>

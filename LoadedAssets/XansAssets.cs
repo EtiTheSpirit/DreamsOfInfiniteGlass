@@ -1,6 +1,8 @@
-﻿using RWCustom;
+﻿#nullable enable
+using RWCustom;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -24,7 +26,7 @@ namespace DreamsOfInfiniteGlass.LoadedAssets {
 			originalMethod(@this);
 			try {
 				Log.LogMessage("Loading assets...");
-				AssetBundle bundle = AssetLoader.LoadAssetBundleFromEmbeddedResource("XansCharacter.assets.embedded.xansshaders");
+				AssetBundle bundle = AssetLoader.LoadAssetBundleFromEmbeddedResource("DreamsOfInfiniteGlass.assets.embedded.xansshaders");
 
 				Log.LogDebug("Loading shaders...");
 				Shaders.AdditiveVertexColored = bundle.FindFShader("Dreams of Infinite Glass/Futile/Additive (Color)");
@@ -54,6 +56,7 @@ namespace DreamsOfInfiniteGlass.LoadedAssets {
 			/// UVs: N/A<br/>
 			/// Vertex Colors: color.rgb, (alpha serves as intensity)
 			/// </summary>
+			[AllowNull]
 			public static FShader AdditiveVertexColored { get; internal set; }
 
 			/// <summary>
@@ -65,16 +68,19 @@ namespace DreamsOfInfiniteGlass.LoadedAssets {
 			/// UVs: N/A<br/>
 			/// Vertex Colors: color.rgb * color.a (color.a determines the inside radius)
 			/// </summary>
+			[AllowNull]
 			public static FShader AdditiveVertexColoredVectorCircle { get; internal set; }
 
 			/// <summary>
 			/// An alternate LevelColor shader that supports additional features leveraged by this mod.
 			/// </summary>
+			[AllowNull]
 			public static FShader SpecializedLevelShader { get; internal set; }
 
 			/// <summary>
 			/// The shader used on the battery HUD element.
 			/// </summary>
+			[AllowNull]
 			public static FShader SpecialBatteryMeterShader { get; internal set; }
 
 		}
@@ -84,9 +90,8 @@ namespace DreamsOfInfiniteGlass.LoadedAssets {
 			/// <summary>
 			/// Allows creating sprites for the battery HUD mask. Its resolution is 128x32
 			/// </summary>
+			[AllowNull]
 			public static SpriteProvider BatteryHudMask { get; internal set; }
-
-
 
 			public class SpriteProvider {
 

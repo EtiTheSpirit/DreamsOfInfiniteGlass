@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using HUD;
 using UnityEngine;
 using RWCustom;
@@ -22,7 +23,7 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator {
 				GameHUD hud = oracle.room.game.cameras[0].hud;
 				if (hud.dialogBox == null) {
 					hud.InitDialogBox();
-					hud.dialogBox.defaultYPos = -10f;
+					hud.dialogBox!.defaultYPos = -10f;
 				}
 				return hud.dialogBox;
 			}
@@ -35,7 +36,7 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator {
 			get {
 				if (_roomCenterCache == null) {
 					_roomCenterCache = Vector2.Lerp(oracle.arm.cornerPositions[3], oracle.arm.cornerPositions[1], 0.5f);
-					// 0 is a corner, 2 is a corner on the opposite side (the pattern follows a ] shape)
+					// 0 is a corner, 2 is a corner on the opposite side (the pattern follows a clockwise pattern, starting from the top left)
 					// [0] [1]
 					// [3] [2]
 				}
@@ -77,7 +78,7 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator {
 		private Vector2 _nextPosHandle;
 		private Vector2 _currentGetTo;
 		private float _pathProgression;
-		private Conversation _currentConversation;
+		private Conversation? _currentConversation;
 		private bool _tempRuntimePreventMoreConversation = false;
 		//#warning Conversation will never occur.
 		private int _moveTimer = 0;
@@ -195,11 +196,9 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator {
 							_currentConversation.Destroy();
 							ProcessManager mgr = oracle.room.game.manager;
 							MusicPlayer plr = mgr.musicPlayer;
-							if (plr.song != null) {
-								plr.song.FadeOut(100f);
-							}
+							plr.song?.FadeOut(100f);
 						}
-						_currentConversation = GlassConversations.ImBack(this);
+						_currentConversation = GlassConversations.TripleAffirmative(this);
 						_currentConversation.AddEvents();
 						PrepareRoomForConversation();
 					}

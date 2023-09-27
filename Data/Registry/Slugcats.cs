@@ -1,4 +1,5 @@
-﻿using JollyCoop;
+﻿#nullable enable
+using JollyCoop;
 using Menu;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -31,17 +32,17 @@ namespace DreamsOfInfiniteGlass.Data.Registry {
 		/// <summary>
 		/// This exists for convenience in the IL hook. Use <see cref="MechID"/> instead.
 		/// </summary>
-		[Obsolete("Use MechID instead, this is for convenience in the IL hook.", true)]
+		[Obsolete("Xan: Use MechID instead, this is for convenience in the IL hook.", true)]
 		private static readonly SlugcatStats.Name _mechIDField;
 		/// <summary>
-		/// This exists for convenience in the IL hook. Use <see cref="MechID"/> instead.
+		/// This exists for convenience in the IL hook. Use <see cref="MechSceneIDNewGame"/> instead.
 		/// </summary>
-		[Obsolete("Use MechID instead, this is for convenience in the IL hook.", true)]
+		[Obsolete("Xan: Use MechSceneIDNewGame instead, this is for convenience in the IL hook.", true)]
 		private static readonly MenuScene.SceneID _mechSceneStartField;
 		/// <summary>
-		/// This exists for convenience in the IL hook. Use <see cref="MechID"/> instead.
+		/// This exists for convenience in the IL hook. Use <see cref="MechSceneIDEndGame"/> instead.
 		/// </summary>
-		[Obsolete("Use MechID instead, this is for convenience in the IL hook.", true)]
+		[Obsolete("Xan: Use MechSceneIDEndGame instead, this is for convenience in the IL hook.", true)]
 		private static readonly MenuScene.SceneID _mechSceneEndField;
 
 		#endregion
