@@ -15,6 +15,7 @@ using XansTools.Utilities.RW;
 using Random = UnityEngine.Random;
 using XansTools.Utilities.General;
 using DreamsOfInfiniteGlass.WorldObjects.Physics;
+using DreamsOfInfiniteGlass.WorldObjects.Decorative;
 
 namespace DreamsOfInfiniteGlass.Character.PlayerCharacter.FX {
 	public class CollapseEffect : UpdatableAndDeletable {
@@ -61,6 +62,13 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter.FX {
 			} else if (_ticksLive == PRE_EXPLODE_AT) {
 				PreExplode();
 			} else if (_ticksLive == PRE_EXPLODE_AT + TICKS_UNTIL_MAIN_EXPLODE) {
+				BodyChunk? firstChunk = _src?.firstChunk;
+				if (firstChunk != null) {
+					if (Extensible.BodyChunk.Binder<SpecialBodyChunk>.TryGetBinding(firstChunk, out SpecialBodyChunk special)) {
+						special.Frozen = true;
+					}
+				}
+
 				Explode();
 				DetonationCompleted = true;
 			} else if (_ticksLive == PRE_EXPLODE_AT + TICKS_UNTIL_MAIN_EXPLODE + TICKS_UNTIL_DESTROY) {
@@ -206,16 +214,28 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter.FX {
 				List<PhysicalObject> pool = room.physicalObjects[physObjIdx];
 				for (int physObjSubIdx = 0; physObjSubIdx < pool.Count; physObjSubIdx++) {
 					PhysicalObject obj = pool[physObjSubIdx];
-					if (obj is Creature creature && Custom.Dist(obj.firstChunk.pos, _at) < 175f) {
-						creature.Die();
-					}
-					if (obj is ElectricSpear spear) {
-						if (spear.abstractSpear.electricCharge == 0) {
-							spear.Recharge();
-						} else {
-							spear.ExplosiveShortCircuit();
+					bool isInFullRange = Custom.Dist(obj.firstChunk.pos, _at) <= 2000f;
+					if (isInFullRange) {
+						if (obj is Creature creature && Custom.Dist(obj.firstChunk.pos, _at) < 175f) {
+							creature.Die();
+						}
+						if (obj is ElectricSpear spear) {
+							if (spear.abstractSpear.electricCharge == 0) {
+								spear.Recharge();
+							} else {
+								spear.ExplosiveShortCircuit();
+							}
 						}
 					}
+				}
+			}
+			for (int zapCoilIndex = 0; zapCoilIndex < room.zapCoils.Count; zapCoilIndex++) {
+				ZapCoil coil = room.zapCoils[zapCoilIndex];
+				if (coil is StableZapCoil stable) {
+					stable.TriggerSpecialZap(stable.CenterPosition, 0f, true);
+				} else {
+					coil.disruption = 1f;
+					coil.smoothDisruption = 1f;
 				}
 			}
 			FirecrackerPlant.ScareObject scareObj = new FirecrackerPlant.ScareObject(_at);

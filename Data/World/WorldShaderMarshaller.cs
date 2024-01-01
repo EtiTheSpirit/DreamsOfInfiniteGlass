@@ -30,13 +30,7 @@ namespace DreamsOfInfiniteGlass.Data.World {
 			Dictionary<string, bool> macros = GetDefaultMacros(newRoom);
 			LoadIndividualMacros(@this, newRoom, macros);
 
-			if (Configuration.AdvancedShaderSystems) {
-				Log.LogTrace($"Advanced shader systems are enabled. Sunlight-related static branches are now available.");
-				Shader.EnableKeyword("SUNLIGHT_STATIC_BRANCHES_AVAILABLE");
-			} else {
-				Log.LogTrace($"Advanced shader systems are disabled. Sunlight-related static branches are no longer available.");
-				Shader.DisableKeyword("SUNLIGHT_STATIC_BRANCHES_AVAILABLE");
-			}
+			Shader.EnableKeyword("SUNLIGHT_STATIC_BRANCHES_AVAILABLE");			
 		}
 
 		private static Dictionary<string, bool> GetDefaultMacros(Room room) {

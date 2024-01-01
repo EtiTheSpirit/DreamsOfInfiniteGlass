@@ -14,12 +14,23 @@ namespace DreamsOfInfiniteGlass.Configs {
 		/// <summary>
 		/// If true, highly detailed logs will be made.
 		/// </summary>
-		public static bool TraceLogging => _traceLogging.Value; // Default to true until configs load.
+		public static bool TraceLogging => _traceLogging.Value;
 
 		/// <summary>
-		/// If true, advanced shader systems that modify behavior on the fly are enabled.
+		/// If true, smooth camera movement is enabled.
 		/// </summary>
-		public static bool AdvancedShaderSystems => _advancedShaders.Value;
+		public static bool SmoothCamera => _smoothCamera.Value;
+
+		/// <summary>
+		/// If true, VRAM usage will be limited by unloading textures.
+		/// </summary>
+		public static bool LowVRAMMode => _lowVRAM.Value;
+
+		/// <summary>
+		/// If true, the rain will no longer fling every physical object in the room around.
+		/// This can somewhat break immersion but also resolves a lot of lag.
+		/// </summary>
+		public static bool DisableRoomRainThrowing => _disableRoomRainThrowing.Value;
 
 		#region Backing Fields
 
@@ -28,7 +39,9 @@ namespace DreamsOfInfiniteGlass.Configs {
 		#endregion
 
 		#region Graphics and Systems
-		private static Configurable<bool> _advancedShaders;
+		private static Configurable<bool> _smoothCamera;
+
+		private static Configurable<bool> _lowVRAM;
 		#endregion
 
 		#region Interop
@@ -36,6 +49,8 @@ namespace DreamsOfInfiniteGlass.Configs {
 		#endregion
 
 		#region Player Mechanics
+
+		private static Configurable<bool> _disableRoomRainThrowing;
 
 		#endregion
 
@@ -121,16 +136,31 @@ You should activate this if you are trying to find bugs in the mod.",
 			_currentSection = "Core Systems";
 			SetCurrentSectionDescription("Settings that relate to critical internal systems.");
 
-			CreateConfig(ref _advancedShaders, true, "Advanced Shaders", description:
-$@"This mod makes heavy use of custom shaders. This option will enable advanced features
-that can dramatically improve performance in this mod's regions, but which might also
-break the renderer in certain weird edge cases that could not be found during testing.",
+			CreateConfig(ref _smoothCamera, true, "Smooth Camera", description:
+$@"/// INCOMPATIBILITY WARNING: Disable SBCameraScroll ///
+If enabled, the camera will scroll smoothly in rooms rather than having discrete, 
+preset views. Levels in this mod have been explicitly rendered to support this using
+a custom renderer.",
+			false);
+
+			CreateConfig(ref _lowVRAM, false, "Low VRAM Mode", description:
+$@"Enable this option to reduce Video RAM usage. This is only really useful if you
+have a comically old (>10 years) GPU, or you are using integrated graphics and have
+low RAM. // NOTE: In exchange, this may cause lag when entering rooms in this
+mod's region, as it will be streaming textures from disk.",
 			false);
 
 			// _currentSection = "Interop";
 			//SetCurrentSectionDescription("Settings that relate to interactions between this mod and other mods.");
 
-			
+			_currentSection = "Mechanical Overrides";
+			SetCurrentSectionDescription("Changes to how the game works that fundamentally changes it, at the benefit of better mod presentation.");
+			CreateConfig(ref _disableRoomRainThrowing, false, "Disable Global Rain Impact Force", description:
+$@"While it is fundamental to the game, the rain throwing objects around the room can cause
+a noticable amount of lag that affects the experience negatively. Enabling this option will,
+for any case where one or more players are SOLSTICE, disable this force. If this is disabled,
+the game will still do it but will ignore SOLSTICE.",
+			false);
 
 			Initialized = true;
 		}

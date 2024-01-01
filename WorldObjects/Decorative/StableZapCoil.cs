@@ -255,7 +255,7 @@ namespace DreamsOfInfiniteGlass.WorldObjects.Decorative {
 									TriggerSpecialZap(chunk.pos + contact * chunk.rad, chunk.rad);
 									chunk.vel -= (contact * 6f + Custom.RNV() * Random.value) / chunk.mass;
 									if (physicsObject is Creature creature) {
-										if (creature is Player player && Extensible.Player.Binder<MechPlayer>.TryGetBinding(player, out WeakReference<MechPlayer> mechRef) && mechRef.TryGetTarget(out MechPlayer mech)) {
+										if (creature is Player player && Extensible.Player.Binder<MechPlayer>.TryGetBinding(player, out MechPlayer mech)) {
 											mech.Die(true);
 										} else {
 											creature.Die();
@@ -313,6 +313,19 @@ namespace DreamsOfInfiniteGlass.WorldObjects.Decorative {
 			room.PlaySoundNoDoppler(SoundID.Zapper_Zap, zapContact, 1f, 1f);
 			room.PlaySoundNoDoppler(Sounds.STOCK_ZAP_SOUND, zapContact, 1f, 1.5f);
 			room.PlaySoundNoDoppler(Sounds.INDUSTRIAL_ALARM, zapContact, 0.5f, 1.0f);
+			_powerState = 0;
+			_ticksRemainingKnockout = Mathematical.SecondsToTicks(5.0f);
+
+			Color alarmColor = ALARM_LIGHT_COLOR.AlphaAsIntensity();
+			_alarmLight1.color = alarmColor;
+			_alarmLight2.color = alarmColor;
+		}
+
+		public void TriggerSpecialZap(Vector2 zapContact, float massRad, bool noAlarm) {
+			room.AddObject(new ColoredZapFlash(zapContact, Mathf.InverseLerp(-0.05f, 15f, massRad), ElectricityColor));
+			room.PlaySoundNoDoppler(SoundID.Zapper_Zap, zapContact, 1f, 1f);
+			room.PlaySoundNoDoppler(Sounds.STOCK_ZAP_SOUND, zapContact, 1f, 1.5f);
+			if (!noAlarm) room.PlaySoundNoDoppler(Sounds.INDUSTRIAL_ALARM, zapContact, 0.5f, 1.0f);
 			_powerState = 0;
 			_ticksRemainingKnockout = Mathematical.SecondsToTicks(5.0f);
 

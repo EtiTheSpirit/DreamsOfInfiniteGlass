@@ -295,11 +295,23 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Character\DeathContextualizer.cs" />
+    <Compile Include="Character\NPC\Machine\MaintainenceSpider.cs" />
+    <Compile Include="Character\NPC\Machine\MaintainenceSpiderGraphics.cs" />
     <Compile Include="Character\NPC\Purposed\Conservator.cs" />
     <Compile Include="Character\NPC\Purposed\GlassOverseer.cs" />
     <Compile Include="Character\NPC\Purposed\GlassOverseerGraphics.cs" />
     <Compile Include="Character\PlayerCharacter\MechPlayerSpawn.cs" />
+    <Compile Include="Character\PlayerCharacter\MechPlayerWorldInteractions.cs" />
+    <Compile Include="Character\PlayerCharacter\MechPlayerWorldInteractions.Rain.cs" />
+    <Compile Include="Data\Creature\IProvideUpdatesAndGraphics.cs" />
+    <Compile Include="Data\Helper\FNodeExtensions.cs" />
+    <Compile Include="Data\Helper\IAmExtensible.cs" />
+    <Compile Include="Data\Mathematical\SpriteTransform2D.cs" />
+    <Compile Include="Data\Persistent\GlassSaveData.cs" />
+    <Compile Include="Data\Registry\CutsceneInjector.cs" />
     <Compile Include="Data\Registry\GlassCreatureTypes.cs" />
+    <Compile Include="Data\Registry\RegisteredCreature.cs" />
     <Compile Include="SystemReimpl\AllowNullAttribute.cs" />
     <Compile Include="SystemReimpl\DoesNotReturnAttribute.cs" />
     <Compile Include="SystemReimpl\DoesNotReturnIfAttribute.cs" />
@@ -310,8 +322,8 @@
     <Compile Include="SystemReimpl\NotNullAttribute.cs" />
     <Compile Include="SystemReimpl\NotNullIfNotNullAttribute.cs" />
     <Compile Include="SystemReimpl\NotNullWhenAttribute.cs" />
-    <Compile Include="WorldObjects\Injections\ZapCoilContextualizer.cs" />
-    <Compile Include="WorldObjects\Physics\FreezableBodyChunk.cs" />
+    <Compile Include="WorldObjects\Physics\SpecialBodyChunk.cs" />
+    <Content Include="assets\mod\text\text_eng\cursedending.txt" />
     <Content Include="assets\mod\text\text_eng\debug\imback.txt" />
     <Compile Include="Character\NPC\Iterator\GlassOracle.cs" />
     <Compile Include="Character\NPC\Iterator\Graphics\GlassOracleGraphics.cs" />
@@ -342,6 +354,14 @@
     <Compile Include="WorldObjects\CustomObjectData.cs" />
     <Compile Include="DreamsOfInfiniteGlassPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="assets\mod\text\text_eng\designsheet.txt" />
+    <Content Include="assets\mod\text\text_eng\exposition2.txt" />
+    <Content Include="assets\mod\text\text_eng\fpsolstice.txt" />
+    <Content Include="assets\mod\text\text_eng\lttmsolstice.txt" />
+    <Content Include="assets\mod\text\text_eng\passive\conservatorinteractions.txt" />
+    <Content Include="assets\mod\text\text_eng\specialinteractions\prl_designsheet.txt" />
+    <Content Include="assets\mod\text\text_eng\testconversation.txt" />
+    <Content Include="assets\mod\text\text_eng\__DOCS.txt" />
     <Content Include="assets\mod\world\IF THINGS AREN%27T WORKING, CHECK ME FIRST.TXT" />
   </ItemGroup>
   <ItemGroup>
@@ -350,7 +370,7 @@
   <ItemGroup>
     <Folder Include="assets\mod\plugins\" />
     <Folder Include="assets\project\" />
-    <Folder Include="Character\NPC\Machine\" />
+    <Folder Include="WorldObjects\Injections\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\description.txt" />
@@ -425,6 +445,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\mod\modinfo.json" />
+    <Compile Include="Character\PlayerCharacter\MechPlayerWorldInteractions.Physics.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XansTools\XansTools.csproj">

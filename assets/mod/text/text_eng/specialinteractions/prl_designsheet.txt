@@ -13,7 +13,7 @@ In fact, for the sake of transparency, I will say that it is your full set of de
 
 The only reason I have chosen to keep this information from you is because it .. might raise some existential questions. This, of course,
 is only a negative because you are still in your testing phase. You and I both know that we need as clean a test environment as possible
-to get proper results.
+to get proper results. It's basic science. This conversation even compromises some of that.
 
 EVT::MovePearlToStorageSpot
 
@@ -35,10 +35,14 @@ EVT::TerminateConversation
 
 EVT::Label,name=PLAYERVERYPERSISTENT
 
-
+I'm sorry, but persistence won't help you here. I am not going to read it yet.
 
 EVT::TerminateConversation
 
 #########################################################################################################################################
 
 EVT::Label,name=PLAYERCOMPLETED
+
+
+
+EVT::TerminateConversation

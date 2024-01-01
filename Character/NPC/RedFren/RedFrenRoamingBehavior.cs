@@ -22,10 +22,13 @@ namespace DreamsOfInfiniteGlass.Character.NPC.RedFren {
 		}
 
 		public override void NewRoom(Room room) {
+			
 			if (room.abstractRoom == null) {
 				AI.creature.Destroy();
 				return;
 			}
+
+			// TODO: For fun should I allow it to be spawned outside?
 			if (room.abstractRoom.name != "AI" || room.abstractRoom.world.region.name != DreamsOfInfiniteGlassPlugin.REGION_PREFIX) {
 				AI.creature.Destroy();
 				return;

@@ -29,7 +29,6 @@ using XansTools.Utilities.ModInit;
 using DreamsOfInfiniteGlass.Data;
 using XansTools.Utilities.RW.FutileTools;
 using DreamsOfInfiniteGlass.Data.World;
-using DreamsOfInfiniteGlass.WorldObjects.Injections;
 using System.Diagnostics.CodeAnalysis;
 using DreamsOfInfiniteGlass.Character.NPC.Purposed;
 
@@ -44,18 +43,28 @@ namespace DreamsOfInfiniteGlass {
 		public const string PLUGIN_ID = "xan.dreamsofinfiniteglass";
 		public const string PLUGIN_VERSION = "1.0.0";
 
+		/// <summary>
+		/// The region prefix for Glass's superstructure
+		/// </summary>
 		public const string REGION_PREFIX = "16";
+
+		/// <summary>
+		/// A quick alias to the string <c>16_AI</c>, the name of the AI chamber room.
+		/// </summary>
+		public const string AI_CHAMBER = REGION_PREFIX + "_AI";
 
 		/// <summary>
 		/// This object can be used to report errors during the mod loading phase.
 		/// </summary>
 		[AllowNull]
-		internal static ErrorReporter Reporter { get; private set; }
+		internal static ErrorReporter ErrReporter { get; private set; }
+
+		[AllowNull]
+		internal static Harmony Harmony { get; private set; }
 
 		[AllowNull]
 		private RemixConfigScreen _cfgScr;
 
-#pragma warning disable IDE0051, IDE0060
 		/// <summary>
 		/// Disable optimization and inlining because this needs to call everything it explicitly goes out of its way to call (mostly static initializers that are empty)
 		/// This has no notable perf impact as Awake is only called once in RW.
@@ -66,7 +75,10 @@ namespace DreamsOfInfiniteGlass {
 				Log.Initialize(Logger);
 				Log.LogMessage("Loading Dreams of Infinite Glass.");
 				Log.LogMessage("Creating error reporter object...");
-				Reporter = new ErrorReporter(this);
+				ErrReporter = new ErrorReporter(this);
+
+				Log.LogMessage("Creating Harmony...");
+				Harmony = new Harmony(PLUGIN_NAME);
 
 				// Configuration.Initialize(); // This is now handled by the RemixConfigScreen class.
 				Log.LogMessage("Loading configs...");
@@ -79,7 +91,7 @@ namespace DreamsOfInfiniteGlass {
 				Oracles.CallToStaticallyReference();
 				Sounds.CallToStaticallyReference();
 				PlaceableObjects.CallToStaticallyReference();
-				MechSaveData.CallToStaticallyReference();
+				// MechSaveData.CallToStaticallyReference();
 
 				Log.LogMessage("Performing patches...");
 				Log.LogTrace("Generating extensibles...");
@@ -89,12 +101,13 @@ namespace DreamsOfInfiniteGlass {
 				Slugcats.Initialize();
 				CustomObjectData.Initialize();
 				WorldShaderMarshaller.Initialize();
-				ZapCoilContextualizer.Initialize();
 				GlassOverseerGraphics.Initialize();
+				MechPlayerWorldInteractions.Initialize();
 
-				Log.LogTrace("Requesting buffers..."); 
+				Log.LogTrace("Requesting special render buffers..."); 
 				FutileSettings.RequestDepthAndStencilBuffer();
 
+				Log.LogTrace("Preparing to register Remix menu...");
 				On.RainWorld.OnModsInit += OnModsInitializing;
 
 
@@ -105,18 +118,18 @@ namespace DreamsOfInfiniteGlass {
 			} catch (Exception exc) {
 				Log.LogFatal("WAKE THE FUCK UP SAMURAI. I SHIT THE BED.");
 				Log.LogFatal(exc.ToString());
-				Reporter.DeferredReportModInitError(exc, $"Loading {PLUGIN_NAME}");
+				ErrReporter.DeferredReportModInitError(exc, $"Loading {PLUGIN_NAME}");
 				throw;
 			}
 		}
-#pragma warning restore IDE0051, IDE0060
+
 		private void OnModsInitializing(On.RainWorld.orig_OnModsInit originalMethod, RainWorld @this) {
 			originalMethod(@this);
 			try {
 				MachineConnector.SetRegisteredOI(PLUGIN_ID, _cfgScr);
 			} catch (Exception exc) {
 				Log.LogFatal(exc);
-				Reporter.DeferredReportModInitError(exc, $"Registering the Remix config menu to {PLUGIN_NAME}");
+				ErrReporter.DeferredReportModInitError(exc, $"Registering the Remix config menu to {PLUGIN_NAME}");
 				throw;
 			}
 		}
@@ -126,5 +139,12 @@ namespace DreamsOfInfiniteGlass {
 			GlassOracle.Initialize();
 			GlassOracleGraphics.Initialize();
 		}
+
+		/// <summary>
+		/// Returns the given <paramref name="name"/> as a full room name (i.e. passing in <c>AI</c> returns <c>16_AI</c>)
+		/// </summary>
+		/// <param name="name"></param>
+		/// <returns></returns>
+		public static string GlassRoom(string name) => $"{REGION_PREFIX}_{name}";
 	}
 }

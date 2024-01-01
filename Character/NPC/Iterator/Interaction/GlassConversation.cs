@@ -22,7 +22,8 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Interaction {
 	/// <summary>
 	/// A more capable conversation type designed for the newer <see cref="ParameterizedEvent"/> system.
 	/// <para/>
-	/// This operates fundamentally differently than the base <see cref="Conversation"/> type.
+	/// This operates fundamentally differently than the base <see cref="Conversation"/> type, and is thus
+	/// not entirely compatible.
 	/// </summary>
 	public abstract class GlassConversation : Conversation {
 
@@ -241,6 +242,7 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Interaction {
 		public override string ToString() {
 			return $"{GetType().FullName}"; // TODO: More text?
 		}
+
 		protected internal static uint JumpDelegate_GetSlugcatEquality(GlassConversation src, JumpEvent evt) {
 			if (evt.ValidSlugcatIDs.Contains(src.currentSaveFile.value)) {
 				return 1;
@@ -674,6 +676,8 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Interaction {
 					Conversation.Jump(this, ConstantLabel);
 				} else {
 					string? target = GetJumpTargetName(Delegate(Conversation, this));
+					if (Conversation.slatedForDeletion) return; // If it was terminated just stop.
+
 					if (target != null) {
 						Conversation.Jump(this, target);
 					}
@@ -698,9 +702,18 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Interaction {
 
 			private static JumpDelegate GetJumpDelegate(GlassConversation @this, string name) {
 				string finalName = JUMP_DELEGATE_METHOD_NAME_PREFIX + name;
-				MethodInfo del = @this.GetType().GetMethod(finalName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+				MethodInfo? del = @this.GetType().GetMethod(finalName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+				MethodInfo? other = @this.interfaceOwner?.GetType().GetMethod(finalName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+				bool methodIsOnConvoOwner = false;
 				if (del == null) {
-					throw new MissingMethodException($"Failed to find a member of {@this.GetType().FullName} named {finalName}.");
+					methodIsOnConvoOwner = true;
+					del = other;
+					if (del == null) {
+						throw new MissingMethodException($"Failed to find a method on either relevant type ({@this.GetType().FullName} and {(@this.interfaceOwner?.GetType()?.FullName ?? "<no IOwnAConversation instance>")}) named {finalName}.");
+					}
+				} else if (other != null) {
+					// Both are declared.
+					throw new InvalidOperationException($"Duplicate method detected; {@this.GetType().FullName} declares {finalName}, but so does {@this.interfaceOwner!.GetType().FullName}. This is not allowed!");
 				}
 
 				#region Delegate Validation
@@ -726,7 +739,7 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Interaction {
 				if (del.IsStatic) {
 					return (JumpDelegate)del.CreateDelegate(typeof(JumpDelegate));
 				}
-				return (JumpDelegate)del.CreateDelegate(typeof(JumpDelegate), @this);
+				return (JumpDelegate)del.CreateDelegate(typeof(JumpDelegate), methodIsOnConvoOwner ? @this.interfaceOwner : @this);
 			}
 
 			private delegate uint JumpDelegate(GlassConversation convo, JumpEvent evt);

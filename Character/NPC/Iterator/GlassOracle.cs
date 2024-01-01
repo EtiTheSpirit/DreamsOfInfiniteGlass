@@ -36,9 +36,9 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator {
 			};
 			On.Room.ReadyForAI += (originalMethod, @this) => {
 				originalMethod(@this);
-				if (@this.abstractRoom.name == $"{DreamsOfInfiniteGlassPlugin.REGION_PREFIX}_AI") {
+				if (@this.abstractRoom.name == DreamsOfInfiniteGlassPlugin.AI_CHAMBER) {
 					if (@this.world != null && @this.game != null) {
-						Log.LogTrace($"I want to spawn glass, the room is {DreamsOfInfiniteGlassPlugin.REGION_PREFIX}_AI.");
+						Log.LogTrace($"I want to spawn glass, the room is {DreamsOfInfiniteGlassPlugin.AI_CHAMBER}.");
 						@this.oracleWantToSpawn = Oracles.GlassID;
 						try {
 							if (@this.abstractRoom == null) {
@@ -192,6 +192,8 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator {
 
 		public void FuckingDie(bool withFunnyRagdoll) {
 			if (health == 0) return;
+			// His last words were "who the hell is steve jobs?"
+
 			Vector2 pos = bodyChunks[0].pos;
 			room.AddObject(new ShockWave(pos, 500f, 0.75f, 18, false));
 			room.AddObject(new Explosion.ExplosionLight(pos, 320f, 1f, 5, Color.white));

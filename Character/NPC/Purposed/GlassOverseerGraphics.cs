@@ -61,7 +61,7 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Purposed {
 					// TODO: Other iterator colors?
 					@this.ownerIterator = GLASS_OVERSEER_IDENTITY;
 				} else {
-					if (UnityEngine.Random.value < 0.001 && world.region.name != "HR") {
+					if ((UnityEngine.Random.value < 0.001 && world.region.name != "HR") || ALWAYS_SPAWN_AS_GLASS_OVERSEER) {
 						// Allow glass's overseers to appear anywhere (other than Rubicon) in any timeline.
 						@this.ownerIterator = GLASS_OVERSEER_IDENTITY;
 					}

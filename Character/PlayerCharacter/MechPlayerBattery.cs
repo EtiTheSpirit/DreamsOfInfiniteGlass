@@ -19,7 +19,7 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter {
 		/// <summary>
 		/// Attempts to get the <see cref="MechPlayer"/> associated with this object's <see cref="Player"/>. Returns null if the object was destroyed.
 		/// </summary>
-		public MechPlayer? PlayerAsMech => Extensible.Player.Binder<MechPlayer>.TryGetBinding(Player, out WeakReference<MechPlayer> mech) ? mech.Get() : null;
+		public MechPlayer? PlayerAsMech => MechPlayer.From(Player);
 
 		/// <summary>
 		/// Charge, as a value from 0 to 100. The getter will never return a value outside of this range, 

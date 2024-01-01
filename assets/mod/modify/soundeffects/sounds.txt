@@ -5,3 +5,4 @@
 [ADD]glass_gigaboom/vol=0.5 : glass-gigaboom
 [ADD]glass_singularity/vol=0.5/dopplerFac=0.0 : glass-singularitybuildup
 [ADD]glass_mech_broken/vol=0.3/dopplerFac=0.0 : glass-mech-broken
+[ADD]glass_mech_die/vol=0.3/dopplerFac=0.0 : drone-die_1,drone-die_2,drone-die_3,drone-die_4

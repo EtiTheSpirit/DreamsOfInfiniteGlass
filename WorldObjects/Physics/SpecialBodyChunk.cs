@@ -12,13 +12,13 @@ namespace DreamsOfInfiniteGlass.WorldObjects.Physics {
 	/// An extension upon <see cref="BodyChunk"/> that can be "anchored" or "frozen".
 	/// While in this state, its velocity is always zero, and its position is stored + reset every Update().
 	/// </summary>
-	public sealed class FreezableBodyChunk : Extensible.BodyChunk {
+	public sealed class SpecialBodyChunk : Extensible.BodyChunk {
 
 		[Obsolete("To future Xan: Unlike other Extensible types, you are actually going to want to bind this one when you construct the corresponding BodyChunk.", true)]
 		internal static void Initialize() { }
 
 #pragma warning disable IDE0051, IDE0060
-		FreezableBodyChunk(BodyChunk original) : base(original) { }
+		SpecialBodyChunk(BodyChunk original) : base(original) { }
 #pragma warning restore IDE0051, IDE0060
 
 		/// <summary>
@@ -38,12 +38,30 @@ namespace DreamsOfInfiniteGlass.WorldObjects.Physics {
 		}
 		private Vector2? _frozenPos = null;
 
+		/// <summary>
+		/// If true, submersion isn't allowed and <see cref="submersion"/> will always return zero.
+		/// </summary>
+		public bool DisallowSubmersion { get; set; }
+
+		public override float submersion {
+			get {
+				float original = base.submersion; // Call the base behavior first for mod compatibility(ish)
+				if (DisallowSubmersion) return 0;
+				return original;
+			}
+		}
+
 		public override void Update() {
+			Force();
+			base.Update();
+			Force();
+		}
+
+		private void Force() {
 			if (Frozen) {
 				vel = Vector2.zero;
 				HardSetPosition(_frozenPos!.Value);
 			}
-			base.Update();
 		}
 	}
 }

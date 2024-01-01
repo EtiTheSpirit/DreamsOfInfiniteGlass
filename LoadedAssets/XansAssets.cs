@@ -39,7 +39,7 @@ namespace DreamsOfInfiniteGlass.LoadedAssets {
 
 				Log.LogDebug("Loading complete!");
 			} catch (Exception error) {
-				DreamsOfInfiniteGlassPlugin.Reporter.DeferredReportModInitError(error, "Loading custom shaders and embedded assets.");
+				DreamsOfInfiniteGlassPlugin.ErrReporter.DeferredReportModInitError(error, "Loading custom shaders and embedded assets.");
 				throw;
 			} finally {
 				Log.LogTrace("Disposing of this hook, as it is no longer needed...");

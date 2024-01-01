@@ -17,7 +17,7 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter {
 			string original = originalMethod(slugcat, out isVanilla);
 
 			if (slugcat == Slugcats.MechID) {
-				original = "16_AI";
+				original = DreamsOfInfiniteGlassPlugin.AI_CHAMBER;
 				isVanilla = false;
 			}
 

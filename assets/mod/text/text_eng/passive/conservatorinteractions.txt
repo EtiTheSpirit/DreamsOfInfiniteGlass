@@ -1,0 +1,45 @@
+﻿EVT::Jmp,delegate=ConservatorInteraction,0=InitialInteraction,1=FollowupInteraction1,2=FollowupInteraction2,3=FollowupInteraction3
+
+EVT::Label,name=InitialInteraction
+
+SYSTEM INTERFACE QUERY [SRC: SOLSTICE (PL_4026531841), TYPE: [CURIOSITY, INQUIRY]]
+MESSAGE FROM GLASS => "I see you have found The Conservator. If you ever wonder how I manage such
+a complex facility, this is how. This handles a lot of the work of managing the newer systems on 
+my behalf, including you, ordinarily. Recent circumstances have led me to assume manual oversight."
+MESSAGE FROM SYSTEM => "Hello, SOLSTICE."
+
+EVT::TerminateConversation
+
+EVT::Label,name=FollowupInteraction1
+
+SYSTEM INTERFACE QUERY [SRC: SOLSTICE (PL_4026531841), TYPE: [CURIOSITY, INQUIRY]]
+NO MESSAGES FROM GLASS. ALLOWING SYSTEM CONVERSATION . . .
+=> "You do seem particularly interested in me. I am sentient to an extent, you know.
+Much like Glass, I too am biomechanical. A large organic neural core sits behind this wall panel,
+you can probably see some of its mass poking through the walls here. I use Glass's systems and share 
+them in real time. In a way, he and I are one and the same, save for my independent core."
+
+EVT::TerminateConversation
+
+EVT::Label,name=FollowupInteraction2
+
+SYSTEM INTERFACE QUERY [SRC: SOLSTICE (PL_4026531841), TYPE: [CURIOSITY, INQUIRY]]
+NO MESSAGES FROM GLASS. ALLOWING SYSTEM CONVERSATION . . .
+=> "My systems are mostly isolated from those outside of the Transition Seal. It is a security 
+measure and I believe it makes complete sense, for a reason now wonderfully highlighted by our current 
+dilemma: Any rogue systems that were to access the core functions of the superstructure would pose an 
+immediate and potentially terminal risk to Glass."
+
+EVT::TerminateConversation
+
+EVT::Label,name=FollowupInteraction3
+
+SYSTEM INTERFACE QUERY [SRC: SOLSTICE (PL_4026531841), TYPE: [CURIOSITY, INQUIRY]]
+NO MESSAGES FROM GLASS. ALLOWING SYSTEM CONVERSATION . . .
+=> "I would love to tell you more, and I am sure you would know to love move, both of us being
+systemic entities... But - and forgive me for potentially coming off as selfish - I *am* in quite
+an unideal situation. Given the fact that your purpose is to resolve this issue, I would very much 
+appreciate if you were to go and complete your task. The rogue systems are .. how can I phrase this
+politely? ...Noisy? Persistent? Oh, who am I kidding. They are insufferable!"
+
+EVT::TerminateConversation

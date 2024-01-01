@@ -17,8 +17,16 @@ namespace DreamsOfInfiniteGlass.Data.Registry {
 		internal static void CallToStaticallyReference() { }
 
 		/// <summary>
+		/// A small, metallic spider-like creature that walks along the walls of the structure rooms and cleans/repairs the
+		/// world. Any objects it comes nearby will be incinerated/deleted/whatever.
+		/// </summary>
+		public static readonly CreatureTemplate.Type MAINTAINENCE_SPIDER = new CreatureTemplate.Type("MaintainenceSpider", true);
+
+		/// <summary>
 		/// Conservator -- A direct underling to Glass responsible for providing chemical messeges or neural impulses
 		/// to other lesser purposed lifeforms. Partly self-aware, but piggybacks off of Glass's intelligence, thus very integrated.
+		/// It's a bit like how a GPU is to a CPU; a companion unit that ultimately receives instructions from the main system
+		/// but is specialized for offloading certain specific work.
 		/// </summary>
 		public static readonly CreatureTemplate.Type CONSERVATOR = new CreatureTemplate.Type("Conservator", true);
 
@@ -30,7 +38,7 @@ namespace DreamsOfInfiniteGlass.Data.Registry {
 
 		/// <summary>
 		/// Sentry -- Also a bit like an inspector, but modified to be able to come into direct contact with Void Fluid with little
-		/// consequence. It is responsible for inspecting the void pipeline, spotting leaks or weaknesses, and repairing them
+		/// consequence. It is responsible for inspecting the void pipeline, spotting leaks or weaknesses, and repairing them.
 		/// </summary>
 		public static readonly CreatureTemplate.Type SENTRY = new CreatureTemplate.Type("Sentry", true);
 

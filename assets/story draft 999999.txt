@@ -1,0 +1,22 @@
+- Glass spontaneously shuts down. SOLSTICE is activated. The player will not see this correlation and will think they woke up on a dead SS
+- Player enters SS from the top, directly into Glass's chamber, sees puppet limp, chamber dark. Continues navigating.
+- Player sees all the equipment still running, sort of. Some stuff is broken but most of it continues to work.
+- Player is guided to a strange wing of the SS, where they encounter the transition seal.
+- Player enters, encountering corrupt conservator via holographic projection
+- Corrupt conservator sees player, locks down the area, and instructs all purposed lifeforms to treat the player as a foreign body.
+- Player must fight their way through to try to get to the conservator and kill it or disable it
+	- Conservator fight needs good controls!
+	- The conservator will be mostly disabled, glitching out and missing most of its core functions
+- On success, the lockdown is released, the player can enter the conservator's mainframe, finds the link to glass and a weird biomass hijacking the data cables
+- Player kills biomass, it falls off, facility suddenly kicks back into full power, including the conservator.
+- Player exits mainframe, sees conservator awake again, conservator quickly takes all the player's weapons
+	- Open dialogue, "Thank you for freeing me also ow holy shit"
+	- "Transition seal unlocked, go to glass's puppet"
+- Player returns to 16_AI
+	- Open glass dialogue, "Oh, it was you. Good. I was hoping you'd work on the first try."
+	- Explain to the player that they are a multipurpose combat and repair drone designed for this type of scenario
+	- Glass reads player's memories, seeing the strange biomass, seems worried
+- MAYBE I could send the player on another little mission, "go investigate the bio wing and make sure shit hasn't hit the fan" type thing
+	- I don't know if the player will find anything.
+- After that, player can roam around glass, but maybe I will have a secret thing, like the player can find a flying drone or cannon i dont fuckin know
+	- If the player finds the secret they can visit the local group, maybe around spearmaster (just before?) so that they can see everyone not dead.

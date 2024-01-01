@@ -4,8 +4,9 @@ paint my own hands red) here's the primary/secondary/tertiary/etc. sources of th
 
 glass-conduitbuzz					: "Robocraft" Respawned & Overclocked update, fusion shield blocking nanotech beam
 glass-devicewarn					: "Robocraft", electroplate failure alarm
-glass-gigaboom						: "Risk of Rain 2" Void Devastator implosion, mixed with the RW thunder sound.
-glass-industrialalarm				: "Spiral Knights", but I am pretty sure this is just a real alarm
-glass-stockshock					: "Spiral Knights"
+glass-gigaboom						: "Risk of Rain 2" Void Devastator implosion, mixed with the RW thunder sound
+glass-industrialalarm				: "Spiral Knights", but I am pretty sure this is just a real alarm or a stock sound.
+glass-stockshock					: Stock sound; unknown source
 glass-singularitybuilup				: Literally just the two singularity bomb sounds stitched together.
 glass-mech-broken					: "Fe", from one of the antagonists' suits of armor whilst broken
+drone-die_*							: "No Man's Sky", sentinel death fx

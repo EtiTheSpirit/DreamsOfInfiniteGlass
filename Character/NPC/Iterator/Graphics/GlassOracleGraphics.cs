@@ -304,6 +304,9 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Graphics {
 			
 			// TODO: If I plan to adapt this to public use I really, *really* want a matrix class so that
 			// matrix transformations can be done rather than just doing trig. It'd be so, so much easier.
+
+			// TODO: You now have your matrix class.
+			// Implement it!
 			
 			Vector2 bodyPos = Vector2.Lerp(owner.firstChunk.lastPos, owner.firstChunk.pos, timeStacker);
 			Vector2 bodyUp = Custom.DirVec(Vector2.Lerp(owner.bodyChunks[1].lastPos, owner.bodyChunks[1].pos, timeStacker), bodyPos);
@@ -648,6 +651,7 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Graphics {
 		}
 
 		#region Halo
+		// TODO: I want to make the segmented halo instead, but need to figure out how to do that.
 
 		private static void OnHaloUpdating(On.OracleGraphics.Halo.orig_Update originalMethod, OracleGraphics.Halo @this) {
 			if (@this.owner.oracle.oracleBehavior is GlassOracleBehavior behavior) {
