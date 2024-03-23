@@ -1,9 +1,11 @@
 ﻿#nullable enable
+using DreamsOfInfiniteGlass.Character.PlayerCharacter;
 using JollyCoop;
 using Menu;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using RWCustom;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +15,12 @@ using System.Threading.Tasks;
 using UnityEngine;
 using XansTools.Exceptions;
 using XansTools.Utilities.Cecil;
+using XansTools.Utilities.RW;
 
 namespace DreamsOfInfiniteGlass.Data.Registry {
 	public static class Slugcats {
 
-		[Obsolete("(to allow referencing the fields)", true)]
+		[Obsolete("Xan: This constructor allows referencing the fields in IL.", true)]
 		static Slugcats() {
 			_mechIDField = new SlugcatStats.Name("Mech", true);
 			_mechSceneStartField = new MenuScene.SceneID("MechSceneStart", true);
@@ -34,11 +37,13 @@ namespace DreamsOfInfiniteGlass.Data.Registry {
 		/// </summary>
 		[Obsolete("Xan: Use MechID instead, this is for convenience in the IL hook.", true)]
 		private static readonly SlugcatStats.Name _mechIDField;
+
 		/// <summary>
 		/// This exists for convenience in the IL hook. Use <see cref="MechSceneIDNewGame"/> instead.
 		/// </summary>
 		[Obsolete("Xan: Use MechSceneIDNewGame instead, this is for convenience in the IL hook.", true)]
 		private static readonly MenuScene.SceneID _mechSceneStartField;
+
 		/// <summary>
 		/// This exists for convenience in the IL hook. Use <see cref="MechSceneIDEndGame"/> instead.
 		/// </summary>
@@ -48,7 +53,7 @@ namespace DreamsOfInfiniteGlass.Data.Registry {
 		#endregion
 
 		/// <summary>
-		/// The cool cat. It's not really a cat. I think.
+		/// The cool cat. It's not really a cat, though. Nor is it a slug.
 		/// </summary>
 		public static SlugcatStats.Name MechID { get; }
 
@@ -65,14 +70,14 @@ namespace DreamsOfInfiniteGlass.Data.Registry {
 		/// <summary>
 		/// The name of the mechanical slugcat.
 		/// </summary>
-		public static string MechName { get; } = "SOLSTICE";
+		public static string MechName { get; } = MechPlayer.CHARACTER_NAME;
 
 		/// <summary>
 		/// A short description of the mechanical slugcat.
 		/// </summary>
-		public static string MechDescription { get; } = 
-@"An AI construct using a mechanical mock body of a slugcat.
-It's not very clear who made it, nor why.";
+		public static string MechDescription { get; } =
+@"A uniquely advanced mechanical being that experiences
+the world much differently than any ordinary creature.";
 
 		internal static void Initialize() {
 			Log.LogMessage("Hooking slugcat related data containers...");
@@ -83,11 +88,54 @@ It's not very clear who made it, nor why.";
 			On.PlayerGraphics.DefaultBodyPartColorHex += OnGettingDefaultBodyPartColorList;
 			On.Menu.MenuScene.BuildScene += OnBuildingScene;
 			On.SlugcatStats.getSlugcatName += OverrideDisplayedName;
+			On.SaveState.GetStoryDenPosition += OnGettingStoryPosition;
 
-			Log.LogMessage("Performing realtime code changes to data containers...");
+			Log.LogMessage("Performing runtime code changes to data containers...");
 			IL.Menu.SlugcatSelectMenu.SlugcatPage.AddImage += InjectAddImageToSlugcat;
 			IL.Menu.SlugcatSelectMenu.RefreshJollySummary += InjectRefreshJollySummary;
 			On.JollyCoop.JollyMenu.JollyPlayerSelector.Update += OnJollyMenuPlayerSelectorUpdate;
+		}
+
+		private static string OnGettingStoryPosition(On.SaveState.orig_GetStoryDenPosition originalMethod, SlugcatStats.Name slugcat, out bool isVanilla) {
+			string originalResult = originalMethod(slugcat, out isVanilla);
+			if (slugcat == MechID) {
+				isVanilla = false;
+				return "HI_B02";
+			}
+			return originalResult;
+		}
+
+		/// <summary>
+		/// Returns true if any current player in the game is SOLSTICE.
+		/// </summary>
+		/// <returns></returns>
+		public static bool IsAnyoneMechPlayer(RainWorldGame? game = null) {
+			/*
+			MainLoopProcess mainLoop = game ?? Custom.rainWorld.processManager.currentMainLoop;
+			if (mainLoop is RainWorldGame game1) {
+				game = game1;
+				return game.Players.Where(abs => abs != null && abs.creatureTemplate == Player).Select(abs => (Player)abs.realizedCreature).Any(plr => MechPlayer.From(plr) is not null);
+			}
+			throw new InvalidOperationException("Rain World's current process is not the in-game process; getting a player is not possible at this time.");
+			*/
+			MainLoopProcess mainLoop = game ?? Custom.rainWorld.processManager.currentMainLoop;
+			if (mainLoop is RainWorldGame game1) {
+				game = game1;
+				if (game.IsStorySession && ModManager.CoopAvailable) {
+					foreach (AbstractCreature abstractCreature in game.Players) {
+						if (abstractCreature.state is PlayerState state) {
+							if (game.rainWorld.options.jollyPlayerOptionsArray[state.playerNumber].playerClass == MechID) return true;
+						}
+					}
+				} else {
+					foreach (AbstractCreature abstractCreature in game.Players) {
+						if (abstractCreature.state is PlayerState state) {
+							if (state.slugcatCharacter == MechID) return true;
+						}
+					}
+				}
+			}
+			return false;
 		}
 
 		#region Display Name Changes
@@ -210,7 +258,7 @@ It's not very clear who made it, nor why.";
 			List<string> list = originalMethod(slugcatID);
 			if (slugcatID == MechID) {
 				if (list[0] != "Body") {
-					Log.LogWarning($"Something else modified [0] in the body part list for slugcats! Expected \"Body\", got \"{list[0]}\" -- I may not be able to do the replacement!");
+					Log.LogWarning($"Something else modified [0] in the body part list for slugcats! Expected \"Body\", got \"{list[0]}\" -- I'll search for it, but things might break!");
 					int i = list.IndexOf("Body");
 					if (i == -1) {
 						Log.LogWarning("\"Body\" does not exist! Replacement will fail, and color customization may display invalid body parts.");
@@ -221,7 +269,7 @@ It's not very clear who made it, nor why.";
 				} else {
 					list[0] = "Chassis"; // replace Body
 				}
-				list.Add("Energy");
+				list.Add("Power Rails");
 
 			}
 			return list;

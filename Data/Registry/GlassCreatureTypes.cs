@@ -8,6 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DreamsOfInfiniteGlass.Data.Registry {
+
+	/// <summary>
+	/// Contains a lookup of the creature enums.
+	/// </summary>
 	public static class GlassCreatureTypes {
 
 		/// <summary>

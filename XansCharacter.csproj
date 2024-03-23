@@ -95,6 +95,9 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="Unity.Mathematics">
+      <HintPath>E:\Steam Games\steamapps\common\Rain World\RainWorld_Data\Managed\Unity.Mathematics.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>E:\Steam Games\steamapps\common\Rain World\RainWorld_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
@@ -296,11 +299,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Character\DeathContextualizer.cs" />
+    <Compile Include="Character\NPC\Iterator\GlassOracleArm.cs" />
     <Compile Include="Character\NPC\Machine\MaintainenceSpider.cs" />
     <Compile Include="Character\NPC\Machine\MaintainenceSpiderGraphics.cs" />
+    <Compile Include="Character\NPC\Purposed\ColoredInformation.cs" />
     <Compile Include="Character\NPC\Purposed\Conservator.cs" />
+    <Compile Include="Character\NPC\Purposed\GlassInspector.cs" />
     <Compile Include="Character\NPC\Purposed\GlassOverseer.cs" />
     <Compile Include="Character\NPC\Purposed\GlassOverseerGraphics.cs" />
+    <Compile Include="Character\PlayerCharacter\Interactions\Spears.cs" />
     <Compile Include="Character\PlayerCharacter\MechPlayerSpawn.cs" />
     <Compile Include="Character\PlayerCharacter\MechPlayerWorldInteractions.cs" />
     <Compile Include="Character\PlayerCharacter\MechPlayerWorldInteractions.Rain.cs" />
@@ -322,6 +329,7 @@
     <Compile Include="SystemReimpl\NotNullAttribute.cs" />
     <Compile Include="SystemReimpl\NotNullIfNotNullAttribute.cs" />
     <Compile Include="SystemReimpl\NotNullWhenAttribute.cs" />
+    <Compile Include="Utilities\DangerTypeHelper.cs" />
     <Compile Include="WorldObjects\Physics\SpecialBodyChunk.cs" />
     <Content Include="assets\mod\text\text_eng\cursedending.txt" />
     <Content Include="assets\mod\text\text_eng\debug\imback.txt" />
@@ -330,7 +338,6 @@
     <Compile Include="Character\NPC\RedFren\RedFrenAI.cs" />
     <Compile Include="Character\NPC\RedFren\RedFrenRoamingBehavior.cs" />
     <Compile Include="Character\PlayerCharacter\DataStorage\MechPlayerHealth.cs" />
-    <Compile Include="Character\PlayerCharacter\DataStorage\MechSaveData.cs" />
     <Compile Include="Character\PlayerCharacter\FX\CollapseEffect.cs" />
     <Compile Include="Character\PlayerCharacter\MechPlayer.cs" />
     <Compile Include="Character\PlayerCharacter\MechPlayerBattery.cs" />

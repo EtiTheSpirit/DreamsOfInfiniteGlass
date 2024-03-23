@@ -609,6 +609,7 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Iterator.Graphics {
 
 		public override void Update() {
 			base.Update();
+			
 
 			float target = 0.0f;
 			//bool processing = false;

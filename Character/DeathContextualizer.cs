@@ -11,6 +11,11 @@ using XansTools.Utilities.General;
 using static XansTools.Utilities.Patchers.MethodOfProvider;
 
 namespace DreamsOfInfiniteGlass.Character {
+
+	/// <summary>
+	/// The death contextualizer allows performing a harmony modification to any method that calls <see cref="Creature.Die"/>
+	/// such that <see cref="MechPlayer.AboutToDie"/> is called just before.
+	/// </summary>
 	public static class DeathContextualizer {
 
 		/// <summary>
@@ -19,20 +24,40 @@ namespace DreamsOfInfiniteGlass.Character {
 		/// </summary>
 		/// <param name="harmony"></param>
 		/// <param name="target"></param>
-		public static void CreateDeathContextIn(Harmony harmony, MethodBase target) {
-			PatchProcessor processor = harmony.CreateProcessor(target);
-			processor.AddTranspiler(new HarmonyMethod(typeof(DeathContextualizer).GetMethod(nameof(TranspileIntoDieHandler), BindingFlags.Static | BindingFlags.NonPublic)));
+		public static void CreateDeathContextIn(Harmony harmony, MethodBinding target) {
+			_transpileIntoDieNoSupernova ??= typeof(DeathContextualizer).GetMethod(nameof(TranspileIntoDieHandler), BindingFlags.Static | BindingFlags.NonPublic);
+			_transpileIntoDieWithSupernova ??= typeof(DeathContextualizer).GetMethod(nameof(TranspileIntoDieHandlerWithSupernova), BindingFlags.Static | BindingFlags.NonPublic);
+
+			PatchProcessor processor = harmony.CreateProcessor(target.method);
+			processor.AddTranspiler(new HarmonyMethod(target.forceSupernova ? _transpileIntoDieWithSupernova : _transpileIntoDieNoSupernova));
 			//processor.AddTranspiler(HarmonyMethodOf(TranspileIntoDieHandler));
 			processor.Patch();
 		}
 
-		public static void CreateDeathContextsIn(Harmony harmony, params MethodBase[] targets) {
-			foreach (MethodBase target in targets) {
+		private static MethodInfo _transpileIntoDieNoSupernova;
+		private static MethodInfo _transpileIntoDieWithSupernova;
+
+		/// <summary>
+		/// Given one or more methods belonging to something that calls <see cref="Creature.Die"/>, this will edit its code such that
+		/// if it kills <see cref="MechPlayer"/> then it will call a special method just beforehand.
+		/// </summary>
+		/// <param name="harmony"></param>
+		/// <param name="target"></param>
+		public static void CreateDeathContextsIn(Harmony harmony, params MethodBinding[] targets) {
+			foreach (MethodBinding target in targets) {
 				CreateDeathContextIn(harmony, target);
 			}
 		}
 
 		private static IEnumerable<CodeInstruction> TranspileIntoDieHandler(IEnumerable<CodeInstruction> instructions, MethodBase original) {
+			return CommonTranspileProcedure(instructions, original, false);
+		}
+
+		private static IEnumerable<CodeInstruction> TranspileIntoDieHandlerWithSupernova(IEnumerable<CodeInstruction> instructions, MethodBase original) {
+			return CommonTranspileProcedure(instructions, original, true);
+		}
+
+		private static IEnumerable<CodeInstruction> CommonTranspileProcedure(IEnumerable<CodeInstruction> instructions, MethodBase original, bool causeSupernova) {
 			int instructionIndex = -1;
 			foreach (CodeInstruction instruction in instructions) {
 				instructionIndex++;
@@ -42,7 +67,7 @@ namespace DreamsOfInfiniteGlass.Character {
 						// I know for a fact that the only stack value will be the thing that is about to die, due to the method's signature.
 
 						// Dupe the creature that is being killed, so that we can use it here and then again for the die method call.
-						yield return new CodeInstruction(OpCodes.Dup); 
+						yield return new CodeInstruction(OpCodes.Dup);
 
 						// Now get the type of the caller.
 						yield return new CodeInstruction(OpCodes.Ldtoken, original.DeclaringType);
@@ -58,9 +83,10 @@ namespace DreamsOfInfiniteGlass.Character {
 
 						// Now to use all of this:
 						// Call TryTellMechPlayerAboutDeath
+						yield return new CodeInstruction(causeSupernova ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0);
 						yield return new CodeInstruction(OpCodes.Call, typeof(DeathContextualizer).GetMethod(nameof(TryTellMechPlayerAboutDeath), BindingFlags.Static | BindingFlags.NonPublic));
 						//yield return new CodeInstruction(OpCodes.Call, methodof(TryTellMechPlayerAboutDeath));
-						
+
 						// And lastly, return the original Die() call.
 						// (Just fall through)
 					}
@@ -77,11 +103,38 @@ namespace DreamsOfInfiniteGlass.Character {
 			return true;
 		}
 
-		private static void TryTellMechPlayerAboutDeath(object dyingThing, Type callerType, object callerInstance) {
+		private static void TryTellMechPlayerAboutDeath(object dyingThing, Type callerType, object callerInstance, bool forceSupernova) {
 			if (dyingThing is Creature creature && creature is Player player && MechPlayer.From(player) is MechPlayer mech) {
-				mech.AboutToDie(callerType, callerInstance);
+				mech.AboutToDie(callerType, callerInstance, forceSupernova);
 			}
 		}
 
+		/// <summary>
+		/// A container with both a method to patch and whether or not the death type should result in a supernova.
+		/// </summary>
+		public readonly struct MethodBinding {
+
+			/// <summary>
+			/// The method to patch.
+			/// </summary>
+			public readonly MethodBase method;
+
+			/// <summary>
+			/// If true, calling Die() from this method should cause a supernova.
+			/// </summary>
+			public readonly bool forceSupernova;
+
+			public static implicit operator MethodBinding(ValueTuple<MethodBase, bool> tuple) => new MethodBinding(tuple.Item1, tuple.Item2);
+
+			public static implicit operator MethodBinding(MethodBase method) => new MethodBinding(method, false);
+
+			public static implicit operator ValueTuple<MethodBase, bool>(MethodBinding @this) => (@this.method, @this.forceSupernova);
+
+			public MethodBinding(MethodBase method, bool forceSupernova) {
+				this.method = method;
+				this.forceSupernova = forceSupernova;
+			}
+
+		}
 	}
 }

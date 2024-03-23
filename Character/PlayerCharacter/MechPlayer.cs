@@ -16,7 +16,7 @@ using XansTools.Utilities.General;
 using System.Runtime.CompilerServices;
 using XansTools.Utilities.RW.DataPersistence;
 using DreamsOfInfiniteGlass.Data.Helper;
-using static UnityEngine.UI.Image;
+using DreamsOfInfiniteGlass.Data.Persistent;
 
 namespace DreamsOfInfiniteGlass.Character.PlayerCharacter {
 
@@ -24,6 +24,11 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter {
 	/// This class represents SOLSTICE and all of its abilities.
 	/// </summary>
 	public sealed class MechPlayer : Extensible.Player {
+
+		/// <summary>
+		/// The name of the player character.
+		/// </summary>
+		public const string CHARACTER_NAME = "SOLSTICE";
 
 		/// <summary>
 		/// Damage in <see cref="Violence(BodyChunk, Vector2?, BodyChunk, PhysicalObject.Appendage.Pos, Creature.DamageType, float, float)"/> is multiplied by this value
@@ -58,12 +63,15 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter {
 		/// </summary>
 		public SpecialBodyChunk? FirstChunkAnchorable => _anchorableFirst.Get();
 
+		/// <summary>
+		/// A reference to <see cref="PhysicalObject.bodyChunks"/>[1] as a <see cref="SpecialBodyChunk"/>.
+		/// </summary>
 		public SpecialBodyChunk? SecondChunkAnchorable => _anchorableSecond.Get();
 
 		/// <summary>
-		/// The mech's save data.
+		/// If true, the next call to <see cref="Die()"/> should always result in the explosive death.
 		/// </summary>
-		public SaveDataAccessor SaveData { get; } = SaveDataAccessor.Get(DreamsOfInfiniteGlassPlugin.PLUGIN_ID, "MechPlayer");
+		private bool _nextDeathIsSupernova = false;
 
 		/// <summary>
 		/// The average velocity of all body parts.
@@ -94,11 +102,13 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter {
 		}
 
 		/// <summary>
-		/// If the provided player has a binding to <see cref="MechPlayer"/>, this returns the instance. Returns null otherwise.
+		/// If the provided player has a binding to <see cref="MechPlayer"/>, this returns the instance. Returns <see langword="null"/> otherwise.
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
 		public static MechPlayer? From(Player player) => Binder<MechPlayer>.TryGetBinding(player, out MechPlayer mech) ? mech : null;
+
+		private LightSource? _waterLight;
 		
 		internal static void Initialize() {
 			On.Player.ctor += (originalMethod, @this, abstractCreature, world) => {
@@ -125,6 +135,7 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter {
 			// Now bind this.
 			_anchorableFirst = Extensible.BodyChunk.Binder<SpecialBodyChunk>.Bind(original.bodyChunks[0]);
 			_anchorableSecond = Extensible.BodyChunk.Binder<SpecialBodyChunk>.Bind(original.bodyChunks[1]);
+			slugcatStats.throwingSkill = 2;
 		}
 #pragma warning restore IDE0051, IDE0060
 
@@ -137,37 +148,14 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter {
 			// In general, Rain World entities will deal anywhere from 0 to 2 damage in most cases.
 			float scaledDamage = damage * DAMAGE_SCALE;
 			Log.LogDebug($"Mech got attacked. The source is {source} ({source?.owner}) with {damage} (=> {scaledDamage}) damage.");
+			Health.TakeDamage(scaledDamage, damageType);
+			/*
 			if (source.TryGetOwnerAs(out Weapon weapon)) {
 				Health.TakeDamage(scaledDamage, weapon);
 			} else if (source.TryGetOwnerAs(out Creature creature)) {
 				Health.TakeDamage(scaledDamage, creature, damageType);
 			} else {
 				Health.TakeDamage(scaledDamage, source?.owner);
-			}
-			/*
-			if (source.TryGetOwnerAs(out Weapon weapon)) {
-				if (weapon is ElectricSpear electricSpear) {
-					if (electricSpear.stuckInObject == (Player)this) {
-						Die(true);
-					} else {
-						// It didn't get stuck but was still a big hit.
-						// TODO: What are the damage values that are usually seen?
-						Battery.ClampedCharge -= (Random.value * 4f) + 2f;
-					}
-				} else if (weapon is ExplosiveSpear explosiveSpear) {
-					// TODO
-				} else {
-					// TODO
-				}
-			} else if (source.TryGetOwnerAs(out Creature creature)) {
-				// TODO
-			} else {
-				// TODO
-				if (type == Creature.DamageType.Electric) {
-
-				} else if (type == Creature.DamageType.Explosion) {
-
-				}
 			}
 			*/
 		}
@@ -184,20 +172,38 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter {
 
 			_anchorableFirst = Extensible.BodyChunk.Binder<SpecialBodyChunk>.Bind(bodyChunks[0]);
 			_anchorableSecond = Extensible.BodyChunk.Binder<SpecialBodyChunk>.Bind(bodyChunks[1]);
+
+			if (_waterLight != null) {
+				_waterLight.Destroy();
+				_waterLight = null;
+			}
 		}
 
-		public void AboutToDie(System.Type sourceType, object? sourceInstance) {
-			Log.LogMessage($"The mech is about to die, via a call from {sourceType.FullName} (instance: {sourceInstance})");
+		public void AboutToDie(Type sourceType, object? sourceInstance, bool forceSupernova) {
+			Log.LogDebug($"The mech is about to die, via a call from {sourceType.FullName} (instance: {sourceInstance})");
+			_nextDeathIsSupernova = forceSupernova;
+			if (forceSupernova) return;
+
+			if (sourceInstance is Spear spear) {
+				_nextDeathIsSupernova = spear.abstractSpear.electricCharge != 0;
+			} else if (sourceInstance is SingularityBomb) {
+				_nextDeathIsSupernova = true;
+			} else if (sourceInstance is ZapCoil) {
+				_nextDeathIsSupernova = true;
+			} else if (sourceInstance is BigEel) {
+				_nextDeathIsSupernova = true;
+			} else if (sourceInstance is Oracle || sourceInstance is OracleBehavior || sourceInstance is SSOracleBehavior.SubBehavior || sourceType.DeclaringType.IsAssignableTo(typeof(OracleBehavior))) {
+				_nextDeathIsSupernova = true;
+			}
 		}
 
-		public override void Die() => Die(false);
+		public override void Die() => Die(_nextDeathIsSupernova);
 
 		/// <summary>
 		/// Kill this player.
 		/// </summary>
 		/// <param name="causeCollapse">If true, the player will violently detonate as their reactor core goes critical. If false, they just die normally.</param>
 		public void Die(bool causeCollapse) {
-			
 			if (dead) return;
 			base.Die();
 			Log.LogDebug($"Mech has died. Collapse: {causeCollapse}");
@@ -239,8 +245,8 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter {
 		}
 
 		public override void Deafen(int df) {
-			Log.LogTrace("Deafen duration will be divided by 8.");
-			base.Deafen(df >> 3);
+			Log.LogTrace("Deafen duration will be divided by 2.");
+			base.Deafen(df >> 1);
 		}
 
 		public override float DeathByBiteMultiplier() {
@@ -291,14 +297,76 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter {
 					y -= 1f;
 				}
 			}
-		}		
+		}
+
+		public override void ThrownSpear(Spear spear) {
+			slugcatStats.throwingSkill = 2;
+			base.ThrownSpear(spear);
+			spear.thrownBy = this;
+			spear.doNotTumbleAtLowSpeed = true;
+			spear.gravity = 0;
+			spear.spearDamageBonus = 4;
+			spear.alwaysStickInWalls = true;
+			spear.waterRetardationImmunity = 1.0f;
+			spear.firstChunk.vel *= 2;
+		}
 
 		public override void Update(bool eu) {
 			base.Update(eu);
+			GlassSaveData.Instance.Update();
+
+			if (_waterLight == null) {
+				_waterLight = new LightSource(firstChunk.pos, false, Color.white, this, true);
+				_waterLight.HardSetRad(512.0f);
+				_waterLight.HardSetAlpha(0.0f);
+				room.AddObject(_waterLight);
+			}
+			if (_waterLight != null && !_waterLight.slatedForDeletetion) {
+				_waterLight.HardSetPos(firstChunk.pos);
+				_waterLight.HardSetAlpha(room.world.rainCycle.RainApproaching <= 0.1f ? 0.25f : 0.0f);
+			}
+
+			if (!GlassSaveData.Instance.HasSeenRainImmunityTutorial) {
+				if (room.world.rainCycle.RainApproaching <= 0.8f || room.abstractRoom.shelter) {
+					GlassSaveData.Instance.HasSeenRainImmunityTutorial = true;
+					TutorialTools.ShowTutorialMessage(
+						$"{CHARACTER_NAME} can not be harmed by the rain. Feel free to stay out and explore.",
+						10,
+						400,
+						true,
+						true
+					);
+					TutorialTools.ShowTutorialMessage(
+						$"Be careful, though! The violent shaking and objects being thrown can still kill you.",
+						10,
+						400,
+						true,
+						true
+					);
+					TutorialTools.ShowTutorialMessage(
+						$"After staying out long enough, the world will flood, potentially unlocking new areas...",
+						10,
+						400,
+						true,
+						true
+					);
+				}
+			}
 
 			if (WouldBeSwimming()) {
 				// Do a manual velocity reduction.
 				ApplyManualWaterDrag();
+
+				if (!GlassSaveData.Instance.HasSeenWaterTutorial) {
+					GlassSaveData.Instance.HasSeenWaterTutorial = true;
+					TutorialTools.ShowTutorialMessage(
+						$"{CHARACTER_NAME} is too heavy to swim. However, it does not need air to survive, and can remain underwater.",
+						0,
+						200,
+						false,
+						false
+					);
+				}
 			}
 
 			// Manage stats

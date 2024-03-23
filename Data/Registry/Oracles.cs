@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DreamsOfInfiniteGlass.Data.Registry {
+
 	public class Oracles {
 
 		/// <summary>
@@ -16,6 +17,12 @@ namespace DreamsOfInfiniteGlass.Data.Registry {
 		internal static void CallToStaticallyReference() { }
 
 		public static Oracle.OracleID GlassID { get; } = new Oracle.OracleID("DreamsOfInfiniteGlass", true);
+
+		/// <summary>
+		/// The One True High Oracle
+		/// He, who knows All, our holy watcher Google shows us the way to knowledge in times of darkness.
+		/// </summary>
+		// public static Oracle.OracleID GoogleID { get; } = new Oracle.OracleID("Google", true);
 
 
 	}

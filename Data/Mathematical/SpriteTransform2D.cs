@@ -222,8 +222,16 @@ namespace DreamsOfInfiniteGlass.Data.Mathematical {
 			);
 		}
 
+		/// <summary>
+		/// Multiply the left matrix with the inverse of the right matrix. Division is not a defined operation
+		/// for matrices but this operates on the idea that <c>x / y</c> is the same as <c>x * (1 / y)</c>, where
+		/// <c>1 / y</c> is the inverse of <c>y</c>: Multiplying it with <c>y</c> results in 1.
+		/// </summary>
+		/// <param name="left"></param>
+		/// <param name="right"></param>
+		/// <returns></returns>
 		public static SpriteTransform2D operator /(SpriteTransform2D left, SpriteTransform2D right) {
-			return ~left * right;
+			return left * ~right;
 		}
 
 		public static bool operator ==(SpriteTransform2D left, SpriteTransform2D right) => left.Equals(right);
@@ -248,6 +256,16 @@ namespace DreamsOfInfiniteGlass.Data.Mathematical {
 		}
 
 		public bool Equals(SpriteTransform2D other) {
+			if (m00 != other.m00) return false;
+			if (m01 != other.m01) return false;
+			if (m10 != other.m10) return false;
+			if (m11 != other.m11) return false;
+			if (x != other.x) return false;
+			if (y != other.y) return false;
+			return true;
+		}
+
+		public bool FuzzyEquals(SpriteTransform2D other) {
 			if (!FuzzyEq(m00, other.m00)) return false;
 			if (!FuzzyEq(m01, other.m01)) return false;
 			if (!FuzzyEq(m10, other.m10)) return false;
@@ -258,7 +276,7 @@ namespace DreamsOfInfiniteGlass.Data.Mathematical {
 		}
 
 		private static bool FuzzyEq(float left, float right) {
-			return Mathf.Abs(left - right) < 1e-5f;
+			return Mathf.Abs(left - right) <= 1e-5f;
 		}
 	}
 }

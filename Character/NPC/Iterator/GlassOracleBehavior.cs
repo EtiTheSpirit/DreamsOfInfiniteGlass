@@ -8,6 +8,7 @@ using GameHUD = HUD.HUD;
 using Random = UnityEngine.Random;
 using Music;
 using XansTools.Utilities.General;
+using DreamsOfInfiniteGlass.Character.NPC.Iterator.Graphics;
 // using static XansCharacter.Character.NPC.Iterator.Interaction.GlassConversations;
 
 namespace DreamsOfInfiniteGlass.Character.NPC.Iterator {

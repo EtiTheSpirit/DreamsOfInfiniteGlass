@@ -10,6 +10,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DreamsOfInfiniteGlass.Data.Registry {
+
+	/// <summary>
+	/// Experimental, broken. Inject a custom cutscene.
+	/// </summary>
 	public sealed class CutsceneInjector {
 
 		public static void Initialize() {

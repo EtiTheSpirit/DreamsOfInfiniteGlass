@@ -11,9 +11,11 @@ using Mono.Cecil;
 using XansTools.Exceptions;
 using UnityEngine;
 using MonoMod.RuntimeDetour;
-using static XansTools.Utilities.Patchers.MethodOfProvider;
 using System.Reflection;
 using DreamsOfInfiniteGlass.Configs;
+using DreamsOfInfiniteGlass.Data.Registry;
+using DreamsOfInfiniteGlass.Utilities;
+using System.Runtime.CompilerServices;
 
 namespace DreamsOfInfiniteGlass.Character.PlayerCharacter {
 	public static partial class MechPlayerWorldInteractions {
@@ -25,6 +27,7 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter {
 			IL.RoomRain.ThrowAroundObjects += InjectRainThrowObjects;
 			On.RoomRain.ThrowAroundObjects += OnThrowingAroundObjects;
 			On.RoomRain.DrawSprites += OnDrawingRain;
+			On.Room.Loaded += OnRoomLoaded;
 			Hook hook = new Hook(
 				typeof(RoomRain).GetProperty(nameof(RoomRain.FloodLevel)).GetMethod,
 				typeof(MechPlayerWorldInteractions).GetMethod(nameof(GetFloodLevel), BindingFlags.Static | BindingFlags.NonPublic)
@@ -32,8 +35,33 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter {
 			hook.Apply();
 		}
 
+		// ALSO TODO: Maybe override all rooms to have flooding enabled too?
+		// This might make sense, given the player is supposed to never actually be out during the rain normally,
+		// so I could just weasel my way out of it by saying "oh yeah it eventually all floods you just can't see that"
+
+		private static void OnRoomLoaded(On.Room.orig_Loaded originalMethod, Room @this) {
+			if (@this.game != null) {
+				if (Slugcats.IsAnyoneMechPlayer(@this.game)) {
+					// TODO: I want to make high up rooms not flood. The world can still flood but there is a point where it seems unrealistic.
+					// As far as how to achieve this, I don't know.
+					// There is no elevation value that regions have, so getting their altitude (especially wrt the retaining wall) is
+					// not exactly possible. The idea I have is that the retaining wall contains most of the water so anything beneath the top
+					// of the wall should eventually flood.
+
+					// For now I may have to add a region blacklist.
+
+					@this.roomSettings.DangerType = DangerTypeHelper.TryAddFlooding(@this.roomSettings.DangerType);
+					if (@this.waterObject == null && DangerTypeHelper.HasRain(@this.roomSettings.DangerType)) {
+						@this.AddWater();
+					}
+				}
+			}
+			originalMethod(@this);
+		}
+
+
 		private static void OnThrowingAroundObjects(On.RoomRain.orig_ThrowAroundObjects originalMethod, RoomRain @this) {
-			if (Configuration.DisableRoomRainThrowing && WorldTools.GetPlayers().Any(plr => MechPlayer.From(plr) is not null)) return;
+			if (Configuration.DisableRoomRainThrowing && Slugcats.IsAnyoneMechPlayer()) return;
 			originalMethod(@this);
 		}
 
@@ -44,7 +72,7 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter {
 
 		private static void OnDrawingRain(On.RoomRain.orig_DrawSprites originalMethod, RoomRain @this, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, UnityEngine.Vector2 camPos) {
 			originalMethod(@this, sLeaser, rCam, timeStacker, camPos);
-			if (WorldTools.GetPlayers().Any(plr => MechPlayer.From(plr) is not null)) {
+			if (Slugcats.IsAnyoneMechPlayer()) {
 				// There is a mech player in this instance. In this scenario, be it singleplayer or co-op,
 				// draw death rain with only part of its intensity.
 				float storedRainEverywhere = Shader.GetGlobalFloat("_rainEverywhere");
@@ -78,7 +106,11 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter {
 			cursor.Emit(OpCodes.Ldloc_3);
 			cursor.Emit(OpCodes.Ldloca_S, (byte)2);
 			cursor.EmitDelegate<CheckForMechPlayer>((BodyChunk bodyChunk, ref int iter) => {
-				if (bodyChunk.owner is Player player && MechPlayer.From(player) is not null) {
+				//if (bodyChunk.owner is Player player && MechPlayer.From(player) is not null) {
+				if (bodyChunk.submersion > 0.2f || !DangerTypeHelper.HasRain(bodyChunk.owner.room.roomRain.dangerType)) {
+					// Experimental: Rather than making the player not move, make submerged objects not move.
+					// This is OK because now I make the *entire world* flood.
+					// I also want to make objects not get thrown around if the room isn't rainy.
 					iter++;
 					return false; // Not allowed to continue.
 				}
@@ -111,7 +143,7 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter {
 
 		private static float OnFloodShake(On.RoomRain.orig_RoomRainFloodShake originalMethod, Room room, float globalFloodLevel) {
 			float shake = originalMethod(room, globalFloodLevel);
-			if (WorldTools.GetPlayers().Any(plr => MechPlayer.From(plr) != null)) {
+			if (Slugcats.IsAnyoneMechPlayer()) {
 				return 0;
 			}
 			return shake;
@@ -121,7 +153,7 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter {
 			originalMethod(@this);
 
 			// Disable the screen shake effect if anyone is SOLSTICE as it is immune to the rain.
-			if (WorldTools.GetPlayers().Any(plr => MechPlayer.From(plr) != null)) {
+			if (Slugcats.IsAnyoneMechPlayer()) {
 				@this.globalRain.ScreenShake = 0;
 				@this.globalRain.MicroScreenShake = 0;
 			}

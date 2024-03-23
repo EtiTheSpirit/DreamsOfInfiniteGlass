@@ -31,6 +31,8 @@ using XansTools.Utilities.RW.FutileTools;
 using DreamsOfInfiniteGlass.Data.World;
 using System.Diagnostics.CodeAnalysis;
 using DreamsOfInfiniteGlass.Character.NPC.Purposed;
+using XansTools.Utilities.RW.DataPersistence;
+using DreamsOfInfiniteGlass.Character.PlayerCharacter.Interactions;
 
 namespace DreamsOfInfiniteGlass {
 
@@ -66,6 +68,12 @@ namespace DreamsOfInfiniteGlass {
 		private RemixConfigScreen _cfgScr;
 
 		/// <summary>
+		/// This object allows the mod to save/load data.
+		/// </summary>
+		[AllowNull]
+		public static SaveDataAccessor SaveData { get; private set; }
+
+		/// <summary>
 		/// Disable optimization and inlining because this needs to call everything it explicitly goes out of its way to call (mostly static initializers that are empty)
 		/// This has no notable perf impact as Awake is only called once in RW.
 		/// </summary>
@@ -77,10 +85,12 @@ namespace DreamsOfInfiniteGlass {
 				Log.LogMessage("Creating error reporter object...");
 				ErrReporter = new ErrorReporter(this);
 
+				Log.LogMessage("Creating save data accessor...");
+				SaveData = SaveDataAccessor.Get(PLUGIN_ID);
+
 				Log.LogMessage("Creating Harmony...");
 				Harmony = new Harmony(PLUGIN_NAME);
 
-				// Configuration.Initialize(); // This is now handled by the RemixConfigScreen class.
 				Log.LogMessage("Loading configs...");
 				_cfgScr = RemixConfigScreen.BIE_Initialize();
 
@@ -102,7 +112,10 @@ namespace DreamsOfInfiniteGlass {
 				CustomObjectData.Initialize();
 				WorldShaderMarshaller.Initialize();
 				GlassOverseerGraphics.Initialize();
+				GlassInspector.Initialize();
 				MechPlayerWorldInteractions.Initialize();
+				Spears.Initialize();
+				GlassOracleArm.Initialize();
 
 				Log.LogTrace("Requesting special render buffers..."); 
 				FutileSettings.RequestDepthAndStencilBuffer();

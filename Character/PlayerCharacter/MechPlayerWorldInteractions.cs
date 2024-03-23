@@ -14,14 +14,17 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter {
 	public static partial class MechPlayerWorldInteractions {
 
 		internal static void Initialize() {
-			IL.BigEel.JawsSnap += InjectLeviathanKill;
-			//IL.ZapCoil.Update += InjectZapCoil;
+			// IL.BigEel.JawsSnap += InjectLeviathanKill;
+			// IL.ZapCoil.Update += InjectZapCoil;
 
 			DeathContextualizer.CreateDeathContextsIn(
 				DreamsOfInfiniteGlassPlugin.Harmony, 
-				NETExtensions.QuickGetMethod<ZapCoil>(nameof(ZapCoil.Update)),
-				NETExtensions.QuickGetMethod<Spear>(nameof(Spear.HitSomething)),
-				NETExtensions.QuickGetMethod<SingularityBomb>(nameof(SingularityBomb.Explode))
+				(NETExtensions.QuickGetMethod<ZapCoil>(nameof(ZapCoil.Update)), true),
+				(NETExtensions.QuickGetMethod<BigEel>(nameof(BigEel.JawsSnap)), true),
+				(NETExtensions.QuickGetMethod<Spear>(nameof(Spear.HitSomething)), false),
+				(NETExtensions.QuickGetMethod<SingularityBomb>(nameof(SingularityBomb.Explode)), true),
+				(NETExtensions.QuickGetMethod<SSOracleBehavior>(nameof(SSOracleBehavior.Update)), true),
+				(NETExtensions.QuickGetMethod<SSOracleBehavior.ThrowOutBehavior>(nameof(SSOracleBehavior.ThrowOutBehavior.Update)), true)
 			);
 
 			InitializeRain();
@@ -29,6 +32,7 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter {
 		}
 
 		
+		[Obsolete("Use the death contextualizer now.")]
 		private static void InjectLeviathanKill(ILContext il) {
 			ILCursor cursor = new ILCursor(il);
 			bool foundLeviathanKill = cursor.TryGotoNext(

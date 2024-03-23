@@ -68,18 +68,7 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter.DataStorage {
 		/// <param name="damageType">The damage type, or null for no type in particular.</param>
 #pragma warning disable IDE0051, IDE0060
 		internal void TakeDamage(float damage, Creature from, Creature.DamageType? damageType = null) {
-			bool violentDeath = false;
-			if (damageType == Creature.DamageType.Electric) {
-				damage *= 3.0f;
-				violentDeath = true;
-			} else if (damageType == Creature.DamageType.Water) {
-				damage *= 2.0f;
-			} else if (damageType == Creature.DamageType.Explosion) {
-				damage *= 2.5f;
-				violentDeath = UnityEngine.Random.value < 0.5f;
-			}
-
-			DoActualDamage(damage, violentDeath);
+			TakeDamage(damage, damageType);
 		}
 
 		/// <summary>
@@ -88,6 +77,7 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter.DataStorage {
 		/// <param name="damage"></param>
 		/// <param name="from"></param>
 		/// <param name="damageType">The damage type, or null for no type in particular.</param>
+		[Obsolete("Not yet implemented.", true)]
 		internal void TakeDamage(float damage, Weapon from) {
 			
 		}
@@ -97,8 +87,23 @@ namespace DreamsOfInfiniteGlass.Character.PlayerCharacter.DataStorage {
 		/// </summary>
 		/// <param name="damage"></param>
 		/// <param name="from">The object responsible, where applicable.</param>
+		[Obsolete("Not yet implemented.", true)]
 		internal void TakeDamage(float damage, PhysicalObject? from = null) {
+			
+		}
 
+		internal void TakeDamage(float damage, Creature.DamageType? damageType) {
+			bool violentDeath = false;
+			if (damageType == Creature.DamageType.Electric) {
+				damage *= 3.0f;
+				violentDeath = true;
+			} else if (damageType == Creature.DamageType.Water) {
+				damage *= 2.0f;
+			} else if (damageType == Creature.DamageType.Explosion) {
+				damage *= 2.5f;
+			}
+
+			DoActualDamage(damage, violentDeath);
 		}
 #pragma warning restore IDE0051, IDE0060
 	}

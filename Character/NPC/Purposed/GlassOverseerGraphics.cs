@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using static DreamsOfInfiniteGlass.Character.NPC.Purposed.ColoredInformation;
 
 namespace DreamsOfInfiniteGlass.Character.NPC.Purposed {
 
@@ -12,16 +13,6 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Purposed {
 	/// This class handles the graphics for overseers owned by Glass
 	/// </summary>
 	public sealed class GlassOverseerGraphics : Extensible.OverseerGraphics {
-
-		/// <summary>
-		/// 16 // 16 // 16 // 16
-		/// </summary>
-		public const int GLASS_OVERSEER_IDENTITY = 16161616;
-
-		/// <summary>
-		/// The color of Glass's overseer.
-		/// </summary>
-		public static Color GLASS_OVERSEER_COLOR => new Color(0.8089771f, 1.0f, 0.3962264f);
 
 		/// <summary>
 		/// If true, the system always spawns overseers as that belonging to this iterator.
@@ -54,7 +45,7 @@ namespace DreamsOfInfiniteGlass.Character.NPC.Purposed {
 		private static void OnConstructingOverseerAI(On.OverseerAbstractAI.orig_ctor originalMethod, OverseerAbstractAI @this, World world, AbstractCreature parent) {
 			originalMethod(@this, world, parent);
 			if (!world.singleRoomWorld) {
-				if (world.region.name == "16") {
+				if (world.region.name == DreamsOfInfiniteGlassPlugin.REGION_PREFIX) {
 					@this.parent.ignoreCycle = true;
 					Log.LogDebug("Setting overseer to ignore the cycle while within Glass.");
 
